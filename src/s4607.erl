@@ -15,6 +15,7 @@
     header_test/0,
     mission_test/0,
     decode_dwell_segment/1,
+    display_dwell_segment/1,
     display_existence_mask/1,
     trim_trailing_spaces/1]).
 
@@ -179,6 +180,9 @@ display_segments(Bin) ->
         mission -> 
             MS = decode_mission_segment(SegData),
             display_mission_segment(MS);
+        dwell   ->
+            DS = decode_dwell_segment(SegData),
+            display_dwell_segment(DS);
         _       -> 
             ok
     end,
@@ -407,8 +411,8 @@ display_mission_segment(MSeg) ->
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 decode_dwell_segment(<<EM:8/binary,RI:16/integer-unsigned-big,
-    DI:16/integer-unsigned-big,LD:1/binary,TRC:16/integer-unsigned-big,
-    DT:32/integer-unsigned-big,SLat:32/binary,SLon:32/binary,SAlt:32/binary,
+    DI:16/integer-unsigned-big,LD,TRC:16/integer-unsigned-big,
+    DT:32/integer-unsigned-big,SLat:4/binary,SLon:4/binary,SAlt:4/binary,
     Rest/binary>>) ->
 
     % Fixed part of the dwell segement is pattern matched above, remainder
@@ -517,10 +521,32 @@ display_existence_mask(EM) ->
     io:format("Sensor heading: ~p~n", [EM#exist_mask.sensor_heading]),
     io:format("Sensor pitch: ~p~n", [EM#exist_mask.sensor_pitch]),
     io:format("Sensor roll: ~p~n", [EM#exist_mask.sensor_roll]),
-    io:format("MDV: ~p~n", [EM#exist_mask.mdv]).
+    io:format("MDV: ~p~n", [EM#exist_mask.mdv]),
+    io:format("MTI report index: ~p~n", [EM#exist_mask.mti_report_index]),
+    io:format("Target Hi-Res Lat.: ~p~n", [EM#exist_mask.target_hr_lat]),
+    io:format("Target Hi-Res Lon.: ~p~n", [EM#exist_mask.target_hr_lon]),
+    io:format("Target delta Lat.: ~p~n", [EM#exist_mask.target_delta_lat]),
+    io:format("Target delta Lon.: ~p~n", [EM#exist_mask.target_delta_lon]),
+    io:format("Target geodetic height.: ~p~n", [EM#exist_mask.geodetic_height]),
+    io:format("Target vel. line of sight: ~p~n", [EM#exist_mask.target_vel_los]),
+    io:format("Target wrap velocity: ~p~n", [EM#exist_mask.target_wrap_velocity]),
+    io:format("Target SNR: ~p~n", [EM#exist_mask.target_snr]),
+    io:format("Target classification: ~p~n", [EM#exist_mask.target_classification]),
+    io:format("Target class. prob.: ~p~n", [EM#exist_mask.target_class_prob]),
+    io:format("Target slant range unc.: ~p~n", [EM#exist_mask.target_slant_range_unc]),
+    io:format("Target cross range unc.: ~p~n", [EM#exist_mask.target_cross_range_unc]),
+    io:format("Target height unc.: ~p~n", [EM#exist_mask.target_height_unc]),
+    io:format("Target rad. vel. unc.: ~p~n", [EM#exist_mask.target_rad_vel_unc]),
+    io:format("Truth tag app.: ~p~n", [EM#exist_mask.truth_tag_app]),
+    io:format("Truth tag entity: ~p~n", [EM#exist_mask.truth_tag_entity]),
+    io:format("Target RCS: ~p~n", [EM#exist_mask.target_rcs]).
 
 decode_last_dwell_of_revisit(0) -> additional_dwells;
 decode_last_dwell_of_revisit(1) -> no_additional_dwells.
+
+display_dwell_segment(DS) ->
+    EM = DS#dwell_segment.existence_mask,
+    display_existence_mask(EM).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Utility functions
