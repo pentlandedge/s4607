@@ -198,9 +198,7 @@ extract_packet_header(<<Hdr:32/binary,Rest/binary>>) ->
 %% Extracts the data payload from a packet from the supplied binary
 %% (which should have had the header removed already).
 extract_packet_data(Bin, Len) ->
-    Data = binary:part(Bin, 0, Len),
-    Rem = binary:part(Bin, Len, (byte_size(Bin) - Len)),
-    {ok, Data, Rem}.
+    extract_data(Bin, Len).
 
 %% Extracts the first binary portion associated with a segment header.
 extract_segment_header(<<Hdr:5/binary,Rest/binary>>) ->
@@ -209,9 +207,7 @@ extract_segment_header(<<Hdr:5/binary,Rest/binary>>) ->
 %% Extracts the segment payload from the supplied binary
 %% (which should have had the header removed already).
 extract_segment_data(Bin, Len) ->
-    Data = binary:part(Bin, 0, Len),
-    Rem = binary:part(Bin, Len, (byte_size(Bin) - Len)),
-    {ok, Data, Rem}.
+    extract_data(Bin, Len).
 
 %% Generic function to take the first part of a binary and return the rest.
 extract_data(Bin, Len) ->
