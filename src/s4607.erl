@@ -213,6 +213,12 @@ extract_segment_data(Bin, Len) ->
     Rem = binary:part(Bin, Len, (byte_size(Bin) - Len)),
     {ok, Data, Rem}.
 
+%% Generic function to take the first part of a binary and return the rest.
+extract_data(Bin, Len) ->
+    Data = binary:part(Bin, 0, Len),
+    Rem = binary:part(Bin, Len, (byte_size(Bin) - Len)),
+    {ok, Data, Rem}.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Packet header decoding functions.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -419,6 +425,9 @@ decode_dwell_segment(<<EM:8/binary,RI:16/integer-unsigned-big,
     % depends on the existence mask.
     EMrec = decode_existence_mask(EM),
 
+    {LatScaleFactor, Bin1} = conditional_extract(Rest, EMrec#exist_mask.lat_scale_factor, 4, fun stanag_types:sa32_to_float/1, 1.0),
+    {LonScaleFactor, Bin2} = conditional_extract(Bin1, EMrec#exist_mask.lon_scale_factor, 4, fun stanag_types:ba32_to_float/1, 1.0),
+    
     #dwell_segment{
         existence_mask = EMrec,
         revisit_index = RI,
@@ -428,7 +437,9 @@ decode_dwell_segment(<<EM:8/binary,RI:16/integer-unsigned-big,
         dwell_time = DT,
         sensor_lat = stanag_types:sa32_to_float(SLat),
         sensor_lon = stanag_types:ba32_to_float(SLon),
-        sensor_alt = stanag_types:s32_to_integer(SAlt)}.
+        sensor_alt = stanag_types:s32_to_integer(SAlt),
+        lat_scale_factor = LatScaleFactor,
+        lon_scale_factor = LonScaleFactor}.
 
 
 %% Function to decode the existance mask. Will crash caller if the mask 
@@ -554,7 +565,8 @@ display_dwell_segment(DS) ->
     io:format("Dwell time: ~p~n", [DS#dwell_segment.dwell_time]),
     io:format("Sensor Lat.: ~p~n", [DS#dwell_segment.sensor_lat]),
     io:format("Sensor Lon.: ~p~n", [DS#dwell_segment.sensor_lon]),
-    io:format("Sensor alt. (cm): ~p~n", [DS#dwell_segment.sensor_alt]).
+    io:format("Sensor alt. (cm): ~p~n", [DS#dwell_segment.sensor_alt]),
+    conditional_display("Lat. scale factor~p~n", [DS#dwell_segment.lat_scale_factor], EM#exist_mask.lat_scale_factor).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Utility functions
@@ -565,4 +577,25 @@ trim_trailing_spaces(Str) ->
     F = fun(C) -> C =:= $\  end,
     RStrip = lists:dropwhile(F, Rev),
     lists:reverse(RStrip).
+
+%% Function to conditionally extract a paramater from the front of a binary
+%% based on the state of a mask bit.
+conditional_extract(Bin, MaskBit, Size, ConvFn, Default) ->
+    case MaskBit of
+        1 -> 
+            {ok, Param, Bin1} = extract_data(Bin, Size),
+            {ConvFn(Param), Bin1};
+        0 ->
+            {Default, Bin}
+    end.
+
+%% Function to conditionally display a parameter based on a mask bit
+conditional_display(FmtStr, Params, MaskBit) ->
+    case MaskBit of
+        1 ->
+            io:format(FmtStr, Params),
+            ok;
+        0 ->
+            ok
+    end.
 
