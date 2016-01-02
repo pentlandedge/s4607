@@ -546,7 +546,15 @@ decode_last_dwell_of_revisit(1) -> no_additional_dwells.
 
 display_dwell_segment(DS) ->
     EM = DS#dwell_segment.existence_mask,
-    display_existence_mask(EM).
+    display_existence_mask(EM),
+    io:format("Revisit index: ~p~n", [DS#dwell_segment.revisit_index]),
+    io:format("Dwell index: ~p~n", [DS#dwell_segment.dwell_index]),
+    io:format("Last dwell of revisit: ~p~n", [DS#dwell_segment.last_dwell_of_revisit]),
+    io:format("Target report count: ~p~n", [DS#dwell_segment.target_report_count]),
+    io:format("Dwell time: ~p~n", [DS#dwell_segment.dwell_time]),
+    io:format("Sensor Lat.: ~p~n", [DS#dwell_segment.sensor_lat]),
+    io:format("Sensor Lon.: ~p~n", [DS#dwell_segment.sensor_lon]),
+    io:format("Sensor alt. (cm): ~p~n", [DS#dwell_segment.sensor_alt]).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Utility functions
