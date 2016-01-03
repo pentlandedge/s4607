@@ -421,9 +421,160 @@ decode_dwell_segment(<<EM:8/binary,RI:16/integer-unsigned-big,
     % depends on the existence mask.
     EMrec = decode_existence_mask(EM),
 
-    {LatScaleFactor, Bin1} = conditional_extract(Rest, EMrec#exist_mask.lat_scale_factor, 4, fun stanag_types:sa32_to_float/1, 1.0),
-    {LonScaleFactor, Bin2} = conditional_extract(Bin1, EMrec#exist_mask.lon_scale_factor, 4, fun stanag_types:ba32_to_float/1, 1.0),
+    {LatScaleFactor, Bin1} = conditional_extract(
+        Rest, 
+        EMrec#exist_mask.lat_scale_factor, 
+        4, 
+        fun stanag_types:sa32_to_float/1, 
+        1.0),
+
+    {LonScaleFactor, Bin2} = conditional_extract(
+        Bin1, 
+        EMrec#exist_mask.lon_scale_factor, 
+        4, 
+        fun stanag_types:ba32_to_float/1, 
+        1.0),
     
+    {SpuAlongTrack, Bin3} = conditional_extract(
+        Bin2, 
+        EMrec#exist_mask.spu_cross_track, 
+        4, 
+        fun stanag_types:i32_to_integer/1, 
+        0),
+
+    {SpuCrossTrack, Bin4} = conditional_extract(
+        Bin3, 
+        EMrec#exist_mask.spu_cross_track, 
+        4, 
+        fun stanag_types:i32_to_integer/1, 
+        0),
+
+    {SpuAlt, Bin5} = conditional_extract(
+        Bin4, 
+        EMrec#exist_mask.spu_alt, 
+        2, 
+        fun stanag_types:i16_to_integer/1, 
+        0),
+
+    {SensorTrack, Bin6} = conditional_extract(
+        Bin5, 
+        EMrec#exist_mask.sensor_track, 
+        2, 
+        fun stanag_types:ba16_to_float/1, 
+        0.0),
+
+    {SensorSpeed, Bin7} = conditional_extract(
+        Bin6, 
+        EMrec#exist_mask.sensor_speed, 
+        4, 
+        fun stanag_types:i32_to_integer/1, 
+        0),
+
+    {SensorVertVel, Bin8} = conditional_extract(
+        Bin7, 
+        EMrec#exist_mask.sensor_vert_vel, 
+        1, 
+        fun stanag_types:s8_to_integer/1, 
+        0),
+    
+    {SensorTrackUnc, Bin9} = conditional_extract(
+        Bin8, 
+        EMrec#exist_mask.sensor_track_unc, 
+        1, 
+        fun stanag_types:i8_to_integer/1, 
+        0),
+
+    {SensorSpeedUnc, Bin10} = conditional_extract(
+        Bin9, 
+        EMrec#exist_mask.sensor_speed_unc, 
+        2, 
+        fun stanag_types:i16_to_integer/1, 
+        0),
+
+    {SensorVertVelUnc, Bin11} = conditional_extract(
+        Bin10, 
+        EMrec#exist_mask.sensor_vert_vel_unc, 
+        2, 
+        fun stanag_types:i16_to_integer/1, 
+        0),
+
+    {PlatHeading, Bin12} = conditional_extract(
+        Bin11, 
+        EMrec#exist_mask.platform_heading, 
+        2, 
+        fun stanag_types:ba16_to_float/1, 
+        0.0),
+
+    {PlatPitch, Bin13} = conditional_extract(
+        Bin12, 
+        EMrec#exist_mask.platform_pitch, 
+        2, 
+        fun stanag_types:sa16_to_float/1, 
+        0.0),
+
+    {PlatRoll, Bin14} = conditional_extract(
+        Bin13, 
+        EMrec#exist_mask.platform_roll, 
+        2, 
+        fun stanag_types:sa16_to_float/1, 
+        0.0),
+
+    {DwellCenterLat, Bin15} = conditional_extract(
+        Bin14, 
+        EMrec#exist_mask.dwell_center_lat, 
+        4, 
+        fun stanag_types:sa32_to_float/1, 
+        0.0),
+
+    {DwellCenterLon, Bin16} = conditional_extract(
+        Bin15, 
+        EMrec#exist_mask.dwell_center_lon, 
+        4, 
+        fun stanag_types:ba32_to_float/1, 
+        0.0),
+
+    {DwellRangeHalfExtent, Bin17} = conditional_extract(
+        Bin16, 
+        EMrec#exist_mask.dwell_range_half_extent, 
+        2, 
+        fun stanag_types:b16_to_float/1, 
+        0.0),
+
+    {DwellAngleHalfExtent, Bin18} = conditional_extract(
+        Bin17, 
+        EMrec#exist_mask.dwell_angle_half_extent, 
+        2, 
+        fun stanag_types:ba16_to_float/1, 
+        0.0),
+
+    {SensorHeading, Bin19} = conditional_extract(
+        Bin18, 
+        EMrec#exist_mask.sensor_heading, 
+        2, 
+        fun stanag_types:ba16_to_float/1, 
+        0.0),
+
+    {SensorPitch, Bin20} = conditional_extract(
+        Bin19, 
+        EMrec#exist_mask.sensor_pitch, 
+        2, 
+        fun stanag_types:sa16_to_float/1, 
+        0.0),
+
+    {SensorRoll, Bin21} = conditional_extract(
+        Bin20, 
+        EMrec#exist_mask.sensor_roll, 
+        2, 
+        fun stanag_types:sa16_to_float/1, 
+        0.0),
+
+    {MDV, Bin22} = conditional_extract(
+        Bin21, 
+        EMrec#exist_mask.mdv, 
+        1, 
+        fun stanag_types:i8_to_integer/1, 
+        0),
+
     #dwell_segment{
         existence_mask = EMrec,
         revisit_index = RI,
@@ -435,7 +586,27 @@ decode_dwell_segment(<<EM:8/binary,RI:16/integer-unsigned-big,
         sensor_lon = stanag_types:ba32_to_float(SLon),
         sensor_alt = stanag_types:s32_to_integer(SAlt),
         lat_scale_factor = LatScaleFactor,
-        lon_scale_factor = LonScaleFactor}.
+        lon_scale_factor = LonScaleFactor,
+        spu_along_track = SpuAlongTrack,
+        spu_cross_track = SpuCrossTrack,
+        spu_alt = SpuAlt,
+        sensor_track = SensorTrack,
+        sensor_speed = SensorSpeed,
+        sensor_vert_vel = SensorVertVel,
+        sensor_track_unc = SensorTrackUnc,
+        sensor_speed_unc = SensorSpeedUnc,
+        sensor_vert_vel_unc = SensorVertVelUnc,
+        platform_heading = PlatHeading,
+        platform_pitch = PlatPitch,
+        platform_roll = PlatRoll,
+        dwell_center_lat = DwellCenterLat,
+        dwell_center_lon = DwellCenterLon,
+        dwell_range_half_extent = DwellRangeHalfExtent,
+        dwell_angle_half_extent = DwellAngleHalfExtent,
+        sensor_heading = SensorHeading,
+        sensor_pitch = SensorPitch,
+        sensor_roll = SensorRoll,
+        mdv = MDV}.
 
 
 %% Function to decode the existance mask. Will crash caller if the mask 
@@ -562,7 +733,28 @@ display_dwell_segment(DS) ->
     io:format("Sensor Lat.: ~p~n", [DS#dwell_segment.sensor_lat]),
     io:format("Sensor Lon.: ~p~n", [DS#dwell_segment.sensor_lon]),
     io:format("Sensor alt. (cm): ~p~n", [DS#dwell_segment.sensor_alt]),
-    conditional_display("Lat. scale factor~p~n", [DS#dwell_segment.lat_scale_factor], EM#exist_mask.lat_scale_factor).
+    conditional_display("Lat. scale factor: ~p~n", [DS#dwell_segment.lat_scale_factor], EM#exist_mask.lat_scale_factor),
+    conditional_display("Lon. scale factor: ~p~n", [DS#dwell_segment.lon_scale_factor], EM#exist_mask.lon_scale_factor),
+    conditional_display("SPU along track: ~p~n", [DS#dwell_segment.spu_along_track], EM#exist_mask.spu_along_track),
+    conditional_display("SPU cross track: ~p~n", [DS#dwell_segment.spu_cross_track], EM#exist_mask.spu_cross_track),
+    conditional_display("SPU alt: ~p~n", [DS#dwell_segment.spu_alt], EM#exist_mask.spu_alt),
+    conditional_display("Sensor track: ~p~n", [DS#dwell_segment.sensor_track], EM#exist_mask.sensor_track),
+    conditional_display("Sensor speed: ~p~n", [DS#dwell_segment.sensor_speed], EM#exist_mask.sensor_speed),
+    conditional_display("Sensor vert. vel.: ~p~n", [DS#dwell_segment.sensor_vert_vel], EM#exist_mask.sensor_vert_vel),
+    conditional_display("Sensor track unc.: ~p~n", [DS#dwell_segment.sensor_track_unc], EM#exist_mask.sensor_track_unc),
+    conditional_display("Sensor speed unc.: ~p~n", [DS#dwell_segment.sensor_speed_unc], EM#exist_mask.sensor_speed_unc),
+    conditional_display("Sensor vert. vel. unc.: ~p~n", [DS#dwell_segment.sensor_vert_vel_unc], EM#exist_mask.sensor_vert_vel_unc),
+    conditional_display("Platform heading: ~p~n", [DS#dwell_segment.platform_heading], EM#exist_mask.platform_heading),
+    conditional_display("Platform pitch: ~p~n", [DS#dwell_segment.platform_pitch], EM#exist_mask.platform_pitch),
+    conditional_display("Platform roll: ~p~n", [DS#dwell_segment.platform_roll], EM#exist_mask.platform_roll),
+    conditional_display("Dwell centre Lat.: ~p~n", [DS#dwell_segment.dwell_center_lat], EM#exist_mask.dwell_center_lat),
+    conditional_display("Dwell centre Lon.: ~p~n", [DS#dwell_segment.dwell_center_lon], EM#exist_mask.dwell_center_lon),
+    conditional_display("Dwell range half extent: ~p~n", [DS#dwell_segment.dwell_range_half_extent], EM#exist_mask.dwell_range_half_extent),
+    conditional_display("Dwell angle half extent: ~p~n", [DS#dwell_segment.dwell_angle_half_extent], EM#exist_mask.dwell_angle_half_extent),
+    conditional_display("Sensor heading: ~p~n", [DS#dwell_segment.sensor_heading], EM#exist_mask.sensor_heading),
+    conditional_display("Sensor pitch: ~p~n", [DS#dwell_segment.sensor_pitch], EM#exist_mask.sensor_pitch),
+    conditional_display("Sensor roll: ~p~n", [DS#dwell_segment.sensor_roll], EM#exist_mask.sensor_roll),
+    conditional_display("MDV: ~p~n", [DS#dwell_segment.mdv], EM#exist_mask.mdv).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Utility functions
