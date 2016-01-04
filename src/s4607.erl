@@ -716,6 +716,97 @@ display_existence_mask(EM) ->
 decode_last_dwell_of_revisit(0) -> additional_dwells;
 decode_last_dwell_of_revisit(1) -> no_additional_dwells.
 
+decode_target_report(TrBin, EM) ->
+    
+    {MRI, Rem1} = conditional_extract(
+        TrBin, 
+        EM#exist_mask.mti_report_index, 
+        2, 
+        fun stanag_types:i16_to_integer/1, 
+        0),
+
+    {TgtHiResLat, Rem2} = conditional_extract(
+        Rem1, 
+        EM#exist_mask.target_hr_lat, 
+        4, 
+        fun stanag_types:sa32_to_float/1, 
+        0.0),
+
+    {TgtHiResLon, Rem3} = conditional_extract(
+        Rem2, 
+        EM#exist_mask.target_hr_lon, 
+        4, 
+        fun stanag_types:ba32_to_float/1, 
+        0.0),
+
+    {TgtDeltaLat, Rem4} = conditional_extract(
+        Rem3, 
+        EM#exist_mask.target_delta_lat, 
+        2, 
+        fun stanag_types:s16_to_integer/1, 
+        0),
+
+    {TgtDeltaLon, Rem5} = conditional_extract(
+        Rem4, 
+        EM#exist_mask.target_delta_lon, 
+        2, 
+        fun stanag_types:s16_to_integer/1, 
+        0),
+
+    {GeodHeight, Rem6} = conditional_extract(
+        Rem5, 
+        EM#exist_mask.geodetic_height, 
+        2, 
+        fun stanag_types:s16_to_integer/1, 
+        0),
+
+    {TgtVelLos, Rem7} = conditional_extract(
+        Rem6, 
+        EM#exist_mask.target_vel_los, 
+        2, 
+        fun stanag_types:s16_to_integer/1, 
+        0),
+
+    {TgtWrapVel, Rem8} = conditional_extract(
+        Rem7, 
+        EM#exist_mask.target_wrap_velocity, 
+        2, 
+        fun stanag_types:i16_to_integer/1, 
+        0),
+
+    {TgtSnr, Rem9} = conditional_extract(
+        Rem8, 
+        EM#exist_mask.target_snr, 
+        1, 
+        fun stanag_types:s8_to_integer/1, 
+        0),
+
+    {TgtClassification, Rem10} = conditional_extract(
+        Rem9, 
+        EM#exist_mask.target_classification, 
+        1, 
+        fun decode_target_classification/1, 
+        0),
+
+    
+    % placeholder
+    ok.
+
+decode_target_classification(<<Val:8>>) ->
+    decode_target_classification(Val);
+    
+decode_target_classification(0) -> no_information_live_target;
+decode_target_classification(1) -> tracked_vehicle_live_target;
+decode_target_classification(2) -> wheeled_vehicle_live_target;
+decode_target_classification(3) -> rotary_wing_aircraft_live_target;
+decode_target_classification(4) -> fixed_wing_aircraft_live_target;
+decode_target_classification(5) -> stationary_rotator_live_target;
+decode_target_classification(6) -> maritime_live_target;
+decode_target_classification(7) -> beacon_live_target;
+decode_target_classification(8) -> amphibious_live_target;
+decode_target_classification(9) -> person_live_target;
+decode_target_classification(255) -> unknown_simulated_target.
+    
 display_dwell_segment(DS) ->
     EM = DS#dwell_segment.existence_mask,
     display_existence_mask(EM),
