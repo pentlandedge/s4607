@@ -590,6 +590,8 @@ decode_dwell_segment(<<EM:8/binary,RI:16/integer-unsigned-big,
         fun stanag_types:i8_to_integer/1, 
         0),
 
+    TgtRepList = decode_target_report_list(Bin22, EMrec, TRC),
+
     #dwell_segment{
         existence_mask = EMrec,
         revisit_index = RI,
@@ -621,7 +623,8 @@ decode_dwell_segment(<<EM:8/binary,RI:16/integer-unsigned-big,
         sensor_heading = SensorHeading,
         sensor_pitch = SensorPitch,
         sensor_roll = SensorRoll,
-        mdv = MDV}.
+        mdv = MDV,
+        targets = TgtRepList}.
 
 
 %% Function to decode the existance mask. Will crash caller if the mask 
@@ -736,6 +739,18 @@ display_existence_mask(EM) ->
 
 decode_last_dwell_of_revisit(0) -> additional_dwells;
 decode_last_dwell_of_revisit(1) -> no_additional_dwells.
+
+%% Function to walk through a binary containing a number of target reports,
+%% decoding each returning as a list of reports.
+decode_target_report_list(Bin, EM, TgtCount) ->
+    decode_target_report_list(Bin, EM, TgtCount, []).
+
+%% Helper function with the accumulator.
+decode_target_report_list(_Bin, _EM, 0, AccTgts) ->
+    lists:reverse(AccTgts);
+decode_target_report_list(Bin, EM, TgtCount, AccTgts) when TgtCount > 0 ->
+    {ok, TR, Rem} = decode_target_report(Bin, EM),
+    decode_target_report_list(Rem, EM, TgtCount-1, [TR|AccTgts]).
 
 decode_target_report(TrBin, EM) ->
     
@@ -865,7 +880,7 @@ decode_target_report(TrBin, EM) ->
         fun stanag_types:s8_to_integer/1, 
         0),
    
-    #tgt_report{
+    TR = #tgt_report{
         mti_report_index = MRI,
         target_hr_lat = TgtHiResLat,
         target_hr_lon = TgtHiResLon,
@@ -883,7 +898,9 @@ decode_target_report(TrBin, EM) ->
         target_rad_vel_unc = TgtRadVelUnc,
         truth_tag_app = TruthTagApp,
         truth_tag_entity = TruthTagEnt,
-        target_rcs = TgtRcs}.
+        target_rcs = TgtRcs},
+        
+    {ok, TR, Rem18}.
 
 decode_target_classification(<<Val:8>>) ->
     decode_target_classification(Val);
