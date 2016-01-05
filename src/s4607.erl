@@ -805,7 +805,30 @@ decode_target_classification(6) -> maritime_live_target;
 decode_target_classification(7) -> beacon_live_target;
 decode_target_classification(8) -> amphibious_live_target;
 decode_target_classification(9) -> person_live_target;
-decode_target_classification(255) -> unknown_simulated_target.
+decode_target_classification(10) -> vehicle_live_target;
+decode_target_classification(11) -> animal_live_target;
+decode_target_classification(12) -> large_multiple_return_live_land_target;
+decode_target_classification(13) -> large_multiple_return_live_maritime_target;
+decode_target_classification(126) -> other_live_target;
+decode_target_classification(127) -> unknown_live_target;
+decode_target_classification(128) -> no_information_simulated_target;
+decode_target_classification(129) -> tracked_vehicle_simulated_target;
+decode_target_classification(130) -> wheeled_vehicle_simulated_target;
+decode_target_classification(131) -> rotary_wing_aircraft_simulated_target;
+decode_target_classification(132) -> fixed_wing_aircraft_simulated_target;
+decode_target_classification(133) -> stationary_rotator_simulated_target;
+decode_target_classification(134) -> maritime_simulated_target;
+decode_target_classification(135) -> beacon_simulated_target;
+decode_target_classification(136) -> amphibious_simulated_target;
+decode_target_classification(137) -> person_simulated_target;
+decode_target_classification(138) -> vehicle_simulated_target;
+decode_target_classification(139) -> animal_simulated_target;
+decode_target_classification(140) -> large_multiple_return_simulated_land_target;
+decode_target_classification(141) -> large_multiple_return_simulated_maritime_target;
+decode_target_classification(143) -> tagging_device;
+decode_target_classification(254) -> other_simulated_target;
+decode_target_classification(255) -> unknown_simulated_target;
+decode_target_classification(_) -> reserved.
     
 display_dwell_segment(DS) ->
     EM = DS#dwell_segment.existence_mask,
