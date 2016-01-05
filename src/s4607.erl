@@ -972,7 +972,29 @@ display_dwell_segment(DS) ->
     conditional_display("Sensor heading: ~p~n", [DS#dwell_segment.sensor_heading], EM#exist_mask.sensor_heading),
     conditional_display("Sensor pitch: ~p~n", [DS#dwell_segment.sensor_pitch], EM#exist_mask.sensor_pitch),
     conditional_display("Sensor roll: ~p~n", [DS#dwell_segment.sensor_roll], EM#exist_mask.sensor_roll),
-    conditional_display("MDV: ~p~n", [DS#dwell_segment.mdv], EM#exist_mask.mdv).
+    conditional_display("MDV: ~p~n", [DS#dwell_segment.mdv], EM#exist_mask.mdv),
+    F = fun(TR) -> display_target_report(TR, EM) end,
+    lists:map(F, DS#dwell_segment.targets).
+
+display_target_report(TR, EM) ->
+    conditional_display("MTI report index: ~p~n", [TR#tgt_report.mti_report_index], EM#exist_mask.mti_report_index),
+    conditional_display("Target HR Lat: ~p~n", [TR#tgt_report.target_hr_lat], EM#exist_mask.target_hr_lat),
+    conditional_display("Target HR Lon: ~p~n", [TR#tgt_report.target_hr_lon], EM#exist_mask.target_hr_lon),
+    conditional_display("Target Delta Lat: ~p~n", [TR#tgt_report.target_delta_lat], EM#exist_mask.target_delta_lat),
+    conditional_display("Target Delta Lon: ~p~n", [TR#tgt_report.target_delta_lon], EM#exist_mask.target_delta_lon),
+    conditional_display("Geodetic Height: ~p~n", [TR#tgt_report.geodetic_height], EM#exist_mask.geodetic_height),
+    conditional_display("Target vel. LOS.: ~p~n", [TR#tgt_report.target_vel_los], EM#exist_mask.target_vel_los),
+    conditional_display("Target wrap vel.: ~p~n", [TR#tgt_report.target_wrap_velocity], EM#exist_mask.target_wrap_velocity),
+    conditional_display("Target SNR: ~p~n", [TR#tgt_report.target_snr], EM#exist_mask.target_snr),
+    conditional_display("Target classification: ~p~n", [TR#tgt_report.target_classification], EM#exist_mask.target_classification),
+    conditional_display("Target classification probability: ~p~n", [TR#tgt_report.target_class_prob], EM#exist_mask.target_class_prob),
+    conditional_display("Target slant range unc.: ~p~n", [TR#tgt_report.target_slant_range_unc], EM#exist_mask.target_slant_range_unc),
+    conditional_display("Target cross range unc.: ~p~n", [TR#tgt_report.target_cross_range_unc], EM#exist_mask.target_cross_range_unc),
+    conditional_display("Target height unc.: ~p~n", [TR#tgt_report.target_height_unc], EM#exist_mask.target_height_unc),
+    conditional_display("Target rad. vel. unc.: ~p~n", [TR#tgt_report.target_rad_vel_unc], EM#exist_mask.target_rad_vel_unc),
+    conditional_display("Truth tag application: ~p~n", [TR#tgt_report.truth_tag_app], EM#exist_mask.truth_tag_app),
+    conditional_display("Truth tag entity: ~p~n", [TR#tgt_report.truth_tag_entity], EM#exist_mask.truth_tag_entity),
+    conditional_display("Target RCS: ~p~n", [TR#tgt_report.target_rcs], EM#exist_mask.target_rcs).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Utility functions
