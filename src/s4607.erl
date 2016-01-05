@@ -129,6 +129,27 @@
     mdv,
     targets}).
 
+-record(tgt_report, {
+    mti_report_index,
+    target_hr_lat,
+    target_hr_lon,
+    target_delta_lat,
+    target_delta_lon,
+    geodetic_height,
+    target_vel_los,
+    target_wrap_velocity,
+    target_snr,
+    target_classification,
+    target_class_prob,
+    target_slant_range_unc,
+    target_cross_range_unc,
+    target_height_unc,
+    target_rad_vel_unc,
+    truth_tag_app,
+    truth_tag_entity,
+    target_rcs}).
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% File handling functions.
 
@@ -786,11 +807,83 @@ decode_target_report(TrBin, EM) ->
         EM#exist_mask.target_classification, 
         1, 
         fun decode_target_classification/1, 
+        no_information_live_target),
+
+    {TgtClassProb, Rem11} = conditional_extract(
+        Rem10, 
+        EM#exist_mask.target_class_prob, 
+        1, 
+        fun stanag_types:i8_to_integer/1, 
         0),
 
-    
-    % placeholder
-    ok.
+    {TgtSlantRgeUnc, Rem12} = conditional_extract(
+        Rem11, 
+        EM#exist_mask.target_slant_range_unc, 
+        2, 
+        fun stanag_types:i16_to_integer/1, 
+        0),
+
+    {TgtCrossRgeUnc, Rem13} = conditional_extract(
+        Rem12, 
+        EM#exist_mask.target_cross_range_unc, 
+        2, 
+        fun stanag_types:i16_to_integer/1, 
+        0),
+
+    {TgtHeightUnc, Rem14} = conditional_extract(
+        Rem13, 
+        EM#exist_mask.target_height_unc, 
+        1, 
+        fun stanag_types:i8_to_integer/1, 
+        0),
+
+    {TgtRadVelUnc, Rem15} = conditional_extract(
+        Rem14, 
+        EM#exist_mask.target_rad_vel_unc, 
+        2, 
+        fun stanag_types:i16_to_integer/1, 
+        0),
+
+    {TruthTagApp, Rem16} = conditional_extract(
+        Rem15, 
+        EM#exist_mask.truth_tag_app, 
+        1, 
+        fun stanag_types:i8_to_integer/1, 
+        0),
+
+    {TruthTagEnt, Rem17} = conditional_extract(
+        Rem16, 
+        EM#exist_mask.truth_tag_entity, 
+        4, 
+        fun stanag_types:i32_to_integer/1, 
+        0),
+
+    {TgtRcs, Rem18} = conditional_extract(
+        Rem17, 
+        EM#exist_mask.target_rcs, 
+        1, 
+        fun stanag_types:s8_to_integer/1, 
+        0),
+   
+    #tgt_report{
+        mti_report_index = MRI,
+        target_hr_lat = TgtHiResLat,
+        target_hr_lon = TgtHiResLon,
+        target_delta_lat = TgtDeltaLat,
+        target_delta_lon = TgtDeltaLon,
+        geodetic_height = GeodHeight,
+        target_vel_los = TgtVelLos,
+        target_wrap_velocity = TgtWrapVel,
+        target_snr = TgtSnr,
+        target_classification = TgtClassification,
+        target_class_prob = TgtClassProb,
+        target_slant_range_unc = TgtSlantRgeUnc,
+        target_cross_range_unc = TgtCrossRgeUnc,
+        target_height_unc = TgtHeightUnc,
+        target_rad_vel_unc = TgtRadVelUnc,
+        truth_tag_app = TruthTagApp,
+        truth_tag_entity = TruthTagEnt,
+        target_rcs = TgtRcs}.
 
 decode_target_classification(<<Val:8>>) ->
     decode_target_classification(Val);
