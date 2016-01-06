@@ -149,6 +149,35 @@
     truth_tag_entity,
     target_rcs}).
 
+-record(job_def, {
+    job_id,
+    sensor_id_type,
+    sensor_id_model,
+    target_filt_flag,
+    priority,
+    bounding_a_lat,
+    bounding_a_lon,
+    bounding_b_lat,
+    bounding_b_lon,
+    bounding_c_lat,
+    bounding_c_lon,
+    bounding_d_lat,
+    bounding_d_lon,
+    radar_mode,
+    nom_rev_int,
+    ns_pos_unc_along_track,
+    ns_pos_unc_cross_track,
+    ns_pos_unc_alt,
+    ns_pos_unc_heading,
+    ns_pos_unc_sensor_speed,
+    ns_val_slant_range_std_dev,
+    ns_val_cross_range_std_dev,
+    ns_val_tgt_vel_los_std_dev,
+    ns_val_mdv,
+    ns_val_det_prob,
+    ns_val_false_alarm_density,
+    terr_elev_model,
+    geoid_model}).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% File handling functions.
@@ -995,6 +1024,12 @@ display_target_report(TR, EM) ->
     conditional_display("Truth tag application: ~p~n", [TR#tgt_report.truth_tag_app], EM#exist_mask.truth_tag_app),
     conditional_display("Truth tag entity: ~p~n", [TR#tgt_report.truth_tag_entity], EM#exist_mask.truth_tag_entity),
     conditional_display("Target RCS: ~p~n", [TR#tgt_report.target_rcs], EM#exist_mask.target_rcs).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Job definition segment decoding functions.
+
+decode_job_definition_segment() ->
+    ok.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Utility functions
