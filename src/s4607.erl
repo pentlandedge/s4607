@@ -1031,6 +1031,37 @@ display_target_report(TR, EM) ->
 decode_job_definition_segment() ->
     ok.
 
+decode_sensor_id(0) -> unidentified;
+decode_sensor_id(1) -> other;
+decode_sensor_id(2) -> hisar;
+decode_sensor_id(3) -> astor;
+decode_sensor_id(4) -> rotary_wing_radar;
+decode_sensor_id(5) -> global_hawk_sensor;
+decode_sensor_id(6) -> horizon;
+decode_sensor_id(7) -> apy_3;
+decode_sensor_id(8) -> apy_6;
+decode_sensor_id(9) -> apy_8;
+decode_sensor_id(10) -> radarsat2;
+decode_sensor_id(11) -> asars_2a;
+decode_sensor_id(12) -> tesar;
+decode_sensor_id(13) -> mp_rtip;
+decode_sensor_id(14) -> apg_77;
+decode_sensor_id(15) -> apg_79;
+decode_sensor_id(16) -> apg_81;
+decode_sensor_id(17) -> apg_6v1;
+decode_sensor_id(18) -> dpy_1;
+decode_sensor_id(19) -> sidm;
+decode_sensor_id(20) -> limit;
+decode_sensor_id(21) -> tcar;
+decode_sensor_id(22) -> lsrs;
+decode_sensor_id(23) -> ugs_single_sensor;
+decode_sensor_id(24) -> ugs_cluster_sensor;
+decode_sensor_id(25) -> imaster_gmti;
+decode_sensor_id(26) -> anzpy_1;
+decode_sensor_id(27) -> vader;
+decode_sensor_id(255) -> no_statement;
+decode_sensor_id(_) -> available_future_use.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Utility functions
 
