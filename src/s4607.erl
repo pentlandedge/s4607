@@ -1028,8 +1028,43 @@ display_target_report(TR, EM) ->
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Job definition segment decoding functions.
 
-decode_job_definition_segment() ->
-    ok.
+decode_job_definition_segment(<<JobID:32/integer-unsigned-big,SIDT,SIDM:6/binary,
+    TFF,Pri,J6:4/binary,J7:4/binary,J8:4/binary,J9:4/binary,J10:4/binary,
+    J11:4/binary,J12:4/binary,J13:4/binary,J14, NRI:16/integer-unsigned-big,
+    J16:16/integer-unsigned-big, J17:16/integer-unsigned-big, 
+    J18:16/integer-unsigned-big, J19:8/integer-unsigned, 
+    J20:16/integer-unsigned-big>>) ->
+
+    #job_def{
+        job_id = JobID,
+        sensor_id_type = SIDT,
+        sensor_id_model = SIDM,
+        target_filt_flag = decode_target_filtering_flag(TFF),
+        priority = Pri,
+        bounding_a_lat = stanag_types:sa32_to_float(J6),
+        bounding_a_lon = stanag_types:ba32_to_float(J7),
+        bounding_b_lat = stanag_types:sa32_to_float(J8),
+        bounding_b_lon = stanag_types:ba32_to_float(J9),
+        bounding_c_lat = stanag_types:sa32_to_float(J10),
+        bounding_c_lon = stanag_types:ba32_to_float(J11),
+        bounding_d_lat = stanag_types:sa32_to_float(J12),
+        bounding_d_lon = stanag_types:ba32_to_float(J13),
+        radar_mode = decode_radar_mode(J14),
+        nom_rev_int = NRI,
+        ns_pos_unc_along_track = decode_sensor_along_track_unc(J16),
+        ns_pos_unc_cross_track = decode_sensor_cross_track_unc(J17),
+        ns_pos_unc_alt = decode_sensor_alt_unc(J18)
+%        ns_pos_unc_heading,
+%        ns_pos_unc_sensor_speed,
+%         ns_val_slant_range_std_dev,
+%         ns_val_cross_range_std_dev,
+%         ns_val_tgt_vel_los_std_dev,
+%         ns_val_mdv,
+%         ns_val_det_prob,
+%         ns_val_false_alarm_density,
+%         terr_elev_model,
+%         geoid_model}.
+        }.
 
 decode_sensor_id(0) -> unidentified;
 decode_sensor_id(1) -> other;
@@ -1061,6 +1096,29 @@ decode_sensor_id(26) -> anzpy_1;
 decode_sensor_id(27) -> vader;
 decode_sensor_id(255) -> no_statement;
 decode_sensor_id(_) -> available_future_use.
+
+%% Placeholder function needs completing.
+decode_target_filtering_flag(X) ->
+    X.
+
+%% Placeholder.
+decode_radar_mode(X) ->
+    X.
+
+%% Function to range limit the values and detect no statement.
+decode_sensor_along_track_unc(65535) -> 
+    no_statement;
+decode_sensor_along_track_unc(X) when X >= 0, X =< 10000 -> 
+    X.
+
+%% Cross track uncertainty has the same parameter range as along track.
+decode_sensor_cross_track_unc(X) -> decode_sensor_along_track_unc(X).
+
+%% Sensor altitude uncertainty decode.
+decode_sensor_alt_unc(65535) ->
+    no_statement;
+decode_sensor_alt_unc(X) when X >= 0, X =< 20000 ->
+    X.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Utility functions
