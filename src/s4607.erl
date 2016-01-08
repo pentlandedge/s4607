@@ -1120,6 +1120,36 @@ decode_sensor_alt_unc(65535) ->
 decode_sensor_alt_unc(X) when X >= 0, X =< 20000 ->
     X.
 
+display_job_definition_segment(JDS) ->
+    io:format("Job ID: ~p~n", [JDS#job_def.job_id]), 
+    io:format("Sensor ID type: ~p~n", [JDS#job_def.sensor_id_type]), 
+    io:format("Sensor ID model: ~p~n", [JDS#job_def.sensor_id_model]), 
+    io:format("Target filtering flag: ~p~n", [JDS#job_def.target_filt_flag]), 
+    io:format("Priority: ~p~n", [JDS#job_def.priority]), 
+    io:format("Bounding A Lat: ~p~n", [JDS#job_def.bounding_a_lat]), 
+    io:format("Bounding A Lon: ~p~n", [JDS#job_def.bounding_a_lon]), 
+    io:format("Bounding B Lat: ~p~n", [JDS#job_def.bounding_b_lat]), 
+    io:format("Bounding B Lon: ~p~n", [JDS#job_def.bounding_b_lon]), 
+    io:format("Bounding C Lat: ~p~n", [JDS#job_def.bounding_c_lat]), 
+    io:format("Bounding C Lon: ~p~n", [JDS#job_def.bounding_c_lon]), 
+    io:format("Bounding D Lat: ~p~n", [JDS#job_def.bounding_d_lat]), 
+    io:format("Bounding D Lon: ~p~n", [JDS#job_def.bounding_d_lon]), 
+    io:format("Radar mode: ~p~n", [JDS#job_def.radar_mode]), 
+    io:format("Nom. revist interval: ~p~n", [JDS#job_def.nom_rev_int]), 
+    io:format("Nom. pos. unc. along track: ~p~n", [JDS#job_def.ns_pos_unc_along_track]), 
+    io:format("Nom. pos. unc. cross track: ~p~n", [JDS#job_def.ns_pos_unc_cross_track]), 
+    io:format("Nom. pos. unc. altitude: ~p~n", [JDS#job_def.ns_pos_unc_alt]), 
+    io:format("Nom. pos. unc. track heading: ~p~n", [JDS#job_def.ns_pos_unc_heading]), 
+    io:format("Nom. pos. unc. sensor speed: ~p~n", [JDS#job_def.ns_pos_unc_sensor_speed]), 
+    io:format("Nom. slant range std. dev.: ~p~n", [JDS#job_def.ns_val_slant_range_std_dev]),
+    io:format("Nom. cross range std. dev.: ~p~n", [JDS#job_def.ns_val_cross_range_std_dev]),
+    io:format("Nom. target vel. LOS std. dev.: ~p~n", [JDS#job_def.ns_val_tgt_vel_los_std_dev]),
+    io:format("Nom. MDV: ~p~n", [JDS#job_def.ns_val_mdv]),
+    io:format("Nom. detection prob.: ~p~n", [JDS#job_def.ns_val_det_prob]),
+    io:format("Nom. false alarm density.: ~p~n", [JDS#job_def.ns_val_false_alarm_density]),
+    io:format("Terrain elevation model: ~p~n", [JDS#job_def.terr_elev_model]),
+    io:format("Geoid model: ~p~n", [JDS#job_def.geoid_model]).
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Utility functions
 
