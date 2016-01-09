@@ -1118,7 +1118,7 @@ decode_target_filtering_flag(<<0:5,B2:1,B1:1,B0:1>>) ->
          end,
     L3.
 
-%% Placeholder.
+%% Function to decode the various radar modes for different systems.
 decode_radar_mode(0) -> {unspecified_mode, generic};
 decode_radar_mode(1) -> {mti, generic};
 decode_radar_mode(2) -> {hrr, generic};
@@ -1149,8 +1149,36 @@ decode_radar_mode(52) -> {emti_wide_frame_search, asars_2};
 decode_radar_mode(53) -> {emti_narrow_frame_search, asars_2};
 decode_radar_mode(54) -> {emti_augmented_spot, asars_2};
 decode_radar_mode(55) -> {emti_wide_area_mti, asars_2};
-decode_radar_mode(X) ->
-    X.
+decode_radar_mode(61) -> {gmti_ppi_mode, tuav};
+decode_radar_mode(62) -> {gmti_expanded_mode, tuav};
+decode_radar_mode(63) -> {narrow_sector_search, arl_m};
+decode_radar_mode(64) -> {single_beam_scan, arl_m};
+decode_radar_mode(65) -> {wide_area, arl_m};
+decode_radar_mode(81) -> {grca, reserved};
+decode_radar_mode(82) -> {rrca, reserved};
+decode_radar_mode(83) -> {sector_search, reserved};
+decode_radar_mode(84) -> {horizon_basic, horizon};
+decode_radar_mode(85) -> {horizon_high_sensitivity, horizon};
+decode_radar_mode(86) -> {horizon_burn_through, horizon};
+decode_radar_mode(87) -> {creso_acquisition, creso};
+decode_radar_mode(88) -> {creso_count, creso};
+decode_radar_mode(94) -> {was_mti_exo, astor};
+decode_radar_mode(95) -> {was_mti_endo_exo, astor};
+decode_radar_mode(96) -> {ss_mti_exo, astor};
+decode_radar_mode(97) -> {ss_mti_endo_exo, astor};
+decode_radar_mode(100) -> {test_status_mode, reserved};
+decode_radar_mode(101) -> {mti_spot_scan, lynx_i_ii};
+decode_radar_mode(102) -> {mti_arc_scan, lynx_i_ii};
+decode_radar_mode(103) -> {hrr_mti_spot_scan, lynx_i_ii};
+decode_radar_mode(104) -> {hrr_mti_arc_scan, lynx_i_ii};
+decode_radar_mode(111) -> {grca, global_hawk};
+decode_radar_mode(112) -> {rrca, global_hawk};
+decode_radar_mode(113) -> {gmti_hrr, global_hawk};
+decode_radar_mode(120) -> {small_area_gmti, vader};
+decode_radar_mode(121) -> {wide_area_gmti, vader};
+decode_radar_mode(122) -> {dismount_gmti, vader};
+decode_radar_mode(123) -> {hrr_gmti, vader};
+decode_radar_mode(_) -> {available_for_future_use, reserved}.
 
 %% Function to decode the cross-range standard deviation parameter.
 decode_cross_range_std_dev(X) ->
