@@ -1125,6 +1125,17 @@ decode_radar_mode(2) -> {hrr, generic};
 decode_radar_mode(3) -> {uhrr, generic};
 decode_radar_mode(4) -> {hur, generic};
 decode_radar_mode(5) -> {fti, generic};
+decode_radar_mode(11) -> {attack_control_satc, joint_stars};
+decode_radar_mode(12) -> {attack_control, joint_stars};
+decode_radar_mode(13) -> {satc, joint_stars};
+decode_radar_mode(14) -> {attack_planning_satc, joint_stars};
+decode_radar_mode(15) -> {attack_planning, joint_stars};
+decode_radar_mode(16) -> {med_res_sector_search, joint_stars};
+decode_radar_mode(17) -> {low_res_sector_search, joint_stars};
+decode_radar_mode(18) -> {wide_area_search_grca, joint_stars};
+decode_radar_mode(19) -> {wide_area_search_rrca, joint_stars};
+decode_radar_mode(20) -> {attack_plannning_with_tracking, joint_stars};
+decode_radar_mode(21) -> {attack_control_with_tracking, joint_stars};
 decode_radar_mode(X) ->
     X.
 
