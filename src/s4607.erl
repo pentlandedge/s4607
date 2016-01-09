@@ -1031,7 +1031,7 @@ display_target_report(TR, EM) ->
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Job definition segment decoding functions.
 
-decode_job_definition_segment(<<JobID:32,SIDT,SIDM:6/binary,TFF,Pri,
+decode_job_definition_segment(<<JobID:32,SIDT,SIDM:6/binary,TFF:1/binary,Pri,
     J6:4/binary,J7:4/binary,J8:4/binary,J9:4/binary,J10:4/binary,J11:4/binary,
     J12:4/binary,J13:4/binary,J14,NRI:16,J16:16,J17:16,J18:16,J19,J20:16,
     J21:16,J22:2/binary,J23:16,J24,J25,J26,J27,J28>>) ->
@@ -1101,8 +1101,22 @@ decode_sensor_id_model(Bin) ->
     trim_trailing_spaces(binary_to_list(Bin)).
 
 %% Placeholder function needs completing.
-decode_target_filtering_flag(X) ->
-    X.
+decode_target_filtering_flag(<<0>>) -> 
+    no_filtering;
+decode_target_filtering_flag(<<0:5,B2:1,B1:1,B0:1>>) -> 
+    L1 = case B0 of
+            1 -> [area_filtering_intersection_dwell_bounding];
+            0 -> []
+         end,
+    L2 = case B1 of
+            1 -> [area_blanking_unspecified_area|L1];
+            0 -> L1 
+         end,
+    L3 = case B2 of
+            1 -> [sector_blanking_unspecified_area|L2];
+            0 -> L2 
+         end,
+    L3.
 
 %% Placeholder.
 decode_radar_mode(X) ->
