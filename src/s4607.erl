@@ -1136,6 +1136,14 @@ decode_radar_mode(18) -> {wide_area_search_grca, joint_stars};
 decode_radar_mode(19) -> {wide_area_search_rrca, joint_stars};
 decode_radar_mode(20) -> {attack_plannning_with_tracking, joint_stars};
 decode_radar_mode(21) -> {attack_control_with_tracking, joint_stars};
+decode_radar_mode(31) -> {wide_area_mti, asars_aip};
+decode_radar_mode(32) -> {coarse_res_search, asars_aip};
+decode_radar_mode(33) -> {med_res_search, asars_aip};
+decode_radar_mode(34) -> {high_res_search, asars_aip};
+decode_radar_mode(35) -> {point_imaging, asars_aip};
+decode_radar_mode(36) -> {swath_mti, asars_aip};
+decode_radar_mode(37) -> {repetititve_point_imaging, asars_aip};
+decode_radar_mode(38) -> {monopulse_calibration, asars_aip};
 decode_radar_mode(X) ->
     X.
 
