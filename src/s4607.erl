@@ -1052,10 +1052,10 @@ decode_job_definition_segment(<<JobID:32,SIDT,SIDM:6/binary,TFF,Pri,
         bounding_d_lon = stanag_types:ba32_to_float(J13),
         radar_mode = decode_radar_mode(J14),
         nom_rev_int = NRI,
-        ns_pos_unc_along_track = decode_sensor_along_track_unc(J16),
-        ns_pos_unc_cross_track = decode_sensor_cross_track_unc(J17),
-        ns_pos_unc_alt = decode_sensor_alt_unc(J18),
-        ns_pos_unc_heading = decode_sensor_heading_unc(J19),
+        ns_pos_unc_along_track = decode_range_ns(J16, 0, 10000, 65535),
+        ns_pos_unc_cross_track = decode_range_ns(J17, 0, 10000, 65535),
+        ns_pos_unc_alt = decode_range_ns(J18, 0, 20000, 65535),
+        ns_pos_unc_heading = decode_range_ns(J19, 0, 45, 255),
         ns_pos_unc_sensor_speed  = decode_range_ns(J20, 0, 65534, 65535),
         ns_val_slant_range_std_dev = decode_range_ns(J21, 0, 65534, 65535),
         ns_val_cross_range_std_dev = decode_cross_range_std_dev(J22),
@@ -1106,27 +1106,6 @@ decode_target_filtering_flag(X) ->
 
 %% Placeholder.
 decode_radar_mode(X) ->
-    X.
-
-%% Function to range limit the values and detect no statement.
-decode_sensor_along_track_unc(65535) -> 
-    no_statement;
-decode_sensor_along_track_unc(X) when X >= 0, X =< 10000 -> 
-    X.
-
-%% Cross track uncertainty has the same parameter range as along track.
-decode_sensor_cross_track_unc(X) -> decode_sensor_along_track_unc(X).
-
-%% Sensor altitude uncertainty decode.
-decode_sensor_alt_unc(65535) ->
-    no_statement;
-decode_sensor_alt_unc(X) when X >= 0, X =< 20000 ->
-    X.
-
-%% Sensor heading uncertainty decode.
-decode_sensor_heading_unc(255) ->
-    no_statement;
-decode_sensor_heading_unc(X) when X >= 0, X =< 45 ->
     X.
 
 %% Function to decode the cross-range standard deviation parameter.
