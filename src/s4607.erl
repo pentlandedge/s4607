@@ -231,6 +231,9 @@ display_segments(Bin) ->
         dwell   ->
             DS = decode_dwell_segment(SegData),
             display_dwell_segment(DS);
+        job_definition ->
+            JD = decode_job_definition_segment(SegData),
+            display_job_definition_segment(JD);
         _       -> 
             ok
     end,
@@ -1028,17 +1031,15 @@ display_target_report(TR, EM) ->
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Job definition segment decoding functions.
 
-decode_job_definition_segment(<<JobID:32/integer-unsigned-big,SIDT,SIDM:6/binary,
-    TFF,Pri,J6:4/binary,J7:4/binary,J8:4/binary,J9:4/binary,J10:4/binary,
-    J11:4/binary,J12:4/binary,J13:4/binary,J14, NRI:16/integer-unsigned-big,
-    J16:16/integer-unsigned-big, J17:16/integer-unsigned-big, 
-    J18:16/integer-unsigned-big, J19:8/integer-unsigned, 
-    J20:16/integer-unsigned-big>>) ->
+decode_job_definition_segment(<<JobID:32,SIDT,SIDM:6/binary,TFF,Pri,
+    J6:4/binary,J7:4/binary,J8:4/binary,J9:4/binary,J10:4/binary,J11:4/binary,
+    J12:4/binary,J13:4/binary,J14,NRI:16,J16:16,J17:16,J18:16,J19,J20:16,
+    J21:16,J22:2/binary,J23:16,J24,J25,J26,J27,J28>>) ->
 
     #job_def{
         job_id = JobID,
-        sensor_id_type = SIDT,
-        sensor_id_model = SIDM,
+        sensor_id_type = decode_sensor_id_type(SIDT),
+        sensor_id_model = decode_sensor_id_model(SIDM),
         target_filt_flag = decode_target_filtering_flag(TFF),
         priority = Pri,
         bounding_a_lat = stanag_types:sa32_to_float(J6),
@@ -1053,49 +1054,51 @@ decode_job_definition_segment(<<JobID:32/integer-unsigned-big,SIDT,SIDM:6/binary
         nom_rev_int = NRI,
         ns_pos_unc_along_track = decode_sensor_along_track_unc(J16),
         ns_pos_unc_cross_track = decode_sensor_cross_track_unc(J17),
-        ns_pos_unc_alt = decode_sensor_alt_unc(J18)
-%        ns_pos_unc_heading,
-%        ns_pos_unc_sensor_speed,
-%         ns_val_slant_range_std_dev,
-%         ns_val_cross_range_std_dev,
-%         ns_val_tgt_vel_los_std_dev,
-%         ns_val_mdv,
-%         ns_val_det_prob,
-%         ns_val_false_alarm_density,
-%         terr_elev_model,
-%         geoid_model}.
-        }.
+        ns_pos_unc_alt = decode_sensor_alt_unc(J18),
+        ns_pos_unc_heading = decode_sensor_heading_unc(J19),
+        ns_pos_unc_sensor_speed  = decode_range_ns(J20, 0, 65534, 65535),
+        ns_val_slant_range_std_dev = decode_range_ns(J21, 0, 65534, 65535),
+        ns_val_cross_range_std_dev = decode_cross_range_std_dev(J22),
+        ns_val_tgt_vel_los_std_dev = decode_range_ns(J23, 0, 5000, 65535),
+        ns_val_mdv = decode_range_ns(J24, 0, 254, 255),
+        ns_val_det_prob = decode_range_ns(J25, 0, 100, 255),
+        ns_val_false_alarm_density = decode_range_ns(J26, 0, 254, 255),
+        terr_elev_model = decode_terrain_elev_model(J27),
+        geoid_model = decode_geoid_model(J28)}.
 
-decode_sensor_id(0) -> unidentified;
-decode_sensor_id(1) -> other;
-decode_sensor_id(2) -> hisar;
-decode_sensor_id(3) -> astor;
-decode_sensor_id(4) -> rotary_wing_radar;
-decode_sensor_id(5) -> global_hawk_sensor;
-decode_sensor_id(6) -> horizon;
-decode_sensor_id(7) -> apy_3;
-decode_sensor_id(8) -> apy_6;
-decode_sensor_id(9) -> apy_8;
-decode_sensor_id(10) -> radarsat2;
-decode_sensor_id(11) -> asars_2a;
-decode_sensor_id(12) -> tesar;
-decode_sensor_id(13) -> mp_rtip;
-decode_sensor_id(14) -> apg_77;
-decode_sensor_id(15) -> apg_79;
-decode_sensor_id(16) -> apg_81;
-decode_sensor_id(17) -> apg_6v1;
-decode_sensor_id(18) -> dpy_1;
-decode_sensor_id(19) -> sidm;
-decode_sensor_id(20) -> limit;
-decode_sensor_id(21) -> tcar;
-decode_sensor_id(22) -> lsrs;
-decode_sensor_id(23) -> ugs_single_sensor;
-decode_sensor_id(24) -> ugs_cluster_sensor;
-decode_sensor_id(25) -> imaster_gmti;
-decode_sensor_id(26) -> anzpy_1;
-decode_sensor_id(27) -> vader;
-decode_sensor_id(255) -> no_statement;
-decode_sensor_id(_) -> available_future_use.
+decode_sensor_id_type(0) -> unidentified;
+decode_sensor_id_type(1) -> other;
+decode_sensor_id_type(2) -> hisar;
+decode_sensor_id_type(3) -> astor;
+decode_sensor_id_type(4) -> rotary_wing_radar;
+decode_sensor_id_type(5) -> global_hawk_sensor;
+decode_sensor_id_type(6) -> horizon;
+decode_sensor_id_type(7) -> apy_3;
+decode_sensor_id_type(8) -> apy_6;
+decode_sensor_id_type(9) -> apy_8;
+decode_sensor_id_type(10) -> radarsat2;
+decode_sensor_id_type(11) -> asars_2a;
+decode_sensor_id_type(12) -> tesar;
+decode_sensor_id_type(13) -> mp_rtip;
+decode_sensor_id_type(14) -> apg_77;
+decode_sensor_id_type(15) -> apg_79;
+decode_sensor_id_type(16) -> apg_81;
+decode_sensor_id_type(17) -> apg_6v1;
+decode_sensor_id_type(18) -> dpy_1;
+decode_sensor_id_type(19) -> sidm;
+decode_sensor_id_type(20) -> limit;
+decode_sensor_id_type(21) -> tcar;
+decode_sensor_id_type(22) -> lsrs;
+decode_sensor_id_type(23) -> ugs_single_sensor;
+decode_sensor_id_type(24) -> ugs_cluster_sensor;
+decode_sensor_id_type(25) -> imaster_gmti;
+decode_sensor_id_type(26) -> anzpy_1;
+decode_sensor_id_type(27) -> vader;
+decode_sensor_id_type(255) -> no_statement;
+decode_sensor_id_type(_) -> available_future_use.
+
+decode_sensor_id_model(Bin) ->
+    trim_trailing_spaces(binary_to_list(Bin)).
 
 %% Placeholder function needs completing.
 decode_target_filtering_flag(X) ->
@@ -1119,6 +1122,49 @@ decode_sensor_alt_unc(65535) ->
     no_statement;
 decode_sensor_alt_unc(X) when X >= 0, X =< 20000 ->
     X.
+
+%% Sensor heading uncertainty decode.
+decode_sensor_heading_unc(255) ->
+    no_statement;
+decode_sensor_heading_unc(X) when X >= 0, X =< 45 ->
+    X.
+
+%% Function to decode the cross-range standard deviation parameter.
+decode_cross_range_std_dev(X) ->
+    Val = stanag_types:ba16_to_float(X),
+    limit_cross_range_std_dev(Val).
+
+limit_cross_range_std_dev(X) when X >= 180.0 -> no_statement;
+limit_cross_range_std_dev(X) when X >= 0.0 -> X.
+
+
+%% Generic range decode with lower, upper and no statement values.
+decode_range_ns(X, _, _, NS) when X =:= NS -> no_statement;
+decode_range_ns(X, L, U, _) when X >= L, X =< U -> X.
+
+%% Decode the terrain elevation model parameter.
+decode_terrain_elev_model(0) -> none_specified;
+decode_terrain_elev_model(1) -> dted0;
+decode_terrain_elev_model(2) -> dted1;
+decode_terrain_elev_model(3) -> dted2;
+decode_terrain_elev_model(4) -> dted3;
+decode_terrain_elev_model(5) -> dted4;
+decode_terrain_elev_model(6) -> dted5;
+decode_terrain_elev_model(7) -> srtm1;
+decode_terrain_elev_model(8) -> srtm2;
+decode_terrain_elev_model(9) -> dgm50;
+decode_terrain_elev_model(10) -> dgm250;
+decode_terrain_elev_model(11) -> ithd;
+decode_terrain_elev_model(12) -> sthd;
+decode_terrain_elev_model(13) -> sedris;
+decode_terrain_elev_model(_) -> reserved.
+
+%% Decode the Geoid model parameter.
+decode_geoid_model(0) -> none_specified;
+decode_geoid_model(1) -> egm96;
+decode_geoid_model(2) -> geo96;
+decode_geoid_model(3) -> flat_earth;
+decode_geoid_model(_) -> reserved.
 
 display_job_definition_segment(JDS) ->
     io:format("Job ID: ~p~n", [JDS#job_def.job_id]), 
