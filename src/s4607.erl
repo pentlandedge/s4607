@@ -1144,6 +1144,9 @@ decode_radar_mode(35) -> {point_imaging, asars_aip};
 decode_radar_mode(36) -> {swath_mti, asars_aip};
 decode_radar_mode(37) -> {repetititve_point_imaging, asars_aip};
 decode_radar_mode(38) -> {monopulse_calibration, asars_aip};
+decode_radar_mode(51) -> {search, asars_2};
+decode_radar_mode(52) -> {emti_wide_frame_search, asars_2};
+decode_radar_mode(53) -> {emti_narrow_frame_search, asars_2};
 decode_radar_mode(X) ->
     X.
 
