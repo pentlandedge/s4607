@@ -1147,6 +1147,8 @@ decode_radar_mode(38) -> {monopulse_calibration, asars_aip};
 decode_radar_mode(51) -> {search, asars_2};
 decode_radar_mode(52) -> {emti_wide_frame_search, asars_2};
 decode_radar_mode(53) -> {emti_narrow_frame_search, asars_2};
+decode_radar_mode(54) -> {emti_augmented_spot, asars_2};
+decode_radar_mode(55) -> {emti_wide_area_mti, asars_2};
 decode_radar_mode(X) ->
     X.
 
