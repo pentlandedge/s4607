@@ -1100,7 +1100,7 @@ decode_sensor_id_type(_) -> available_future_use.
 decode_sensor_id_model(Bin) ->
     trim_trailing_spaces(binary_to_list(Bin)).
 
-%% Placeholder function needs completing.
+%% Function to decode the bits in the target filtering flag.
 decode_target_filtering_flag(<<0>>) -> 
     no_filtering;
 decode_target_filtering_flag(<<0:5,B2:1,B1:1,B0:1>>) -> 
@@ -1119,6 +1119,12 @@ decode_target_filtering_flag(<<0:5,B2:1,B1:1,B0:1>>) ->
     L3.
 
 %% Placeholder.
+decode_radar_mode(0) -> {unspecified_mode, generic};
+decode_radar_mode(1) -> {mti, generic};
+decode_radar_mode(2) -> {hrr, generic};
+decode_radar_mode(3) -> {uhrr, generic};
+decode_radar_mode(4) -> {hur, generic};
+decode_radar_mode(5) -> {fti, generic};
 decode_radar_mode(X) ->
     X.
 
