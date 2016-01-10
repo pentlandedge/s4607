@@ -37,6 +37,8 @@
     mission_id, 
     job_id}).
 
+-record(segment, {header, data}).
+
 -record(seg_header, {type, size}).
 
 -record(mission_segment, {
@@ -182,6 +184,8 @@
     terr_elev_model,
     geoid_model}).
 
+-record(decode_status, {status, error_list}).
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% File handling functions.
 
@@ -233,18 +237,23 @@ decode_segments(Bin, Acc) ->
     % Switch on the segment type
     case SH#seg_header.type of
         mission -> 
-            SegRec = {ok, decode_mission_segment(SegData)};
+            SegRec = {ok, SH, decode_mission_segment(SegData)};
         dwell   ->
-            SegRec = {ok, decode_dwell_segment(SegData)};
+            SegRec = {ok, SH, decode_dwell_segment(SegData)};
         job_definition ->
-            SegRec = {ok, decode_job_definition_segment(SegData)};
+            SegRec = {ok, SH, decode_job_definition_segment(SegData)};
         _       -> 
-            SegRec = {unknown_segment, SegData}
+            SegRec = {unknown_segment, SH, SegData}
     end,
 
     % Loop over any remaining segments contained in this packet.
     decode_segments(SRem2, [SegRec|Acc]).
 
+%display_packets2(PktLst) ->
+%    lists:map(fun display_packet/1, PktList).
+
+%display_packet(Pkt) ->
+    
 %% Packet processing loop, prints out decoded information.
 display_packets(<<>>) ->
     ok;
@@ -298,6 +307,23 @@ display_segments(Bin) ->
 
     % Loop over any remaining segments contained in this packet.
     display_segments(SRem2).
+
+%% Function to display a segment. Segment should have been decoded prior to 
+%% calling this function.
+display_segment(SegHdr, SegRec) ->
+    display_segment_header(SegHdr),
+    
+    % Switch on the segment type and display the segment data.
+    case SegHdr#seg_header.type of
+        mission -> 
+            display_mission_segment(SegRec);
+        dwell   ->
+            display_dwell_segment(SegRec);
+        job_definition ->
+            display_job_definition_segment(SegRec);
+        _       -> 
+            ok
+    end. 
 
 %% Extracts the first portion of the binary of the size required for a packet
 %% header. Returns the unused portion to allow further processing.
