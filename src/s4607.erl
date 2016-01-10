@@ -2,6 +2,7 @@
 
 -export([
     read_file/1,
+    decode/1,
     extract_packet_header/1,
     extract_packet_data/2,
     display_packets/1,
@@ -21,6 +22,8 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Record definitions.
+
+-record(packet, {header, segments}).
 
 -record(pheader, {
     version, 
@@ -186,6 +189,61 @@
 read_file(File) ->
     {ok, Bin} = file:read_file(File),
     Bin.
+
+%% Function to decode binary data in Stanag 4607 packet format and return 
+%% a structured representation i.e. a list of packets with nested segments
+%% as appropriate.
+decode(Bin) ->
+    decode_packets(Bin, []).
+
+decode_packets(<<>>, Acc) ->
+    lists:reverse(Acc);
+decode_packets(Bin, Acc) ->
+    {ok, Hdr, R1} = extract_packet_header(Bin),
+    H1 = s4607:decode_packet_header(Hdr),
+    
+    % The size in the header includes the header itself.
+    PayloadSize = H1#pheader.packet_size - byte_size(Hdr),
+    
+    % Get the packet data payload.
+    {ok, PktData, R2} = extract_packet_data(R1, PayloadSize),
+
+    % Loop through all the segments in the packet.
+    SegRecList = decode_segments(PktData, []),
+
+    % Build the packet structure.
+    Pkt = #packet{header = H1, segments = SegRecList}, 
+
+    % Loop over any remaining packets, adding each to the list. 
+    decode_packets(R2, [Pkt|Acc]).
+
+decode_segments(<<>>, Acc) ->
+    lists:reverse(Acc);
+decode_segments(Bin, Acc) ->
+    % Get the segment header.
+    {ok, SegHdr, SRem} = extract_segment_header(Bin),
+    SH = decode_segment_header(SegHdr),
+
+    % The size in the header includes the header itself.
+    PayloadSize = SH#seg_header.size - byte_size(SegHdr),
+
+    % Get the packet data payload.
+    {ok, SegData, SRem2} = extract_segment_data(SRem, PayloadSize),
+
+    % Switch on the segment type
+    case SH#seg_header.type of
+        mission -> 
+            SegRec = {ok, decode_mission_segment(SegData)};
+        dwell   ->
+            SegRec = {ok, decode_dwell_segment(SegData)};
+        job_definition ->
+            SegRec = {ok, decode_job_definition_segment(SegData)};
+        _       -> 
+            SegRec = {unknown_segment, SegData}
+    end,
+
+    % Loop over any remaining segments contained in this packet.
+    decode_segments(SRem2, [SegRec|Acc]).
 
 %% Packet processing loop, prints out decoded information.
 display_packets(<<>>) ->
