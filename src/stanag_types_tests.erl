@@ -17,4 +17,8 @@ i8_checks() ->
 
 i16_checks() ->
     [?_assertEqual(255, stanag_types:i16_to_integer(<<0,255>>)),
-     ?_assertEqual(65280, stanag_types:i16_to_integer(<<255,0>>))]. 
+     ?_assertEqual(65280, stanag_types:i16_to_integer(<<255,0>>)),
+     
+     ?_assertEqual(<<0,255>>, stanag_types:integer_to_i16(255)),
+     ?_assertEqual(<<255,0>>, stanag_types:integer_to_i16(65280)),
+     ?_assertEqual(<<255,255>>, stanag_types:integer_to_i16(65535))]. 
