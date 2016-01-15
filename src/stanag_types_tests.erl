@@ -49,7 +49,7 @@ i32_checks() ->
 
 %% Define a test generator for the signed integer types.
 signed_test_() ->
-    [s8_checks(), s16_checks(), s32_checks()].
+    [s8_checks(), s16_checks(), s32_checks(), s64_checks()].
 
 s8_checks() ->
     [?_assertEqual(-1, stanag_types:s8_to_integer(<<255>>)),
@@ -77,3 +77,10 @@ s32_checks() ->
      ?_assertEqual(<<0,0,255,255>>, stanag_types:integer_to_s32(65535)),
      ?_assertEqual(<<127,255,255,255>>, stanag_types:integer_to_s32(2147483647)),
      ?_assertEqual(<<255,255,255,255>>, stanag_types:integer_to_s32(-1))].
+
+s64_checks() ->
+    [?_assertEqual(-1, stanag_types:s64_to_integer(<<255,255,255,255,255,255,255,255>>)),
+     ?_assertEqual(9223372036854775807, stanag_types:s64_to_integer(<<127,255,255,255,255,255,255,255>>)),
+    
+     ?_assertEqual(<<128,0,0,0,0,0,0,0>>, stanag_types:integer_to_s64(-9223372036854775808)),
+     ?_assertEqual(<<255,255,255,255,255,255,255,255>>, stanag_types:integer_to_s64(-1))].
