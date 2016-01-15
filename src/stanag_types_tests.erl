@@ -41,7 +41,8 @@ i16_checks() ->
 
 i32_checks() ->
     [?_assertEqual(255, stanag_types:i32_to_integer(<<0,0,0,255>>)),
-     ?_assertEqual(4294967295, stanag_types:i32_to_integer(<<255,255,255,255>>)),
+     ?_assertEqual(4294967295, 
+        stanag_types:i32_to_integer(<<255,255,255,255>>)),
      ?_assertEqual(16909060, stanag_types:i32_to_integer(<<1,2,3,4>>)),
 
      ?_assertEqual(<<1,2,3,4>>, stanag_types:integer_to_i32(16909060)),
@@ -57,30 +58,34 @@ s8_checks() ->
      ?_assertEqual(0, stanag_types:s8_to_integer(<<0>>)),
      ?_assertEqual(127, stanag_types:s8_to_integer(<<127>>)),
      ?_assertEqual(-128, stanag_types:s8_to_integer(<<128>>)),
-     
      ?_assertEqual(<<255>>, stanag_types:integer_to_s8(-1)),
      ?_assertEqual(<<127>>, stanag_types:integer_to_s8(127))].
    
 s16_checks() ->
     [?_assertEqual(-1, stanag_types:s16_to_integer(<<255,255>>)),
      ?_assertEqual(-32768, stanag_types:s16_to_integer(<<128,0>>)),
-     
      ?_assertEqual(<<255,255>>, stanag_types:integer_to_s16(-1)),
      ?_assertEqual(<<0,127>>, stanag_types:integer_to_s16(127)),
      ?_assertEqual(<<128,0>>, stanag_types:integer_to_s16(-32768))].
      
 s32_checks() ->
     [?_assertEqual(-1, stanag_types:s32_to_integer(<<255,255,255,255>>)),
-     ?_assertEqual(2147483647, stanag_types:s32_to_integer(<<127,255,255,255>>)),
-     ?_assertEqual(65535, stanag_types:s32_to_integer(<<0,0,255,255>>)),
-    
+     ?_assertEqual(2147483647, 
+        stanag_types:s32_to_integer(<<127,255,255,255>>)),
+     ?_assertEqual(65535, 
+        stanag_types:s32_to_integer(<<0,0,255,255>>)),
      ?_assertEqual(<<0,0,255,255>>, stanag_types:integer_to_s32(65535)),
-     ?_assertEqual(<<127,255,255,255>>, stanag_types:integer_to_s32(2147483647)),
+     ?_assertEqual(<<127,255,255,255>>, 
+        stanag_types:integer_to_s32(2147483647)),
      ?_assertEqual(<<255,255,255,255>>, stanag_types:integer_to_s32(-1))].
 
 s64_checks() ->
-    [?_assertEqual(-1, stanag_types:s64_to_integer(<<255,255,255,255,255,255,255,255>>)),
-     ?_assertEqual(9223372036854775807, stanag_types:s64_to_integer(<<127,255,255,255,255,255,255,255>>)),
-    
-     ?_assertEqual(<<128,0,0,0,0,0,0,0>>, stanag_types:integer_to_s64(-9223372036854775808)),
-     ?_assertEqual(<<255,255,255,255,255,255,255,255>>, stanag_types:integer_to_s64(-1))].
+    [?_assertEqual(-1, 
+        stanag_types:s64_to_integer(<<255,255,255,255,255,255,255,255>>)),
+     ?_assertEqual(9223372036854775807, 
+        stanag_types:s64_to_integer(<<127,255,255,255,255,255,255,255>>)),
+     ?_assertEqual(<<128,0,0,0,0,0,0,0>>, 
+        stanag_types:integer_to_s64(-9223372036854775808)),
+     ?_assertEqual(<<255,255,255,255,255,255,255,255>>, 
+        stanag_types:integer_to_s64(-1))].
+        
