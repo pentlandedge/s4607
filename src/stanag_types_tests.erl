@@ -95,7 +95,8 @@ binary_angle_test_() ->
 
 ba16_checks() ->
     [?_assert(almost_equal(125.31006, 
-        stanag_types:ba16_to_float(<<16#59,16#1C>>), 0.00001))].
+        stanag_types:ba16_to_float(<<16#59,16#1C>>), 0.00001)),
+     ?_assertEqual(<<16#59,16#1C>>, stanag_types:float_to_ba16(125.31006))].
 
 %% Utility function to compare whether floating point values are within a 
 %% specified range.
