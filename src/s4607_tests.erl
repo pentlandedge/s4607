@@ -20,13 +20,18 @@
 
 %% Define a test generator for the unsigned integer types.
 pheader_test_() ->
-    [version_checks()].
+    [version_checks(), class_checks()].
 
 version_checks() ->
     SH1 = sample_header1(),
     Hdr1 = s4607:decode_packet_header(SH1),
     [?_assertEqual({1,2}, s4607:get_version_id(Hdr1))].
 
+
+class_checks() -> 
+    SH1 = sample_header1(),
+    Hdr1 = s4607:decode_packet_header(SH1),
+    [?_assertEqual(top_secret, s4607:get_classification(Hdr1))].
 
 %% Sample packet header for test data.
 sample_header1() ->
