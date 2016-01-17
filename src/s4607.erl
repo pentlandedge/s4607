@@ -24,11 +24,11 @@
     decode_packet_header/1,
     decode_us_packet_code/1,
     display_packet_header/1,
+    get_version_id/1,
     decode_segment_header/1,
     display_segment_header/1,
     decode_mission_segment/1,
     display_mission_segment/1,
-    header_test/0,
     mission_test/0,
     decode_dwell_segment/1,
     display_dwell_segment/1,
@@ -454,8 +454,8 @@ display_packet_header(PktHdr) ->
     io:format("Mission ID: ~p~n", [PktHdr#pheader.mission_id]),
     io:format("Job ID: ~p~n", [PktHdr#pheader.job_id]).
 
-header_test() ->
-    <<"12",0,0,0,32, "UK", 1, "  ", 0, 1, 128, "ABCDEFGHIJ", 0, 0, 0, 5, 0, 0, 0, 6>>.
+%% Get the version ID from a packet header
+get_version_id(#pheader{version = V}) -> V.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Segment header decoding functions.
