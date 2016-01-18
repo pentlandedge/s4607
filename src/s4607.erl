@@ -27,6 +27,7 @@
     get_version_id/1,
     get_packet_size/1,
     get_classification/1,
+    get_class_system/1,
     decode_segment_header/1,
     display_segment_header/1,
     decode_mission_segment/1,
@@ -464,6 +465,9 @@ get_packet_size(#pheader{packet_size = S}) -> S.
 
 %% Get the classification level
 get_classification(#pheader{classification = C}) -> C.
+
+%% Get the classification system from the header. 
+get_class_system(#pheader{class_system = X}) -> X.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Segment header decoding functions.
