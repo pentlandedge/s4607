@@ -25,6 +25,7 @@
     decode_us_packet_code/1,
     display_packet_header/1,
     get_version_id/1,
+    get_packet_size/1,
     get_classification/1,
     decode_segment_header/1,
     display_segment_header/1,
@@ -457,6 +458,9 @@ display_packet_header(PktHdr) ->
 
 %% Get the version ID from a packet header
 get_version_id(#pheader{version = V}) -> V.
+
+%% Get the packet size from the header. 
+get_packet_size(#pheader{packet_size = S}) -> S.
 
 %% Get the classification level
 get_classification(#pheader{classification = C}) -> C.
