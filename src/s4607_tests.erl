@@ -20,7 +20,8 @@
 
 %% Define a test generator for the unsigned integer types.
 pheader_test_() ->
-    [version_checks(), class_checks(), size_checks(), class_sys_checks()].
+    [version_checks(), class_checks(), size_checks(), class_sys_checks(), 
+     sec_code_checks()].
 
 version_checks() ->
     SH1 = sample_header1(),
@@ -41,6 +42,10 @@ class_sys_checks() ->
     SH1 = sample_header1(),
     Hdr1 = s4607:decode_packet_header(SH1),
     [?_assertEqual("XN", s4607:get_class_system(Hdr1))].
+
+sec_code_checks() -> 
+    Hdr1 = s4607:decode_packet_header(sample_header1()),
+    [?_assertEqual(nocontract, s4607:get_packet_code(Hdr1))].
 
 %% Sample packet header for test data.
 sample_header1() ->

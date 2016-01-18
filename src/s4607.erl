@@ -28,6 +28,7 @@
     get_packet_size/1,
     get_classification/1,
     get_class_system/1,
+    get_packet_code/1,
     decode_segment_header/1,
     display_segment_header/1,
     decode_mission_segment/1,
@@ -468,6 +469,9 @@ get_classification(#pheader{classification = C}) -> C.
 
 %% Get the classification system from the header. 
 get_class_system(#pheader{class_system = X}) -> X.
+
+%% Get the packet security code from the header.
+get_packet_code(#pheader{packet_code = X}) -> X.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Segment header decoding functions.
