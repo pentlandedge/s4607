@@ -24,23 +24,19 @@ pheader_test_() ->
      sec_code_checks()].
 
 version_checks() ->
-    SH1 = sample_header1(),
-    Hdr1 = s4607:decode_packet_header(SH1),
+    Hdr1 = s4607:decode_packet_header(sample_header1()),
     [?_assertEqual({1,2}, s4607:get_version_id(Hdr1))].
 
 size_checks() ->
-    SH1 = sample_header1(),
-    Hdr1 = s4607:decode_packet_header(SH1),
+    Hdr1 = s4607:decode_packet_header(sample_header1()),
     [?_assertEqual(32, s4607:get_packet_size(Hdr1))].
     
 class_checks() -> 
-    SH1 = sample_header1(),
-    Hdr1 = s4607:decode_packet_header(SH1),
+    Hdr1 = s4607:decode_packet_header(sample_header1()),
     [?_assertEqual(top_secret, s4607:get_classification(Hdr1))].
 
 class_sys_checks() -> 
-    SH1 = sample_header1(),
-    Hdr1 = s4607:decode_packet_header(SH1),
+    Hdr1 = s4607:decode_packet_header(sample_header1()),
     [?_assertEqual("XN", s4607:get_class_system(Hdr1))].
 
 sec_code_checks() -> 
