@@ -30,6 +30,7 @@
     get_classification/1,
     get_class_system/1,
     get_packet_code/1,
+    get_exercise_indicator/1,
     decode_segment_header/1,
     display_segment_header/1,
     decode_mission_segment/1,
@@ -476,6 +477,9 @@ get_class_system(#pheader{class_system = X}) -> X.
 
 %% Get the packet security code from the header.
 get_packet_code(#pheader{packet_code = X}) -> X.
+
+%% Get the exercise indicator from the header structure.
+get_exercise_indicator(#pheader{exercise_ind = X}) -> X.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Segment header decoding functions.
