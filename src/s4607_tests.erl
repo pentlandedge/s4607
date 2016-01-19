@@ -67,3 +67,25 @@ job_id_checks() ->
 %% Sample packet header for test data.
 sample_header1() ->
     <<"12",0,0,0,32, "UK", 1, "XN", 0, 1, 128, "ABCDEFGHIJ", 0, 0, 0, 5, 0, 0, 0, 6>>.
+
+%% Define a test generator for the segment header decoding.
+seg_header_test_() ->
+    [seg_type_checks()].
+
+%% Function to check the decoding of fields in the segment header
+seg_type_checks() ->
+    SH1 = s4607:decode_segment_header(sample_seg_header1()),
+    SH2 = s4607:decode_segment_header(sample_seg_header2()),
+    SH3 = s4607:decode_segment_header(sample_seg_header3()),
+    SHJR = s4607:decode_segment_header(seg_header_job_req()),
+    [?_assertEqual(mission, s4607:get_segment_type(SH1)),
+     ?_assertEqual(dwell, s4607:get_segment_type(SH2)),
+     ?_assertEqual(hrr, s4607:get_segment_type(SH3)),
+     ?_assertEqual(job_request, s4607:get_segment_type(SHJR))].
+
+%% Test segment header data.
+sample_seg_header1() -> <<1,0,0,0,8>>.
+sample_seg_header2() -> <<2,0,0,80,8>>.
+sample_seg_header3() -> <<3,1,0,0,0>>.
+seg_header_job_req() -> <<101,1,0,0,0>>.
+

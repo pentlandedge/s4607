@@ -36,6 +36,8 @@
     get_job_id/1,
     decode_segment_header/1,
     display_segment_header/1,
+    get_segment_type/1,
+    get_segment_size/1,
     decode_mission_segment/1,
     display_mission_segment/1,
     mission_test/0,
@@ -520,6 +522,12 @@ decode_segment_type(_) -> reserved.
 display_segment_header(SegHdr) ->
     io:format("Segment type: ~p~n", [SegHdr#seg_header.type]),
     io:format("Segment size: ~p~n", [SegHdr#seg_header.size]).
+
+%% Function to get the segment type from the seg header structure.
+get_segment_type(#seg_header{type = T}) -> T.
+
+%% Function to get the segment size from the seg header structure.
+get_segment_size(#seg_header{size = S}) -> S.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Mission segment decoding functions.
