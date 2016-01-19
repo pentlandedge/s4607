@@ -21,7 +21,8 @@
 %% Define a test generator for the unsigned integer types.
 pheader_test_() ->
     [version_checks(), size_checks(), nationality_checks(), class_checks(), 
-     class_sys_checks(), sec_code_checks(), exercise_ind_checks()].
+     class_sys_checks(), sec_code_checks(), exercise_ind_checks(), 
+     platform_id_checks()].
 
 version_checks() ->
     Hdr1 = s4607:decode_packet_header(sample_header1()),
@@ -51,6 +52,10 @@ exercise_ind_checks() ->
     Hdr1 = s4607:decode_packet_header(sample_header1()),
     [?_assertEqual(exercise_real, s4607:get_exercise_indicator(Hdr1))].
 
+platform_id_checks() ->
+    Hdr1 = s4607:decode_packet_header(sample_header1()),
+    [?_assertEqual("ABCDEFGHIJ", s4607:get_platform_id(Hdr1))].
+    
     
 %% Sample packet header for test data.
 sample_header1() ->
