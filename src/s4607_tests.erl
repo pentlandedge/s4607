@@ -70,7 +70,7 @@ sample_header1() ->
 
 %% Define a test generator for the segment header decoding.
 seg_header_test_() ->
-    [seg_type_checks()].
+    [seg_type_checks(), seg_size_checks()].
 
 %% Function to check the decoding of fields in the segment header
 seg_type_checks() ->
@@ -82,6 +82,13 @@ seg_type_checks() ->
      ?_assertEqual(dwell, s4607:get_segment_type(SH2)),
      ?_assertEqual(hrr, s4607:get_segment_type(SH3)),
      ?_assertEqual(job_request, s4607:get_segment_type(SHJR))].
+
+%% Function to check the decoding of the segment header size field.
+seg_size_checks() ->
+    SH1 = s4607:decode_segment_header(sample_seg_header1()),
+    SH3 = s4607:decode_segment_header(sample_seg_header3()),
+    [?_assertEqual(8, s4607:get_segment_size(SH1)),
+     ?_assertEqual(16777216, s4607:get_segment_size(SH3))].
 
 %% Test segment header data.
 sample_seg_header1() -> <<1,0,0,0,8>>.
