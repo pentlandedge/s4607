@@ -77,10 +77,14 @@ seg_type_checks() ->
     SH1 = s4607:decode_segment_header(sample_seg_header1()),
     SH2 = s4607:decode_segment_header(sample_seg_header2()),
     SH3 = s4607:decode_segment_header(sample_seg_header3()),
+    SHR4 = s4607:decode_segment_header(seg_header_res_4()),
+    SHJD = s4607:decode_segment_header(seg_header_job_def()),
     SHJR = s4607:decode_segment_header(seg_header_job_req()),
     [?_assertEqual(mission, s4607:get_segment_type(SH1)),
      ?_assertEqual(dwell, s4607:get_segment_type(SH2)),
      ?_assertEqual(hrr, s4607:get_segment_type(SH3)),
+     ?_assertEqual(reserved, s4607:get_segment_type(SHR4)),
+     ?_assertEqual(job_definition, s4607:get_segment_type(SHJD)),
      ?_assertEqual(job_request, s4607:get_segment_type(SHJR))].
 
 %% Function to check the decoding of the segment header size field.
@@ -94,5 +98,7 @@ seg_size_checks() ->
 sample_seg_header1() -> <<1,0,0,0,8>>.
 sample_seg_header2() -> <<2,0,0,80,8>>.
 sample_seg_header3() -> <<3,1,0,0,0>>.
+seg_header_res_4()   -> <<4,1,0,0,0>>.
+seg_header_job_def() -> <<5,1,0,0,0>>.
 seg_header_job_req() -> <<101,1,0,0,0>>.
 
