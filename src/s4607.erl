@@ -33,6 +33,7 @@
     get_exercise_indicator/1,
     get_platform_id/1,
     get_mission_id/1,
+    get_job_id/1,
     decode_segment_header/1,
     display_segment_header/1,
     decode_mission_segment/1,
@@ -488,6 +489,9 @@ get_platform_id(#pheader{platform_id = X}) -> X.
 
 %% Get the mission ID from the header structure.
 get_mission_id(#pheader{mission_id = X}) -> X.
+
+%% Get the job ID from the header structure.
+get_job_id(#pheader{job_id = X}) -> X.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Segment header decoding functions.

@@ -22,7 +22,7 @@
 pheader_test_() ->
     [version_checks(), size_checks(), nationality_checks(), class_checks(), 
      class_sys_checks(), sec_code_checks(), exercise_ind_checks(), 
-     platform_id_checks(), mission_id_checks()].
+     platform_id_checks(), mission_id_checks(), job_id_checks()].
 
 version_checks() ->
     Hdr1 = s4607:decode_packet_header(sample_header1()),
@@ -60,6 +60,10 @@ mission_id_checks() ->
     Hdr1 = s4607:decode_packet_header(sample_header1()),
     [?_assertEqual(5, s4607:get_mission_id(Hdr1))].
     
+job_id_checks() ->
+    Hdr1 = s4607:decode_packet_header(sample_header1()),
+    [?_assertEqual(6, s4607:get_job_id(Hdr1))].
+
 %% Sample packet header for test data.
 sample_header1() ->
     <<"12",0,0,0,32, "UK", 1, "XN", 0, 1, 128, "ABCDEFGHIJ", 0, 0, 0, 5, 0, 0, 0, 6>>.
