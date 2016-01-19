@@ -32,6 +32,7 @@
     get_packet_code/1,
     get_exercise_indicator/1,
     get_platform_id/1,
+    get_mission_id/1,
     decode_segment_header/1,
     display_segment_header/1,
     decode_mission_segment/1,
@@ -484,6 +485,9 @@ get_exercise_indicator(#pheader{exercise_ind = X}) -> X.
 
 %% Get the platform ID from the header structure.
 get_platform_id(#pheader{platform_id = X}) -> X.
+
+%% Get the mission ID from the header structure.
+get_mission_id(#pheader{mission_id = X}) -> X.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Segment header decoding functions.
