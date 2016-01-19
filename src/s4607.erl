@@ -454,16 +454,16 @@ decode_platform_id(<<X:10/binary>>) ->
     trim_trailing_spaces(binary_to_list(X)).
 
 display_packet_header(PktHdr) ->
-    io:format("Version: ~p~n", [PktHdr#pheader.version]),
-    io:format("Packet size: ~p~n", [PktHdr#pheader.packet_size]), 
-    io:format("Nationality: ~p~n", [PktHdr#pheader.nationality]),
-    io:format("Classification: ~p~n", [PktHdr#pheader.classification]),
-    io:format("Classification System: ~p~n", [PktHdr#pheader.class_system]),
-    io:format("Packet code: ~p~n", [PktHdr#pheader.packet_code]),
-    io:format("Exercise Indication: ~p~n", [PktHdr#pheader.exercise_ind]),
-    io:format("Platform ID: ~p~n", [PktHdr#pheader.platform_id]),
-    io:format("Mission ID: ~p~n", [PktHdr#pheader.mission_id]),
-    io:format("Job ID: ~p~n", [PktHdr#pheader.job_id]).
+    io:format("Version: ~p~n", [get_version_id(PktHdr)]),
+    io:format("Packet size: ~p~n", [get_packet_size(PktHdr)]), 
+    io:format("Nationality: ~p~n", [get_nationality(PktHdr)]),
+    io:format("Classification: ~p~n", [get_classification(PktHdr)]),
+    io:format("Classification System: ~p~n", [get_class_system(PktHdr)]),
+    io:format("Packet code: ~p~n", [get_packet_code(PktHdr)]),
+    io:format("Exercise Indication: ~p~n", [get_exercise_indicator(PktHdr)]),
+    io:format("Platform ID: ~p~n", [get_platform_id(PktHdr)]),
+    io:format("Mission ID: ~p~n", [get_mission_id(PktHdr)]),
+    io:format("Job ID: ~p~n", [get_job_id(PktHdr)]).
 
 %% Get the version ID from a packet header
 get_version_id(#pheader{version = V}) -> V.
