@@ -20,12 +20,16 @@
 
 %% Define a test generator for the unsigned integer types.
 pheader_test_() ->
-    [version_checks(), class_checks(), size_checks(), class_sys_checks(), 
-     sec_code_checks()].
+    [version_checks(), size_checks(), nationality_checks(), class_checks(), 
+     class_sys_checks(), sec_code_checks()].
 
 version_checks() ->
     Hdr1 = s4607:decode_packet_header(sample_header1()),
     [?_assertEqual({1,2}, s4607:get_version_id(Hdr1))].
+
+nationality_checks() ->
+    Hdr1 = s4607:decode_packet_header(sample_header1()),
+    [?_assertEqual("UK", s4607:get_nationality(Hdr1))].
 
 size_checks() ->
     Hdr1 = s4607:decode_packet_header(sample_header1()),

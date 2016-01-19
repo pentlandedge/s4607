@@ -26,6 +26,7 @@
     display_packet_header/1,
     get_version_id/1,
     get_packet_size/1,
+    get_nationality/1,
     get_classification/1,
     get_class_system/1,
     get_packet_code/1,
@@ -463,6 +464,9 @@ get_version_id(#pheader{version = V}) -> V.
 
 %% Get the packet size from the header. 
 get_packet_size(#pheader{packet_size = S}) -> S.
+
+%% Get the nationality from a header structure.
+get_nationality(#pheader{nationality = N}) -> N.
 
 %% Get the classification level
 get_classification(#pheader{classification = C}) -> C.
