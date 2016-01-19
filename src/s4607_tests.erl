@@ -18,7 +18,7 @@
 
 -include_lib("eunit/include/eunit.hrl").
 
-%% Define a test generator for the unsigned integer types.
+%% Define a test generator for the decoding of the packet header fields. 
 pheader_test_() ->
     [version_checks(), size_checks(), nationality_checks(), class_checks(), 
      class_sys_checks(), sec_code_checks(), exercise_ind_checks(), 
