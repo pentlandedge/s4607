@@ -100,5 +100,20 @@ sample_seg_header2() -> <<2,0,0,80,8>>.
 sample_seg_header3() -> <<3,1,0,0,0>>.
 seg_header_res_4()   -> <<4,1,0,0,0>>.
 seg_header_job_def() -> <<5,1,0,0,0>>.
+seg_header_free_text() -> <<6,1,0,0,1>>.
+seg_header_low_refl() -> <<7,1,1,1,1>>.
+seg_header_group() -> <<8,2,1,1,1>>.
+seg_header_att_tar() -> <<9,2,1,1,1>>.
+seg_header_test() -> <<10,2,1,1,1>>.
+seg_header_sys_spec() -> <<11,2,1,1,1>>.
+seg_header_proc_his() -> <<12,2,1,1,1>>.
+seg_header_plat_loc() -> <<13,2,1,1,1>>.
+seg_header_res_14() -> <<13,2,1,1,1>>.
+seg_header_res_100() -> <<100,2,1,1,1>>.
 seg_header_job_req() -> <<101,1,0,0,0>>.
+seg_header_job_ack() -> <<102,1,0,0,0>>.
+seg_header_res_fut() -> <<103,1,0,0,0>>.
+seg_header_res_ext() -> <<128,1,0,0,0>>.
+seg_header_res_ext2() -> <<255,1,0,0,0>>.
+
 
