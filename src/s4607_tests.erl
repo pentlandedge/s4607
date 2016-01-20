@@ -79,13 +79,41 @@ seg_type_checks() ->
     SH3 = s4607:decode_segment_header(sample_seg_header3()),
     SHR4 = s4607:decode_segment_header(seg_header_res_4()),
     SHJD = s4607:decode_segment_header(seg_header_job_def()),
+    SHFT = s4607:decode_segment_header(seg_header_free_text()),
+    SHLR = s4607:decode_segment_header(seg_header_low_refl()),
+    SHGP = s4607:decode_segment_header(seg_header_group()),
+    SHAT = s4607:decode_segment_header(seg_header_att_tar()),
+    SHTS = s4607:decode_segment_header(seg_header_test()),
+    SHSS = s4607:decode_segment_header(seg_header_sys_spec()),
+    SHPH = s4607:decode_segment_header(seg_header_proc_his()),
+    SHPL = s4607:decode_segment_header(seg_header_plat_loc()),
+    SHR14 = s4607:decode_segment_header(seg_header_res_14()),
+    SHR100 = s4607:decode_segment_header(seg_header_res_100()),
     SHJR = s4607:decode_segment_header(seg_header_job_req()),
+    SHJA = s4607:decode_segment_header(seg_header_job_ack()),
+    SHRF = s4607:decode_segment_header(seg_header_res_fut()),
+    SHRE = s4607:decode_segment_header(seg_header_res_ext()),
+    SHRE2 = s4607:decode_segment_header(seg_header_res_ext2()),
     [?_assertEqual(mission, s4607:get_segment_type(SH1)),
      ?_assertEqual(dwell, s4607:get_segment_type(SH2)),
      ?_assertEqual(hrr, s4607:get_segment_type(SH3)),
      ?_assertEqual(reserved, s4607:get_segment_type(SHR4)),
      ?_assertEqual(job_definition, s4607:get_segment_type(SHJD)),
-     ?_assertEqual(job_request, s4607:get_segment_type(SHJR))].
+     ?_assertEqual(free_text, s4607:get_segment_type(SHFT)),
+     ?_assertEqual(low_reflectivity_index, s4607:get_segment_type(SHLR)),
+     ?_assertEqual(group, s4607:get_segment_type(SHGP)),
+     ?_assertEqual(attached_target, s4607:get_segment_type(SHAT)),
+     ?_assertEqual(test_and_status, s4607:get_segment_type(SHTS)),
+     ?_assertEqual(system_specific, s4607:get_segment_type(SHSS)),
+     ?_assertEqual(processing_history, s4607:get_segment_type(SHPH)),
+     ?_assertEqual(platform_location, s4607:get_segment_type(SHPL)),
+     ?_assertEqual(reserved, s4607:get_segment_type(SHR14)),
+     ?_assertEqual(reserved, s4607:get_segment_type(SHR100)),
+     ?_assertEqual(job_request, s4607:get_segment_type(SHJR)),
+     ?_assertEqual(job_acknowledge, s4607:get_segment_type(SHJA)),
+     ?_assertEqual(reserved, s4607:get_segment_type(SHRF)),
+     ?_assertEqual(reserved, s4607:get_segment_type(SHRE)),
+     ?_assertEqual(reserved, s4607:get_segment_type(SHRE2))].
 
 %% Function to check the decoding of the segment header size field.
 seg_size_checks() ->
@@ -108,7 +136,7 @@ seg_header_test() -> <<10,2,1,1,1>>.
 seg_header_sys_spec() -> <<11,2,1,1,1>>.
 seg_header_proc_his() -> <<12,2,1,1,1>>.
 seg_header_plat_loc() -> <<13,2,1,1,1>>.
-seg_header_res_14() -> <<13,2,1,1,1>>.
+seg_header_res_14() -> <<14,2,1,1,1>>.
 seg_header_res_100() -> <<100,2,1,1,1>>.
 seg_header_job_req() -> <<101,1,0,0,0>>.
 seg_header_job_ack() -> <<102,1,0,0,0>>.
