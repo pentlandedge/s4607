@@ -118,11 +118,15 @@ seg_type_checks() ->
 %% Function to check the decoding of the segment header size field.
 seg_size_checks() ->
     SH1 = s4607:decode_segment_header(sample_seg_header1()),
+    SH2 = s4607:decode_segment_header(sample_seg_header2()),
     SH3 = s4607:decode_segment_header(sample_seg_header3()),
     SHFT = s4607:decode_segment_header(seg_header_free_text()),
+    SHSS = s4607:decode_segment_header(seg_header_sys_spec()),
     [?_assertEqual(8, s4607:get_segment_size(SH1)),
+     ?_assertEqual(20488, s4607:get_segment_size(SH2)),
      ?_assertEqual(16777216, s4607:get_segment_size(SH3)),
-     ?_assertEqual(16777217, s4607:get_segment_size(SHFT))].
+     ?_assertEqual(16777217, s4607:get_segment_size(SHFT)),
+     ?_assertEqual(33620225, s4607:get_segment_size(SHSS))].
 
 %% Test segment header data.
 sample_seg_header1() -> <<1,0,0,0,8>>.
