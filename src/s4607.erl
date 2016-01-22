@@ -520,8 +520,8 @@ decode_segment_type(102) -> job_acknowledge;
 decode_segment_type(_) -> reserved.
 
 display_segment_header(SegHdr) ->
-    io:format("Segment type: ~p~n", [SegHdr#seg_header.type]),
-    io:format("Segment size: ~p~n", [SegHdr#seg_header.size]).
+    io:format("Segment type: ~p~n", [get_segment_type(SegHdr)]),
+    io:format("Segment size: ~p~n", [get_segment_size(SegHdr)]).
 
 %% Function to get the segment type from the seg header structure.
 get_segment_type(#seg_header{type = T}) -> T.
