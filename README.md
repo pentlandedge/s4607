@@ -20,6 +20,8 @@ From the Erlang prompt, open a file in Stanag 4607 format and display its conten
 1> Bin = s4607:read_file("/path/to/file").
 2> s4607:display_packets(Bin).
 ```
+In the not too distant future, it will be possible to read the entire list of packets into a single, hierarchical structure suitable for data processing applications.
+
 # Running the regression tests
 The project uses Erlang's eunit test system. From the Erlang shell, to run all of the unit tests:
 ```
