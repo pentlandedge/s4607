@@ -4,26 +4,22 @@ Stanag 4607 library written in Erlang. Stanag 4607 is a NATO standard for sharin
 This software is still under development, but can now decode the packet header, dwell, mission and job definition segments. Further improvements including better test coverage will follow in due course. 
 
 The software has been released under an Apache free software license.
-
 # Building
 The software can be built by moving to the src directory and running make:
 ```
 # cd src
 # make
 ```
-
 # Decoding a Stanag 4607 file
 From the root directory, the Erlang shell can be started as follows:
 ```
 # erl -pa ebin
 ```
-
 From the Erlang prompt, open a file in Stanag 4607 format and display its contents in the following manner:
 ```
 1> Bin = s4607:read_file("/path/to/file").
 2> s4607:display_packets(Bin).
 ```
-
 # Running the regression tests
 The project uses Erlang's eunit test system. From the Erlang shell, to run all of the unit tests:
 ```
