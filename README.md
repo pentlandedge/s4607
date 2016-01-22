@@ -7,17 +7,25 @@ The software has been released under an Apache free software license.
 
 # Building
 The software can be built by moving to the src directory and running make:
-cd src
-make
+```
+# cd src
+# make
+```
 
 # Decoding a Stanag 4607 file
 From the root directory, the Erlang shell can be started as follows:
-erl -pa ebin
+```
+# erl -pa ebin
+```
 
 From the Erlang prompt, open a file in Stanag 4607 format and display its contents in the following manner:
-Bin = s4607:read_file("/path/to/file").
-s4607:display_packets(Bin).
+```
+1> Bin = s4607:read_file("/path/to/file").
+2> s4607:display_packets(Bin).
+```
 
 # Running the regression tests
 The project uses Erlang's eunit test system. From the Erlang shell, to run all of the unit tests:
-eunit:test(all_tests).
+```
+3> eunit:test(all_tests).
+```
