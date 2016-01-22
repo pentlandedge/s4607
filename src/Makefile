@@ -17,6 +17,7 @@
 
 # code to compile
 SOURCE = \
+    all_tests.erl \
 	s4607.erl \
     s4607_tests.erl \
 	stanag_types.erl \
