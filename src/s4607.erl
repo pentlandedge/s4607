@@ -34,10 +34,6 @@
     get_platform_id/1,
     get_mission_id/1,
     get_job_id/1,
-    decode_segment_header/1,
-    display_segment_header/1,
-    get_segment_type/1,
-    get_segment_size/1,
     decode_mission_segment/1,
     display_mission_segment/1,
     mission_test/0,
@@ -64,8 +60,6 @@
     job_id}).
 
 -record(segment, {header, data}).
-
--record(seg_header, {type, size}).
 
 -record(mission_segment, {
     mission_plan, 
@@ -252,16 +246,16 @@ decode_segments(<<>>, Acc) ->
 decode_segments(Bin, Acc) ->
     % Get the segment header.
     {ok, SegHdr, SRem} = extract_segment_header(Bin),
-    SH = decode_segment_header(SegHdr),
+    SH = seg_header:decode(SegHdr),
 
     % The size in the header includes the header itself.
-    PayloadSize = SH#seg_header.size - byte_size(SegHdr),
+    PayloadSize = seg_header:get_segment_size(SH) - byte_size(SegHdr),
 
     % Get the packet data payload.
     {ok, SegData, SRem2} = extract_segment_data(SRem, PayloadSize),
 
     % Switch on the segment type
-    case SH#seg_header.type of
+    case seg_header:get_segment_type(SH) of
         mission -> 
             SegRec = {ok, SH, decode_mission_segment(SegData)};
         dwell   ->
@@ -306,18 +300,18 @@ display_segments(<<>>) ->
 display_segments(Bin) ->
     % Get the segment header.
     {ok, SegHdr, SRem} = extract_segment_header(Bin),
-    SH = decode_segment_header(SegHdr),
-    display_segment_header(SH),
+    SH = seg_header:decode(SegHdr),
+    seg_header:display(SH),
     io:format("~n"),
 
     % The size in the header includes the header itself.
-    PayloadSize = SH#seg_header.size - byte_size(SegHdr),
+    PayloadSize = seg_header:get_segment_size(SH) - byte_size(SegHdr),
 
     % Get the packet data payload.
     {ok, SegData, SRem2} = extract_segment_data(SRem, PayloadSize),
 
     % Switch on the segment type
-    case SH#seg_header.type of
+    case seg_header:get_segment_type(SH) of
         mission -> 
             MS = decode_mission_segment(SegData),
             display_mission_segment(MS);
@@ -337,10 +331,10 @@ display_segments(Bin) ->
 %% Function to display a segment. Segment should have been decoded prior to 
 %% calling this function.
 display_segment(SegHdr, SegRec) ->
-    display_segment_header(SegHdr),
+    seg_header:display(SegHdr),
     
     % Switch on the segment type and display the segment data.
-    case SegHdr#seg_header.type of
+    case seg_header:get_segment_type(SegHdr) of
         mission -> 
             display_mission_segment(SegRec);
         dwell   ->
@@ -494,40 +488,6 @@ get_mission_id(#pheader{mission_id = X}) -> X.
 
 %% Get the job ID from the header structure.
 get_job_id(#pheader{job_id = X}) -> X.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Segment header decoding functions.
-
-decode_segment_header(<<S1, SegSize:32/integer-unsigned-big>>) ->
-    SegType = decode_segment_type(S1),
-    #seg_header{type = SegType, size = SegSize}.
-
-decode_segment_type(1) -> mission;
-decode_segment_type(2) -> dwell;
-decode_segment_type(3) -> hrr;
-decode_segment_type(4) -> reserved;
-decode_segment_type(5) -> job_definition;
-decode_segment_type(6) -> free_text;
-decode_segment_type(7) -> low_reflectivity_index;
-decode_segment_type(8) -> group;
-decode_segment_type(9) -> attached_target;
-decode_segment_type(10) -> test_and_status;
-decode_segment_type(11) -> system_specific;
-decode_segment_type(12) -> processing_history;
-decode_segment_type(13) -> platform_location;
-decode_segment_type(101) -> job_request;
-decode_segment_type(102) -> job_acknowledge;
-decode_segment_type(_) -> reserved.
-
-display_segment_header(SegHdr) ->
-    io:format("Segment type: ~p~n", [get_segment_type(SegHdr)]),
-    io:format("Segment size: ~p~n", [get_segment_size(SegHdr)]).
-
-%% Function to get the segment type from the seg header structure.
-get_segment_type(#seg_header{type = T}) -> T.
-
-%% Function to get the segment size from the seg header structure.
-get_segment_size(#seg_header{size = S}) -> S.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Mission segment decoding functions.
