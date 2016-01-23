@@ -19,7 +19,14 @@
     decode/1, 
     display/1, 
     decode_platform_type/1,
-    mission_test/0]).
+    mission_test/0,
+    get_mission_plan/1,
+    get_flight_plan/1,
+    get_platform_type/1,
+    get_platform_config/1,
+    get_year/1,
+    get_month/1,
+    get_day/1]).
 
 -record(mission_segment, {
     mission_plan, 
@@ -99,6 +106,27 @@ display(MSeg) ->
     io:format("Year: ~p~n", [MSeg#mission_segment.year]),
     io:format("Month: ~p~n", [MSeg#mission_segment.month]),
     io:format("Day: ~p~n", [MSeg#mission_segment.day]).
+
+%% Accessor function for the mission plan field.
+get_mission_plan(#mission_segment{mission_plan = M}) -> M.
+
+%% Accessor function for the flight plan field.
+get_flight_plan(#mission_segment{flight_plan = F}) -> F.
+
+%% Accessor function for the platform type field.
+get_platform_type(#mission_segment{platform_type = T}) -> T.
+
+%% Accessor function for the platform config field.
+get_platform_config(#mission_segment{platform_config = C}) -> C.
+
+%% Accessor function for the year field.
+get_year(#mission_segment{year = Y}) -> Y.
+
+%% Accessor function for the month field.
+get_month(#mission_segment{month = M}) -> M.
+
+%% Accessor function for the day field.
+get_day(#mission_segment{day = D}) -> D.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Utility functions
