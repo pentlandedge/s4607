@@ -5,7 +5,7 @@ This software is still under development, but can now decode the packet header, 
 
 The software has been released under an Apache free software license.
 # Building
-The software can be built by moving to the src directory and running make:
+It is necessary to have Erlang installed, and the compiler erlc available on the path. The software can be built (on a Linux platform) by moving to the src directory and running make:
 ```
 # cd src
 # make
