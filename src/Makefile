@@ -18,6 +18,7 @@
 # code to compile
 SOURCE = \
     all_tests.erl \
+    mission.erl \
 	s4607.erl \
     s4607_tests.erl \
     seg_header.erl \
