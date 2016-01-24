@@ -43,10 +43,10 @@
 decode(<<M1:12/binary, M2:12/binary, M3, M4:10/binary, 
     Year:16/integer-unsigned-big, Month, Day>>) ->
 
-    Mission = trim_trailing_spaces(binary_to_list(M1)),
-    Flight = trim_trailing_spaces(binary_to_list(M2)),
+    Mission = sutils:trim_trailing_spaces(binary_to_list(M1)),
+    Flight = sutils:trim_trailing_spaces(binary_to_list(M2)),
     Type = decode_platform_type(M3),
-    Config = trim_trailing_spaces(binary_to_list(M4)),
+    Config = sutils:trim_trailing_spaces(binary_to_list(M4)),
 
     #mission_segment{mission_plan = Mission, flight_plan = Flight, 
         platform_type = Type, platform_config = Config, year = Year,
@@ -127,13 +127,4 @@ get_month(#mission_segment{month = M}) -> M.
 
 %% Accessor function for the day field.
 get_day(#mission_segment{day = D}) -> D.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Utility functions
-
-trim_trailing_spaces(Str) ->
-    Rev = lists:reverse(Str),
-    F = fun(C) -> C =:= $\  end,
-    RStrip = lists:dropwhile(F, Rev),
-    lists:reverse(RStrip).
 

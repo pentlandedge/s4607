@@ -119,7 +119,7 @@ decode_sensor_id_type(255) -> no_statement;
 decode_sensor_id_type(_) -> available_future_use.
 
 decode_sensor_id_model(Bin) ->
-    trim_trailing_spaces(binary_to_list(Bin)).
+    sutils:trim_trailing_spaces(binary_to_list(Bin)).
 
 %% Function to decode the bits in the target filtering flag.
 decode_target_filtering_flag(<<0>>) -> 
@@ -266,13 +266,4 @@ display(JDS) ->
     io:format("Nom. false alarm density.: ~p~n", [JDS#job_def.ns_val_false_alarm_density]),
     io:format("Terrain elevation model: ~p~n", [JDS#job_def.terr_elev_model]),
     io:format("Geoid model: ~p~n", [JDS#job_def.geoid_model]).
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Utility functions
-
-trim_trailing_spaces(Str) ->
-    Rev = lists:reverse(Str),
-    F = fun(C) -> C =:= $\  end,
-    RStrip = lists:dropwhile(F, Rev),
-    lists:reverse(RStrip).
 
