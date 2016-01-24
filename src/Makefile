@@ -20,11 +20,12 @@ SOURCE = \
     all_tests.erl \
     job_def.erl \
     mission.erl \
-	s4607.erl \
+    s4607.erl \
     s4607_tests.erl \
     seg_header.erl \
-	stanag_types.erl \
-    stanag_types_tests.erl
+    stanag_types.erl \
+    stanag_types_tests.erl \
+    sutils.erl
 
 # Where include files are stored ".hrl"
 EFLAGS = -I../include 

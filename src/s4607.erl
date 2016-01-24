@@ -36,8 +36,7 @@
     get_job_id/1,
     decode_dwell_segment/1,
     display_dwell_segment/1,
-    display_existence_mask/1,
-    trim_trailing_spaces/1]).
+    display_existence_mask/1]).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Record definitions.
@@ -311,7 +310,7 @@ extract_packet_header(<<Hdr:32/binary,Rest/binary>>) ->
 %% Extracts the data payload from a packet from the supplied binary
 %% (which should have had the header removed already).
 extract_packet_data(Bin, Len) ->
-    extract_data(Bin, Len).
+    sutils:extract_data(Bin, Len).
 
 %% Extracts the first binary portion associated with a segment header.
 extract_segment_header(<<Hdr:5/binary,Rest/binary>>) ->
@@ -320,13 +319,7 @@ extract_segment_header(<<Hdr:5/binary,Rest/binary>>) ->
 %% Extracts the segment payload from the supplied binary
 %% (which should have had the header removed already).
 extract_segment_data(Bin, Len) ->
-    extract_data(Bin, Len).
-
-%% Generic function to take the first part of a binary and return the rest.
-extract_data(Bin, Len) ->
-    Data = binary:part(Bin, 0, Len),
-    Rem = binary:part(Bin, Len, (byte_size(Bin) - Len)),
-    {ok, Data, Rem}.
+    sutils:extract_data(Bin, Len).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Packet header decoding functions.
@@ -403,7 +396,7 @@ decode_exercise_indicator(130) -> {ok, exercise_synthesized};
 decode_exercise_indicator(_) -> {error, reserved}.
 
 decode_platform_id(<<X:10/binary>>) ->
-    trim_trailing_spaces(binary_to_list(X)).
+    sutils:trim_trailing_spaces(binary_to_list(X)).
 
 display_packet_header(PktHdr) ->
     io:format("Version: ~p~n", [get_version_id(PktHdr)]),
@@ -459,154 +452,154 @@ decode_dwell_segment(<<EM:8/binary,RI:16/integer-unsigned-big,
     % depends on the existence mask.
     EMrec = decode_existence_mask(EM),
 
-    {LatScaleFactor, Bin1} = conditional_extract(
+    {LatScaleFactor, Bin1} = sutils:conditional_extract(
         Rest, 
         EMrec#exist_mask.lat_scale_factor, 
         4, 
         fun stanag_types:sa32_to_float/1, 
         1.0),
 
-    {LonScaleFactor, Bin2} = conditional_extract(
+    {LonScaleFactor, Bin2} = sutils:conditional_extract(
         Bin1, 
         EMrec#exist_mask.lon_scale_factor, 
         4, 
         fun stanag_types:ba32_to_float/1, 
         1.0),
     
-    {SpuAlongTrack, Bin3} = conditional_extract(
+    {SpuAlongTrack, Bin3} = sutils:conditional_extract(
         Bin2, 
         EMrec#exist_mask.spu_cross_track, 
         4, 
         fun stanag_types:i32_to_integer/1, 
         0),
 
-    {SpuCrossTrack, Bin4} = conditional_extract(
+    {SpuCrossTrack, Bin4} = sutils:conditional_extract(
         Bin3, 
         EMrec#exist_mask.spu_cross_track, 
         4, 
         fun stanag_types:i32_to_integer/1, 
         0),
 
-    {SpuAlt, Bin5} = conditional_extract(
+    {SpuAlt, Bin5} = sutils:conditional_extract(
         Bin4, 
         EMrec#exist_mask.spu_alt, 
         2, 
         fun stanag_types:i16_to_integer/1, 
         0),
 
-    {SensorTrack, Bin6} = conditional_extract(
+    {SensorTrack, Bin6} = sutils:conditional_extract(
         Bin5, 
         EMrec#exist_mask.sensor_track, 
         2, 
         fun stanag_types:ba16_to_float/1, 
         0.0),
 
-    {SensorSpeed, Bin7} = conditional_extract(
+    {SensorSpeed, Bin7} = sutils:conditional_extract(
         Bin6, 
         EMrec#exist_mask.sensor_speed, 
         4, 
         fun stanag_types:i32_to_integer/1, 
         0),
 
-    {SensorVertVel, Bin8} = conditional_extract(
+    {SensorVertVel, Bin8} = sutils:conditional_extract(
         Bin7, 
         EMrec#exist_mask.sensor_vert_vel, 
         1, 
         fun stanag_types:s8_to_integer/1, 
         0),
     
-    {SensorTrackUnc, Bin9} = conditional_extract(
+    {SensorTrackUnc, Bin9} = sutils:conditional_extract(
         Bin8, 
         EMrec#exist_mask.sensor_track_unc, 
         1, 
         fun stanag_types:i8_to_integer/1, 
         0),
 
-    {SensorSpeedUnc, Bin10} = conditional_extract(
+    {SensorSpeedUnc, Bin10} = sutils:conditional_extract(
         Bin9, 
         EMrec#exist_mask.sensor_speed_unc, 
         2, 
         fun stanag_types:i16_to_integer/1, 
         0),
 
-    {SensorVertVelUnc, Bin11} = conditional_extract(
+    {SensorVertVelUnc, Bin11} = sutils:conditional_extract(
         Bin10, 
         EMrec#exist_mask.sensor_vert_vel_unc, 
         2, 
         fun stanag_types:i16_to_integer/1, 
         0),
 
-    {PlatHeading, Bin12} = conditional_extract(
+    {PlatHeading, Bin12} = sutils:conditional_extract(
         Bin11, 
         EMrec#exist_mask.platform_heading, 
         2, 
         fun stanag_types:ba16_to_float/1, 
         0.0),
 
-    {PlatPitch, Bin13} = conditional_extract(
+    {PlatPitch, Bin13} = sutils:conditional_extract(
         Bin12, 
         EMrec#exist_mask.platform_pitch, 
         2, 
         fun stanag_types:sa16_to_float/1, 
         0.0),
 
-    {PlatRoll, Bin14} = conditional_extract(
+    {PlatRoll, Bin14} = sutils:conditional_extract(
         Bin13, 
         EMrec#exist_mask.platform_roll, 
         2, 
         fun stanag_types:sa16_to_float/1, 
         0.0),
 
-    {DwellCenterLat, Bin15} = conditional_extract(
+    {DwellCenterLat, Bin15} = sutils:conditional_extract(
         Bin14, 
         EMrec#exist_mask.dwell_center_lat, 
         4, 
         fun stanag_types:sa32_to_float/1, 
         0.0),
 
-    {DwellCenterLon, Bin16} = conditional_extract(
+    {DwellCenterLon, Bin16} = sutils:conditional_extract(
         Bin15, 
         EMrec#exist_mask.dwell_center_lon, 
         4, 
         fun stanag_types:ba32_to_float/1, 
         0.0),
 
-    {DwellRangeHalfExtent, Bin17} = conditional_extract(
+    {DwellRangeHalfExtent, Bin17} = sutils:conditional_extract(
         Bin16, 
         EMrec#exist_mask.dwell_range_half_extent, 
         2, 
         fun stanag_types:b16_to_float/1, 
         0.0),
 
-    {DwellAngleHalfExtent, Bin18} = conditional_extract(
+    {DwellAngleHalfExtent, Bin18} = sutils:conditional_extract(
         Bin17, 
         EMrec#exist_mask.dwell_angle_half_extent, 
         2, 
         fun stanag_types:ba16_to_float/1, 
         0.0),
 
-    {SensorHeading, Bin19} = conditional_extract(
+    {SensorHeading, Bin19} = sutils:conditional_extract(
         Bin18, 
         EMrec#exist_mask.sensor_heading, 
         2, 
         fun stanag_types:ba16_to_float/1, 
         0.0),
 
-    {SensorPitch, Bin20} = conditional_extract(
+    {SensorPitch, Bin20} = sutils:conditional_extract(
         Bin19, 
         EMrec#exist_mask.sensor_pitch, 
         2, 
         fun stanag_types:sa16_to_float/1, 
         0.0),
 
-    {SensorRoll, Bin21} = conditional_extract(
+    {SensorRoll, Bin21} = sutils:conditional_extract(
         Bin20, 
         EMrec#exist_mask.sensor_roll, 
         2, 
         fun stanag_types:sa16_to_float/1, 
         0.0),
 
-    {MDV, Bin22} = conditional_extract(
+    {MDV, Bin22} = sutils:conditional_extract(
         Bin21, 
         EMrec#exist_mask.mdv, 
         1, 
@@ -777,126 +770,126 @@ decode_target_report_list(Bin, EM, TgtCount, AccTgts) when TgtCount > 0 ->
 
 decode_target_report(TrBin, EM) ->
     
-    {MRI, Rem1} = conditional_extract(
+    {MRI, Rem1} = sutils:conditional_extract(
         TrBin, 
         EM#exist_mask.mti_report_index, 
         2, 
         fun stanag_types:i16_to_integer/1, 
         0),
 
-    {TgtHiResLat, Rem2} = conditional_extract(
+    {TgtHiResLat, Rem2} = sutils:conditional_extract(
         Rem1, 
         EM#exist_mask.target_hr_lat, 
         4, 
         fun stanag_types:sa32_to_float/1, 
         0.0),
 
-    {TgtHiResLon, Rem3} = conditional_extract(
+    {TgtHiResLon, Rem3} = sutils:conditional_extract(
         Rem2, 
         EM#exist_mask.target_hr_lon, 
         4, 
         fun stanag_types:ba32_to_float/1, 
         0.0),
 
-    {TgtDeltaLat, Rem4} = conditional_extract(
+    {TgtDeltaLat, Rem4} = sutils:conditional_extract(
         Rem3, 
         EM#exist_mask.target_delta_lat, 
         2, 
         fun stanag_types:s16_to_integer/1, 
         0),
 
-    {TgtDeltaLon, Rem5} = conditional_extract(
+    {TgtDeltaLon, Rem5} = sutils:conditional_extract(
         Rem4, 
         EM#exist_mask.target_delta_lon, 
         2, 
         fun stanag_types:s16_to_integer/1, 
         0),
 
-    {GeodHeight, Rem6} = conditional_extract(
+    {GeodHeight, Rem6} = sutils:conditional_extract(
         Rem5, 
         EM#exist_mask.geodetic_height, 
         2, 
         fun stanag_types:s16_to_integer/1, 
         0),
 
-    {TgtVelLos, Rem7} = conditional_extract(
+    {TgtVelLos, Rem7} = sutils:conditional_extract(
         Rem6, 
         EM#exist_mask.target_vel_los, 
         2, 
         fun stanag_types:s16_to_integer/1, 
         0),
 
-    {TgtWrapVel, Rem8} = conditional_extract(
+    {TgtWrapVel, Rem8} = sutils:conditional_extract(
         Rem7, 
         EM#exist_mask.target_wrap_velocity, 
         2, 
         fun stanag_types:i16_to_integer/1, 
         0),
 
-    {TgtSnr, Rem9} = conditional_extract(
+    {TgtSnr, Rem9} = sutils:conditional_extract(
         Rem8, 
         EM#exist_mask.target_snr, 
         1, 
         fun stanag_types:s8_to_integer/1, 
         0),
 
-    {TgtClassification, Rem10} = conditional_extract(
+    {TgtClassification, Rem10} = sutils:conditional_extract(
         Rem9, 
         EM#exist_mask.target_classification, 
         1, 
         fun decode_target_classification/1, 
         no_information_live_target),
 
-    {TgtClassProb, Rem11} = conditional_extract(
+    {TgtClassProb, Rem11} = sutils:conditional_extract(
         Rem10, 
         EM#exist_mask.target_class_prob, 
         1, 
         fun stanag_types:i8_to_integer/1, 
         0),
 
-    {TgtSlantRgeUnc, Rem12} = conditional_extract(
+    {TgtSlantRgeUnc, Rem12} = sutils:conditional_extract(
         Rem11, 
         EM#exist_mask.target_slant_range_unc, 
         2, 
         fun stanag_types:i16_to_integer/1, 
         0),
 
-    {TgtCrossRgeUnc, Rem13} = conditional_extract(
+    {TgtCrossRgeUnc, Rem13} = sutils:conditional_extract(
         Rem12, 
         EM#exist_mask.target_cross_range_unc, 
         2, 
         fun stanag_types:i16_to_integer/1, 
         0),
 
-    {TgtHeightUnc, Rem14} = conditional_extract(
+    {TgtHeightUnc, Rem14} = sutils:conditional_extract(
         Rem13, 
         EM#exist_mask.target_height_unc, 
         1, 
         fun stanag_types:i8_to_integer/1, 
         0),
 
-    {TgtRadVelUnc, Rem15} = conditional_extract(
+    {TgtRadVelUnc, Rem15} = sutils:conditional_extract(
         Rem14, 
         EM#exist_mask.target_rad_vel_unc, 
         2, 
         fun stanag_types:i16_to_integer/1, 
         0),
 
-    {TruthTagApp, Rem16} = conditional_extract(
+    {TruthTagApp, Rem16} = sutils:conditional_extract(
         Rem15, 
         EM#exist_mask.truth_tag_app, 
         1, 
         fun stanag_types:i8_to_integer/1, 
         0),
 
-    {TruthTagEnt, Rem17} = conditional_extract(
+    {TruthTagEnt, Rem17} = sutils:conditional_extract(
         Rem16, 
         EM#exist_mask.truth_tag_entity, 
         4, 
         fun stanag_types:i32_to_integer/1, 
         0),
 
-    {TgtRcs, Rem18} = conditional_extract(
+    {TgtRcs, Rem18} = sutils:conditional_extract(
         Rem17, 
         EM#exist_mask.target_rcs, 
         1, 
@@ -974,78 +967,49 @@ display_dwell_segment(DS) ->
     io:format("Sensor Lat.: ~p~n", [DS#dwell_segment.sensor_lat]),
     io:format("Sensor Lon.: ~p~n", [DS#dwell_segment.sensor_lon]),
     io:format("Sensor alt. (cm): ~p~n", [DS#dwell_segment.sensor_alt]),
-    conditional_display("Lat. scale factor: ~p~n", [DS#dwell_segment.lat_scale_factor], EM#exist_mask.lat_scale_factor),
-    conditional_display("Lon. scale factor: ~p~n", [DS#dwell_segment.lon_scale_factor], EM#exist_mask.lon_scale_factor),
-    conditional_display("SPU along track: ~p~n", [DS#dwell_segment.spu_along_track], EM#exist_mask.spu_along_track),
-    conditional_display("SPU cross track: ~p~n", [DS#dwell_segment.spu_cross_track], EM#exist_mask.spu_cross_track),
-    conditional_display("SPU alt: ~p~n", [DS#dwell_segment.spu_alt], EM#exist_mask.spu_alt),
-    conditional_display("Sensor track: ~p~n", [DS#dwell_segment.sensor_track], EM#exist_mask.sensor_track),
-    conditional_display("Sensor speed: ~p~n", [DS#dwell_segment.sensor_speed], EM#exist_mask.sensor_speed),
-    conditional_display("Sensor vert. vel.: ~p~n", [DS#dwell_segment.sensor_vert_vel], EM#exist_mask.sensor_vert_vel),
-    conditional_display("Sensor track unc.: ~p~n", [DS#dwell_segment.sensor_track_unc], EM#exist_mask.sensor_track_unc),
-    conditional_display("Sensor speed unc.: ~p~n", [DS#dwell_segment.sensor_speed_unc], EM#exist_mask.sensor_speed_unc),
-    conditional_display("Sensor vert. vel. unc.: ~p~n", [DS#dwell_segment.sensor_vert_vel_unc], EM#exist_mask.sensor_vert_vel_unc),
-    conditional_display("Platform heading: ~p~n", [DS#dwell_segment.platform_heading], EM#exist_mask.platform_heading),
-    conditional_display("Platform pitch: ~p~n", [DS#dwell_segment.platform_pitch], EM#exist_mask.platform_pitch),
-    conditional_display("Platform roll: ~p~n", [DS#dwell_segment.platform_roll], EM#exist_mask.platform_roll),
-    conditional_display("Dwell centre Lat.: ~p~n", [DS#dwell_segment.dwell_center_lat], EM#exist_mask.dwell_center_lat),
-    conditional_display("Dwell centre Lon.: ~p~n", [DS#dwell_segment.dwell_center_lon], EM#exist_mask.dwell_center_lon),
-    conditional_display("Dwell range half extent: ~p~n", [DS#dwell_segment.dwell_range_half_extent], EM#exist_mask.dwell_range_half_extent),
-    conditional_display("Dwell angle half extent: ~p~n", [DS#dwell_segment.dwell_angle_half_extent], EM#exist_mask.dwell_angle_half_extent),
-    conditional_display("Sensor heading: ~p~n", [DS#dwell_segment.sensor_heading], EM#exist_mask.sensor_heading),
-    conditional_display("Sensor pitch: ~p~n", [DS#dwell_segment.sensor_pitch], EM#exist_mask.sensor_pitch),
-    conditional_display("Sensor roll: ~p~n", [DS#dwell_segment.sensor_roll], EM#exist_mask.sensor_roll),
-    conditional_display("MDV: ~p~n", [DS#dwell_segment.mdv], EM#exist_mask.mdv),
+    sutils:conditional_display("Lat. scale factor: ~p~n", [DS#dwell_segment.lat_scale_factor], EM#exist_mask.lat_scale_factor),
+    sutils:conditional_display("Lon. scale factor: ~p~n", [DS#dwell_segment.lon_scale_factor], EM#exist_mask.lon_scale_factor),
+    sutils:conditional_display("SPU along track: ~p~n", [DS#dwell_segment.spu_along_track], EM#exist_mask.spu_along_track),
+    sutils:conditional_display("SPU cross track: ~p~n", [DS#dwell_segment.spu_cross_track], EM#exist_mask.spu_cross_track),
+    sutils:conditional_display("SPU alt: ~p~n", [DS#dwell_segment.spu_alt], EM#exist_mask.spu_alt),
+    sutils:conditional_display("Sensor track: ~p~n", [DS#dwell_segment.sensor_track], EM#exist_mask.sensor_track),
+    sutils:conditional_display("Sensor speed: ~p~n", [DS#dwell_segment.sensor_speed], EM#exist_mask.sensor_speed),
+    sutils:conditional_display("Sensor vert. vel.: ~p~n", [DS#dwell_segment.sensor_vert_vel], EM#exist_mask.sensor_vert_vel),
+    sutils:conditional_display("Sensor track unc.: ~p~n", [DS#dwell_segment.sensor_track_unc], EM#exist_mask.sensor_track_unc),
+    sutils:conditional_display("Sensor speed unc.: ~p~n", [DS#dwell_segment.sensor_speed_unc], EM#exist_mask.sensor_speed_unc),
+    sutils:conditional_display("Sensor vert. vel. unc.: ~p~n", [DS#dwell_segment.sensor_vert_vel_unc], EM#exist_mask.sensor_vert_vel_unc),
+    sutils:conditional_display("Platform heading: ~p~n", [DS#dwell_segment.platform_heading], EM#exist_mask.platform_heading),
+    sutils:conditional_display("Platform pitch: ~p~n", [DS#dwell_segment.platform_pitch], EM#exist_mask.platform_pitch),
+    sutils:conditional_display("Platform roll: ~p~n", [DS#dwell_segment.platform_roll], EM#exist_mask.platform_roll),
+    sutils:conditional_display("Dwell centre Lat.: ~p~n", [DS#dwell_segment.dwell_center_lat], EM#exist_mask.dwell_center_lat),
+    sutils:conditional_display("Dwell centre Lon.: ~p~n", [DS#dwell_segment.dwell_center_lon], EM#exist_mask.dwell_center_lon),
+    sutils:conditional_display("Dwell range half extent: ~p~n", [DS#dwell_segment.dwell_range_half_extent], EM#exist_mask.dwell_range_half_extent),
+    sutils:conditional_display("Dwell angle half extent: ~p~n", [DS#dwell_segment.dwell_angle_half_extent], EM#exist_mask.dwell_angle_half_extent),
+    sutils:conditional_display("Sensor heading: ~p~n", [DS#dwell_segment.sensor_heading], EM#exist_mask.sensor_heading),
+    sutils:conditional_display("Sensor pitch: ~p~n", [DS#dwell_segment.sensor_pitch], EM#exist_mask.sensor_pitch),
+    sutils:conditional_display("Sensor roll: ~p~n", [DS#dwell_segment.sensor_roll], EM#exist_mask.sensor_roll),
+    sutils:conditional_display("MDV: ~p~n", [DS#dwell_segment.mdv], EM#exist_mask.mdv),
     F = fun(TR) -> display_target_report(TR, EM) end,
     lists:map(F, DS#dwell_segment.targets).
 
 display_target_report(TR, EM) ->
-    conditional_display("MTI report index: ~p~n", [TR#tgt_report.mti_report_index], EM#exist_mask.mti_report_index),
-    conditional_display("Target HR Lat: ~p~n", [TR#tgt_report.target_hr_lat], EM#exist_mask.target_hr_lat),
-    conditional_display("Target HR Lon: ~p~n", [TR#tgt_report.target_hr_lon], EM#exist_mask.target_hr_lon),
-    conditional_display("Target Delta Lat: ~p~n", [TR#tgt_report.target_delta_lat], EM#exist_mask.target_delta_lat),
-    conditional_display("Target Delta Lon: ~p~n", [TR#tgt_report.target_delta_lon], EM#exist_mask.target_delta_lon),
-    conditional_display("Geodetic Height: ~p~n", [TR#tgt_report.geodetic_height], EM#exist_mask.geodetic_height),
-    conditional_display("Target vel. LOS.: ~p~n", [TR#tgt_report.target_vel_los], EM#exist_mask.target_vel_los),
-    conditional_display("Target wrap vel.: ~p~n", [TR#tgt_report.target_wrap_velocity], EM#exist_mask.target_wrap_velocity),
-    conditional_display("Target SNR: ~p~n", [TR#tgt_report.target_snr], EM#exist_mask.target_snr),
-    conditional_display("Target classification: ~p~n", [TR#tgt_report.target_classification], EM#exist_mask.target_classification),
-    conditional_display("Target classification probability: ~p~n", [TR#tgt_report.target_class_prob], EM#exist_mask.target_class_prob),
-    conditional_display("Target slant range unc.: ~p~n", [TR#tgt_report.target_slant_range_unc], EM#exist_mask.target_slant_range_unc),
-    conditional_display("Target cross range unc.: ~p~n", [TR#tgt_report.target_cross_range_unc], EM#exist_mask.target_cross_range_unc),
-    conditional_display("Target height unc.: ~p~n", [TR#tgt_report.target_height_unc], EM#exist_mask.target_height_unc),
-    conditional_display("Target rad. vel. unc.: ~p~n", [TR#tgt_report.target_rad_vel_unc], EM#exist_mask.target_rad_vel_unc),
-    conditional_display("Truth tag application: ~p~n", [TR#tgt_report.truth_tag_app], EM#exist_mask.truth_tag_app),
-    conditional_display("Truth tag entity: ~p~n", [TR#tgt_report.truth_tag_entity], EM#exist_mask.truth_tag_entity),
-    conditional_display("Target RCS: ~p~n", [TR#tgt_report.target_rcs], EM#exist_mask.target_rcs).
+    sutils:conditional_display("MTI report index: ~p~n", [TR#tgt_report.mti_report_index], EM#exist_mask.mti_report_index),
+    sutils:conditional_display("Target HR Lat: ~p~n", [TR#tgt_report.target_hr_lat], EM#exist_mask.target_hr_lat),
+    sutils:conditional_display("Target HR Lon: ~p~n", [TR#tgt_report.target_hr_lon], EM#exist_mask.target_hr_lon),
+    sutils:conditional_display("Target Delta Lat: ~p~n", [TR#tgt_report.target_delta_lat], EM#exist_mask.target_delta_lat),
+    sutils:conditional_display("Target Delta Lon: ~p~n", [TR#tgt_report.target_delta_lon], EM#exist_mask.target_delta_lon),
+    sutils:conditional_display("Geodetic Height: ~p~n", [TR#tgt_report.geodetic_height], EM#exist_mask.geodetic_height),
+    sutils:conditional_display("Target vel. LOS.: ~p~n", [TR#tgt_report.target_vel_los], EM#exist_mask.target_vel_los),
+    sutils:conditional_display("Target wrap vel.: ~p~n", [TR#tgt_report.target_wrap_velocity], EM#exist_mask.target_wrap_velocity),
+    sutils:conditional_display("Target SNR: ~p~n", [TR#tgt_report.target_snr], EM#exist_mask.target_snr),
+    sutils:conditional_display("Target classification: ~p~n", [TR#tgt_report.target_classification], EM#exist_mask.target_classification),
+    sutils:conditional_display("Target classification probability: ~p~n", [TR#tgt_report.target_class_prob], EM#exist_mask.target_class_prob),
+    sutils:conditional_display("Target slant range unc.: ~p~n", [TR#tgt_report.target_slant_range_unc], EM#exist_mask.target_slant_range_unc),
+    sutils:conditional_display("Target cross range unc.: ~p~n", [TR#tgt_report.target_cross_range_unc], EM#exist_mask.target_cross_range_unc),
+    sutils:conditional_display("Target height unc.: ~p~n", [TR#tgt_report.target_height_unc], EM#exist_mask.target_height_unc),
+    sutils:conditional_display("Target rad. vel. unc.: ~p~n", [TR#tgt_report.target_rad_vel_unc], EM#exist_mask.target_rad_vel_unc),
+    sutils:conditional_display("Truth tag application: ~p~n", [TR#tgt_report.truth_tag_app], EM#exist_mask.truth_tag_app),
+    sutils:conditional_display("Truth tag entity: ~p~n", [TR#tgt_report.truth_tag_entity], EM#exist_mask.truth_tag_entity),
+    sutils:conditional_display("Target RCS: ~p~n", [TR#tgt_report.target_rcs], EM#exist_mask.target_rcs).
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Utility functions
-
-trim_trailing_spaces(Str) ->
-    Rev = lists:reverse(Str),
-    F = fun(C) -> C =:= $\  end,
-    RStrip = lists:dropwhile(F, Rev),
-    lists:reverse(RStrip).
-
-%% Function to conditionally extract a paramater from the front of a binary
-%% based on the state of a mask bit.
-conditional_extract(Bin, MaskBit, Size, ConvFn, Default) ->
-    case MaskBit of
-        1 -> 
-            {ok, Param, Bin1} = extract_data(Bin, Size),
-            {ConvFn(Param), Bin1};
-        0 ->
-            {Default, Bin}
-    end.
-
-%% Function to conditionally display a parameter based on a mask bit
-conditional_display(FmtStr, Params, MaskBit) ->
-    case MaskBit of
-        1 ->
-            io:format(FmtStr, Params),
-            ok;
-        0 ->
-            ok
-    end.
 
