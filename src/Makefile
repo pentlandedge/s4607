@@ -25,7 +25,8 @@ SOURCE = \
     seg_header.erl \
     stanag_types.erl \
     stanag_types_tests.erl \
-    sutils.erl
+    sutils.erl \
+    tgt_report.erl
 
 # Where include files are stored ".hrl"
 EFLAGS = -I../include 
