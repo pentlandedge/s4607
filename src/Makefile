@@ -18,6 +18,7 @@
 # code to compile
 SOURCE = \
     all_tests.erl \
+    exist_mask.erl \
     job_def.erl \
     mission.erl \
     s4607.erl \
