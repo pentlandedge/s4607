@@ -20,7 +20,7 @@
 
 %% Define a test generator for the decoding of the mission segment. 
 mission_test_() ->
-    [mission_plan_checks()].
+    [mission_plan_checks(), flight_plan_checks()].
 
 mission_plan_checks() ->
     MS1 = mission:decode(sample_mission_seg1()),
@@ -28,8 +28,14 @@ mission_plan_checks() ->
     [?_assertEqual("Global Domin", mission:get_mission_plan(MS1)),
      ?_assertEqual("Short", mission:get_mission_plan(MS2))].
 
+flight_plan_checks() ->
+    MS1 = mission:decode(sample_mission_seg1()),
+    MS2 = mission:decode(sample_mission_seg2()),
+    [?_assertEqual("Fly By", mission:get_flight_plan(MS1)),
+     ?_assertEqual("Full length1", mission:get_flight_plan(MS2))].
+
 sample_mission_seg1() ->
     <<"Global Domin","Fly By      ",36,"Skynet v12",16#07, 16#DF, 12, 31>>.
 
 sample_mission_seg2() ->
-    <<"Short       ","Fly By      ",36,"Skynet v12",16#07, 16#DF, 12, 31>>.
+    <<"Short       ","Full length1",36,"Skynet v12",16#07, 16#DF, 12, 31>>.
