@@ -38,10 +38,22 @@ platform_type_checks() ->
     B1 = sample_mission_seg1(),
     % Hack the platform type to get new test samples.
     B2 = binary:replace(B1, <<36>>, <<0>>, [{scope, {24,1}}]),
+    B3 = binary:replace(B1, <<36>>, <<255>>, [{scope, {24,1}}]),
+    B4 = binary:replace(B1, <<36>>, <<127>>, [{scope, {24,1}}]),
+    B5 = binary:replace(B1, <<36>>, <<9>>, [{scope, {24,1}}]),
+    B6 = binary:replace(B1, <<36>>, <<39>>, [{scope, {24,1}}]),
     MS1 = mission:decode(B1),
     MS2 = mission:decode(B2),
+    MS3 = mission:decode(B3),
+    MS4 = mission:decode(B4),
+    MS5 = mission:decode(B5),
+    MS6 = mission:decode(B6),
     [?_assertEqual(reaper, mission:get_platform_type(MS1)),
-     ?_assertEqual(unidentified, mission:get_platform_type(MS2))].
+     ?_assertEqual(unidentified, mission:get_platform_type(MS2)),
+     ?_assertEqual(future_use, mission:get_platform_type(MS4)),
+     ?_assertEqual(predator, mission:get_platform_type(MS5)),
+     ?_assertEqual(twin_otter, mission:get_platform_type(MS6)),
+     ?_assertEqual(other, mission:get_platform_type(MS3))].
 
 sample_mission_seg1() ->
     <<"Global Domin","Fly By      ",36,"Skynet v12",16#07, 16#DF, 12, 31>>.
