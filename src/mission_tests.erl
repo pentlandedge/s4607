@@ -23,8 +23,13 @@ mission_test_() ->
     [mission_plan_checks()].
 
 mission_plan_checks() ->
-    MS = mission:decode(sample_mission_seg1()),
-    [?_assertEqual("Global Domin", mission:get_mission_plan(MS))].
+    MS1 = mission:decode(sample_mission_seg1()),
+    MS2 = mission:decode(sample_mission_seg2()),
+    [?_assertEqual("Global Domin", mission:get_mission_plan(MS1)),
+     ?_assertEqual("Short", mission:get_mission_plan(MS2))].
 
 sample_mission_seg1() ->
     <<"Global Domin","Fly By      ",36,"Skynet v12",16#07, 16#DF, 12, 31>>.
+
+sample_mission_seg2() ->
+    <<"Short       ","Fly By      ",36,"Skynet v12",16#07, 16#DF, 12, 31>>.
