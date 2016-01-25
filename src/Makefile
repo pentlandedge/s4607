@@ -21,6 +21,7 @@ SOURCE = \
     exist_mask.erl \
     job_def.erl \
     mission.erl \
+    mission_tests.erl \
     s4607.erl \
     s4607_tests.erl \
     seg_header.erl \

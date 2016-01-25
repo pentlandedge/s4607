@@ -14,10 +14,11 @@
 %% under the License.
 %%
 
--module(all_tests).
+-module(mission_tests).
 
 -include_lib("eunit/include/eunit.hrl").
 
-%% Define a test generator function to run all the tests. 
-all_test_() ->
-    [{module, s4607}, {module, stanag_types}, {module, mission}].  
+%% Define a test generator for the decoding of the mission segment. 
+mission_test_() ->
+    [].
+
