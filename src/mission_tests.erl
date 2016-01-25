@@ -21,7 +21,7 @@
 %% Define a test generator for the decoding of the mission segment. 
 mission_test_() ->
     [mission_plan_checks(), flight_plan_checks(), platform_type_checks(),
-     platform_config_checks()].
+     platform_config_checks(), reference_time_checks()].
 
 mission_plan_checks() ->
     MS1 = mission:decode(sample_mission_seg1()),
@@ -62,8 +62,18 @@ platform_config_checks() ->
     [?_assertEqual("Skynet v12", mission:get_platform_config(MS1)),
      ?_assertEqual("Skynet", mission:get_platform_config(MS2))].
     
+reference_time_checks() ->
+    MS1 = mission:decode(sample_mission_seg1()),
+    MS2 = mission:decode(sample_mission_seg2()),
+    [?_assertEqual(2015, mission:get_year(MS1)),
+     ?_assertEqual(12, mission:get_month(MS1)),
+     ?_assertEqual(31, mission:get_day(MS1)),
+     ?_assertEqual(1997, mission:get_year(MS2)),
+     ?_assertEqual(8, mission:get_month(MS2)),
+     ?_assertEqual(29, mission:get_day(MS2))].
+    
 sample_mission_seg1() ->
     <<"Global Domin","Fly By      ",36,"Skynet v12",16#07, 16#DF, 12, 31>>.
 
 sample_mission_seg2() ->
-    <<"Short       ","Full length1",36,"Skynet    ",16#07, 16#DF, 12, 31>>.
+    <<"Short       ","Full length1",36,"Skynet    ",16#07, 16#CD, 08, 29>>.
