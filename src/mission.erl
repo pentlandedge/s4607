@@ -51,7 +51,7 @@ decode(<<M1:12/binary, M2:12/binary, M3, M4:10/binary,
         platform_type = Type, platform_config = Config, year = Year,
         month = Month, day = Day}.
 
-decode_platform_type(0) -> unidentfified;
+decode_platform_type(0) -> unidentified;
 decode_platform_type(1) -> acs;
 decode_platform_type(2) -> arl_m;
 decode_platform_type(3) -> sentinel;

@@ -20,7 +20,7 @@
 
 %% Define a test generator for the decoding of the mission segment. 
 mission_test_() ->
-    [mission_plan_checks(), flight_plan_checks()].
+    [mission_plan_checks(), flight_plan_checks(), platform_type_checks()].
 
 mission_plan_checks() ->
     MS1 = mission:decode(sample_mission_seg1()),
@@ -33,6 +33,15 @@ flight_plan_checks() ->
     MS2 = mission:decode(sample_mission_seg2()),
     [?_assertEqual("Fly By", mission:get_flight_plan(MS1)),
      ?_assertEqual("Full length1", mission:get_flight_plan(MS2))].
+
+platform_type_checks() ->
+    B1 = sample_mission_seg1(),
+    % Hack the platform type to get new test samples.
+    B2 = binary:replace(B1, <<36>>, <<0>>, [{scope, {24,1}}]),
+    MS1 = mission:decode(B1),
+    MS2 = mission:decode(B2),
+    [?_assertEqual(reaper, mission:get_platform_type(MS1)),
+     ?_assertEqual(unidentified, mission:get_platform_type(MS2))].
 
 sample_mission_seg1() ->
     <<"Global Domin","Fly By      ",36,"Skynet v12",16#07, 16#DF, 12, 31>>.
