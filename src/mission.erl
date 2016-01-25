@@ -19,7 +19,6 @@
     decode/1, 
     display/1, 
     decode_platform_type/1,
-    mission_test/0,
     get_mission_plan/1,
     get_flight_plan/1,
     get_platform_type/1,
@@ -94,9 +93,6 @@ decode_platform_type(38) -> warrior;
 decode_platform_type(39) -> twin_otter;
 decode_platform_type(255) -> other;
 decode_platform_type(_) -> future_use.
-
-mission_test() ->
-    <<"Global Domin","Fly By      ",36,"Skynet v12",16#07, 16#DF, 12, 31>>.
 
 display(MSeg) ->
     io:format("Mission Plan: ~p~n", [MSeg#mission_segment.mission_plan]),
