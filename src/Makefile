@@ -23,6 +23,7 @@ SOURCE = \
     job_def.erl \
     mission.erl \
     mission_tests.erl \
+    pheader.erl \
     s4607.erl \
     s4607_tests.erl \
     seg_header.erl \
