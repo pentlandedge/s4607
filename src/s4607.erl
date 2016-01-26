@@ -82,17 +82,22 @@ decode_segments(Bin, Acc) ->
     % Switch on the segment type
     case seg_header:get_segment_type(SH) of
         mission -> 
-            SegRec = {ok, SH, mission:decode(SegData)};
+            {ok, SegRec} = mission:decode(SegData),
+            Seg = {SH, SegRec};
         dwell   ->
-            SegRec = {ok, SH, dwell:decode(SegData)};
+            {ok, SegRec} = dwell:decode(SegData),
+            Seg = {SH, SegRec};
         job_definition ->
-            SegRec = {ok, SH, job_def:decode(SegData)};
-        _       -> 
-            SegRec = {unknown_segment, SH, SegData}
+            {ok, SegRec} = job_def:decode(SegData),
+            Seg = {SH, SegRec};
+        _       ->
+            % Leave the data in binary form if we don't know how to decode it.
+            Seg = {SH, SegData}
+
     end,
 
     % Loop over any remaining segments contained in this packet.
-    decode_segments(SRem2, [SegRec|Acc]).
+    decode_segments(SRem2, [Seg|Acc]).
 
 %display_packets2(PktLst) ->
 %    lists:map(fun display_packet/1, PktList).
