@@ -17,7 +17,9 @@
 
 -export([
     decode/1, 
-    display/1]).
+    display/1,
+    get_job_id/1
+    ]).
 
 -record(job_def, {
     job_id,
@@ -266,4 +268,7 @@ display(JDS) ->
     io:format("Nom. false alarm density.: ~p~n", [JDS#job_def.ns_val_false_alarm_density]),
     io:format("Terrain elevation model: ~p~n", [JDS#job_def.terr_elev_model]),
     io:format("Geoid model: ~p~n", [JDS#job_def.geoid_model]).
+
+%% Accessor functions to allow clients access to the contents
+get_job_id(#job_def{job_id = X}) -> X.
 

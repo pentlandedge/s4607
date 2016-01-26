@@ -21,6 +21,7 @@ SOURCE = \
     dwell.erl \
     exist_mask.erl \
     job_def.erl \
+    job_def_tests.erl \
     mission.erl \
     mission_tests.erl \
     pheader.erl \

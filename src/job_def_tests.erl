@@ -14,11 +14,20 @@
 %% under the License.
 %%
 
--module(all_tests).
+-module(job_def_tests).
 
 -include_lib("eunit/include/eunit.hrl").
 
-%% Define a test generator function to run all the tests. 
-all_test_() ->
-    [{module, s4607}, {module, stanag_types}, {module, mission},
-     {module, job_def}].  
+%% Define a test generator for the decoding of the mission segment. 
+job_def_test_() ->
+    [job1_checks()].
+
+job1_checks() ->
+    JD1 = job_def:decode(job_def1()),
+    [?_assertEqual(16909060, job_def:get_job_id(JD1))].
+
+job_def1() ->
+    <<1,2,3,4, 5, "Model1", 0, 23, 
+      64,0,0,0, "õUUU", 64,0,0,0, "õUUU", 64,0,0,0, "õUUU", 64,0,0,0, "õUUU",
+      1, 1,0, 255,255, 1,0, 16#27,16#10, 45, 0,128, 
+      255,255, 127,74, 0,100, 5, 90, 3, 1, 3>>.
