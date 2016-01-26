@@ -18,12 +18,13 @@ From the root directory, the Erlang shell can be started as follows:
 From the Erlang prompt, open a file in Stanag 4607 format and display its contents in the following manner:
 ```
 1> Bin = s4607:read_file("/path/to/file").
-2> s4607:display_packets(Bin).
+2> PacketList = s4607:decode(Bin).
+3> s4607:display_packets(PacketList).
 ```
-In the not too distant future, it will be possible to read the entire list of packets into a single, hierarchical structure suitable for data processing applications.
+The PacketList is a single, hierarchical structure suitable for use in data processing applications.
 
 # Running the regression tests
 The project uses Erlang's eunit test system. From the Erlang shell, to run all of the unit tests:
 ```
-3> eunit:test(all_tests).
+4> eunit:test(all_tests).
 ```

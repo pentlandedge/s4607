@@ -22,6 +22,7 @@
     extract_packet_data/2,
     display_packets/1,
     display_packet/1,
+    display_segments/1,
     display_segment/1]).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -103,65 +104,18 @@ decode_segments(Bin, Acc) ->
 
 display_packet(#packet{header = H, segments = Slist}) ->
     pheader:display(H),
-    lists:map(fun display_segment/1, Slist). 
-    
+    display_segments(Slist).
+
 %% Packet processing loop, prints out decoded information.
 display_packets(PktLst) when is_list(PktLst) ->
     lists:map(fun display_packet/1, PktLst),
-    ok;
-display_packets(<<>>) ->
-    ok;
-display_packets(Bin) ->
-    {ok, Hdr, R1} = extract_packet_header(Bin),
-    H1 = pheader:decode(Hdr),
-    %s4607:display_packet_header(H1),
-    io:format("~n"),
-    % The size in the header includes the header itself.
-    PayloadSize = pheader:get_packet_size(H1) - byte_size(Hdr),
-    io:format("size ~p, len ~p~n", [byte_size(R1), PayloadSize]),
-    % Get the packet data payload.
-    {ok, PktData, R2} = extract_packet_data(R1, PayloadSize),
+    ok.
 
-    % Loop through all the segments in the packet.
-    display_segments(PktData),
-
-    % Loop over any remaining packets.
-    display_packets(R2).
-
-%% Display all the segments within a packet.
-display_segments(<<>>) ->
-    ok;
-display_segments(Bin) ->
-    % Get the segment header.
-    {ok, SegHdr, SRem} = extract_segment_header(Bin),
-    SH = seg_header:decode(SegHdr),
-    seg_header:display(SH),
-    io:format("~n"),
-
-    % The size in the header includes the header itself.
-    PayloadSize = seg_header:get_segment_size(SH) - byte_size(SegHdr),
-
-    % Get the packet data payload.
-    {ok, SegData, SRem2} = extract_segment_data(SRem, PayloadSize),
-
-    % Switch on the segment type
-    case seg_header:get_segment_type(SH) of
-        mission -> 
-            {ok, MS} = mission:decode(SegData),
-            mission:display(MS);
-        dwell   ->
-            {ok, DS} = dwell:decode(SegData),
-            dwell:display(DS);
-        job_definition ->
-            {ok, JD} = job_def:decode(SegData),
-            job_def:display(JD);
-        _       -> 
-            ok
-    end,
-
-    % Loop over any remaining segments contained in this packet.
-    display_segments(SRem2).
-
+%% Function to display a list of segments
+display_segments(Slist) ->
+    lists:map(fun display_segment/1, Slist),
+    ok.
+    
 %% Function to display a segment.
 display_segment(#segment{header = H, data = D}) ->
     display_segment(H, D).
