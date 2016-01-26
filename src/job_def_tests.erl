@@ -24,7 +24,9 @@ job_def_test_() ->
 
 job1_checks() ->
     JD1 = job_def:decode(job_def1()),
-    [?_assertEqual(16909060, job_def:get_job_id(JD1))].
+    [?_assertEqual(16909060, job_def:get_job_id(JD1)),
+     ?_assertEqual(global_hawk_sensor, job_def:get_sensor_id_type(JD1)),
+     ?_assertEqual(flat_earth, job_def:get_geoid_model(JD1))].
 
 job_def1() ->
     <<1,2,3,4, 5, "Model1", 0, 23, 

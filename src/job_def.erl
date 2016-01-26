@@ -18,8 +18,33 @@
 -export([
     decode/1, 
     display/1,
-    get_job_id/1
-    ]).
+    get_job_id/1,
+    get_target_filt_flag/1,
+    get_priority/1,
+    get_bounding_a_lat/1,
+    get_bounding_a_lon/1,
+    get_bounding_b_lat/1,
+    get_bounding_b_lon/1,
+    get_bounding_c_lat/1,
+    get_bounding_c_lon/1,
+    get_bounding_d_lat/1,
+    get_bounding_d_lon/1,
+    get_radar_mode/1,
+    get_nom_rev_int/1,
+    get_ns_pos_unc_along_track/1,
+    get_ns_pos_unc_cross_track/1,
+    get_ns_pos_unc_alt/1,
+    get_ns_pos_unc_heading/1,
+    get_ns_pos_unc_sensor_speed/1,
+    get_ns_val_slant_range_std_dev/1,
+    get_ns_val_cross_range_std_dev/1,
+    get_ns_val_tgt_vel_los_std_dev/1,
+    get_ns_val_mdv/1,
+    get_ns_val_det_prob/1,
+    get_ns_val_false_alarm_density/1,
+    get_terr_elev_model/1,
+    get_sensor_id_type/1,
+    get_geoid_model/1]).
 
 -record(job_def, {
     job_id,
@@ -271,4 +296,30 @@ display(JDS) ->
 
 %% Accessor functions to allow clients access to the contents
 get_job_id(#job_def{job_id = X}) -> X.
-
+get_geoid_model(#job_def{geoid_model = X}) -> X.
+get_sensor_id_type(#job_def{sensor_id_type = X}) -> X.
+get_target_filt_flag(#job_def{target_filt_flag = X}) -> X.
+get_priority(#job_def{priority = X}) -> X.
+get_bounding_a_lat(#job_def{bounding_a_lat = X}) -> X.
+get_bounding_a_lon(#job_def{bounding_a_lon = X}) -> X.
+get_bounding_b_lat(#job_def{bounding_b_lat = X}) -> X.
+get_bounding_b_lon(#job_def{bounding_b_lon = X}) -> X.
+get_bounding_c_lat(#job_def{bounding_c_lat = X}) -> X.
+get_bounding_c_lon(#job_def{bounding_c_lon = X}) -> X.
+get_bounding_d_lat(#job_def{bounding_d_lat = X}) -> X.
+get_bounding_d_lon(#job_def{bounding_d_lon = X}) -> X.
+get_radar_mode(#job_def{radar_mode = X}) -> X.
+get_nom_rev_int(#job_def{nom_rev_int = X}) -> X.
+get_ns_pos_unc_along_track(#job_def{ns_pos_unc_along_track = X}) -> X.
+get_ns_pos_unc_cross_track(#job_def{ns_pos_unc_cross_track = X}) -> X.
+get_ns_pos_unc_alt(#job_def{ns_pos_unc_alt = X}) -> X.
+get_ns_pos_unc_heading(#job_def{ns_pos_unc_heading = X}) -> X.
+get_ns_pos_unc_sensor_speed(#job_def{ns_pos_unc_sensor_speed = X}) -> X.
+get_ns_val_slant_range_std_dev(#job_def{ns_val_slant_range_std_dev = X}) -> X.
+get_ns_val_cross_range_std_dev(#job_def{ns_val_cross_range_std_dev = X}) -> X.
+get_ns_val_tgt_vel_los_std_dev(#job_def{ns_val_tgt_vel_los_std_dev = X}) -> X.
+get_ns_val_mdv(#job_def{ns_val_mdv = X}) -> X.
+get_ns_val_det_prob(#job_def{ns_val_det_prob = X}) -> X.
+get_ns_val_false_alarm_density(#job_def{ns_val_false_alarm_density = X}) -> X.
+get_terr_elev_model(#job_def{terr_elev_model = X}) -> X.
+ 
