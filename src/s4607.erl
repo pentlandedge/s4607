@@ -101,14 +101,14 @@ decode_segments(Bin, Acc) ->
     % Loop over any remaining segments contained in this packet.
     decode_segments(SRem2, [Seg|Acc]).
 
-%display_packets2(PktLst) ->
-%    lists:map(fun display_packet/1, PktList).
-
 display_packet(#packet{header = H, segments = Slist}) ->
     pheader:display(H),
     lists:map(fun display_segment/1, Slist). 
     
 %% Packet processing loop, prints out decoded information.
+display_packets(PktLst) when is_list(PktLst) ->
+    lists:map(fun display_packet/1, PktLst),
+    ok;
 display_packets(<<>>) ->
     ok;
 display_packets(Bin) ->
