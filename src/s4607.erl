@@ -27,7 +27,7 @@
 
 -record(packet, {header, segments}).
 
-%-record(segment, {header, data}).
+-record(segment, {header, data}).
 
 %-record(decode_status, {status, error_list}).
 
@@ -83,16 +83,16 @@ decode_segments(Bin, Acc) ->
     case seg_header:get_segment_type(SH) of
         mission -> 
             {ok, SegRec} = mission:decode(SegData),
-            Seg = {SH, SegRec};
+            Seg = #segment{header = SH, data = SegRec};
         dwell   ->
             {ok, SegRec} = dwell:decode(SegData),
-            Seg = {SH, SegRec};
+            Seg = #segment{header = SH, data = SegRec};
         job_definition ->
             {ok, SegRec} = job_def:decode(SegData),
-            Seg = {SH, SegRec};
+            Seg = #segment{header = SH, data = SegRec};
         _       ->
             % Leave the data in binary form if we don't know how to decode it.
-            Seg = {SH, SegData}
+            Seg = #segment{header = SH, data = SegData}
 
     end,
 
