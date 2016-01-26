@@ -23,9 +23,12 @@ job_def_test_() ->
     [job1_checks()].
 
 job1_checks() ->
-    JD1 = job_def:decode(job_def1()),
+    {ok, JD1} = job_def:decode(job_def1()),
     [?_assertEqual(16909060, job_def:get_job_id(JD1)),
      ?_assertEqual(global_hawk_sensor, job_def:get_sensor_id_type(JD1)),
+     ?_assertEqual("Model1", job_def:get_sensor_id_model(JD1)),
+     ?_assertEqual(no_filtering, job_def:get_target_filt_flag(JD1)),
+     ?_assertEqual(23, job_def:get_priority(JD1)),
      ?_assertEqual(flat_earth, job_def:get_geoid_model(JD1))].
 
 job_def1() ->

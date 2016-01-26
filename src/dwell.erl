@@ -222,7 +222,7 @@ decode(<<EM:8/binary,RI:16/integer-unsigned-big,
 
     TgtRepList = decode_target_report_list(Bin22, EMrec, TRC),
 
-    #dwell_segment{
+    {ok, #dwell_segment{
         existence_mask = EMrec,
         revisit_index = RI,
         dwell_index = DI,
@@ -254,7 +254,7 @@ decode(<<EM:8/binary,RI:16/integer-unsigned-big,
         sensor_pitch = SensorPitch,
         sensor_roll = SensorRoll,
         mdv = MDV,
-        targets = TgtRepList}.
+        targets = TgtRepList}}.
 
 
 decode_last_dwell_of_revisit(0) -> additional_dwells;

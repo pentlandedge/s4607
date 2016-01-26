@@ -24,14 +24,14 @@ mission_test_() ->
      platform_config_checks(), reference_time_checks()].
 
 mission_plan_checks() ->
-    MS1 = mission:decode(sample_mission_seg1()),
-    MS2 = mission:decode(sample_mission_seg2()),
+    {ok, MS1} = mission:decode(sample_mission_seg1()),
+    {ok, MS2} = mission:decode(sample_mission_seg2()),
     [?_assertEqual("Global Domin", mission:get_mission_plan(MS1)),
      ?_assertEqual("Short", mission:get_mission_plan(MS2))].
 
 flight_plan_checks() ->
-    MS1 = mission:decode(sample_mission_seg1()),
-    MS2 = mission:decode(sample_mission_seg2()),
+    {ok, MS1} = mission:decode(sample_mission_seg1()),
+    {ok, MS2} = mission:decode(sample_mission_seg2()),
     [?_assertEqual("Fly By", mission:get_flight_plan(MS1)),
      ?_assertEqual("Full length1", mission:get_flight_plan(MS2))].
 
@@ -43,12 +43,12 @@ platform_type_checks() ->
     B4 = binary:replace(B1, <<36>>, <<127>>, [{scope, {24,1}}]),
     B5 = binary:replace(B1, <<36>>, <<9>>, [{scope, {24,1}}]),
     B6 = binary:replace(B1, <<36>>, <<39>>, [{scope, {24,1}}]),
-    MS1 = mission:decode(B1),
-    MS2 = mission:decode(B2),
-    MS3 = mission:decode(B3),
-    MS4 = mission:decode(B4),
-    MS5 = mission:decode(B5),
-    MS6 = mission:decode(B6),
+    {ok, MS1} = mission:decode(B1),
+    {ok, MS2} = mission:decode(B2),
+    {ok, MS3} = mission:decode(B3),
+    {ok, MS4} = mission:decode(B4),
+    {ok, MS5} = mission:decode(B5),
+    {ok, MS6} = mission:decode(B6),
     [?_assertEqual(reaper, mission:get_platform_type(MS1)),
      ?_assertEqual(unidentified, mission:get_platform_type(MS2)),
      ?_assertEqual(future_use, mission:get_platform_type(MS4)),
@@ -57,14 +57,14 @@ platform_type_checks() ->
      ?_assertEqual(other, mission:get_platform_type(MS3))].
 
 platform_config_checks() ->
-    MS1 = mission:decode(sample_mission_seg1()),
-    MS2 = mission:decode(sample_mission_seg2()),
+    {ok, MS1} = mission:decode(sample_mission_seg1()),
+    {ok, MS2} = mission:decode(sample_mission_seg2()),
     [?_assertEqual("Skynet v12", mission:get_platform_config(MS1)),
      ?_assertEqual("Skynet", mission:get_platform_config(MS2))].
     
 reference_time_checks() ->
-    MS1 = mission:decode(sample_mission_seg1()),
-    MS2 = mission:decode(sample_mission_seg2()),
+    {ok, MS1} = mission:decode(sample_mission_seg1()),
+    {ok, MS2} = mission:decode(sample_mission_seg2()),
     [?_assertEqual(2015, mission:get_year(MS1)),
      ?_assertEqual(12, mission:get_month(MS1)),
      ?_assertEqual(31, mission:get_day(MS1)),

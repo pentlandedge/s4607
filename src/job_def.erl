@@ -19,6 +19,8 @@
     decode/1, 
     display/1,
     get_job_id/1,
+    get_sensor_id_type/1,
+    get_sensor_id_model/1,
     get_target_filt_flag/1,
     get_priority/1,
     get_bounding_a_lat/1,
@@ -43,7 +45,6 @@
     get_ns_val_det_prob/1,
     get_ns_val_false_alarm_density/1,
     get_terr_elev_model/1,
-    get_sensor_id_type/1,
     get_geoid_model/1]).
 
 -record(job_def, {
@@ -84,7 +85,7 @@ decode(<<JobID:32,SIDT,SIDM:6/binary,TFF:1/binary,Pri,
     J12:4/binary,J13:4/binary,J14,NRI:16,J16:16,J17:16,J18:16,J19,J20:16,
     J21:16,J22:2/binary,J23:16,J24,J25,J26,J27,J28>>) ->
 
-    #job_def{
+    {ok, #job_def{
         job_id = JobID,
         sensor_id_type = decode_sensor_id_type(SIDT),
         sensor_id_model = decode_sensor_id_model(SIDM),
@@ -112,7 +113,7 @@ decode(<<JobID:32,SIDT,SIDM:6/binary,TFF:1/binary,Pri,
         ns_val_det_prob = decode_range_ns(J25, 0, 100, 255),
         ns_val_false_alarm_density = decode_range_ns(J26, 0, 254, 255),
         terr_elev_model = decode_terrain_elev_model(J27),
-        geoid_model = decode_geoid_model(J28)}.
+        geoid_model = decode_geoid_model(J28)}}.
 
 decode_sensor_id_type(0) -> unidentified;
 decode_sensor_id_type(1) -> other;
@@ -298,6 +299,7 @@ display(JDS) ->
 get_job_id(#job_def{job_id = X}) -> X.
 get_geoid_model(#job_def{geoid_model = X}) -> X.
 get_sensor_id_type(#job_def{sensor_id_type = X}) -> X.
+get_sensor_id_model(#job_def{sensor_id_model = X}) -> X.
 get_target_filt_flag(#job_def{target_filt_flag = X}) -> X.
 get_priority(#job_def{priority = X}) -> X.
 get_bounding_a_lat(#job_def{bounding_a_lat = X}) -> X.

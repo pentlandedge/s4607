@@ -138,13 +138,13 @@ display_segments(Bin) ->
     % Switch on the segment type
     case seg_header:get_segment_type(SH) of
         mission -> 
-            MS = mission:decode(SegData),
+            {ok, MS} = mission:decode(SegData),
             mission:display(MS);
         dwell   ->
-            DS = dwell:decode(SegData),
+            {ok, DS} = dwell:decode(SegData),
             dwell:display(DS);
         job_definition ->
-            JD = job_def:decode(SegData),
+            {ok, JD} = job_def:decode(SegData),
             job_def:display(JD);
         _       -> 
             ok

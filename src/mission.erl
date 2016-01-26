@@ -47,9 +47,9 @@ decode(<<M1:12/binary, M2:12/binary, M3, M4:10/binary,
     Type = decode_platform_type(M3),
     Config = sutils:trim_trailing_spaces(binary_to_list(M4)),
 
-    #mission_segment{mission_plan = Mission, flight_plan = Flight, 
+    {ok, #mission_segment{mission_plan = Mission, flight_plan = Flight, 
         platform_type = Type, platform_config = Config, year = Year,
-        month = Month, day = Day}.
+        month = Month, day = Day}}.
 
 decode_platform_type(0) -> unidentified;
 decode_platform_type(1) -> acs;
