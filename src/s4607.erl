@@ -20,7 +20,9 @@
     decode/1,
     extract_packet_header/1,
     extract_packet_data/2,
-    display_packets/1]).
+    display_packets/1,
+    display_packet/1,
+    display_segment/1]).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Record definitions.
@@ -102,7 +104,9 @@ decode_segments(Bin, Acc) ->
 %display_packets2(PktLst) ->
 %    lists:map(fun display_packet/1, PktList).
 
-%display_packet(Pkt) ->
+display_packet(#packet{header = H, segments = Slist}) ->
+    pheader:display(H),
+    lists:map(fun display_segment/1, Slist). 
     
 %% Packet processing loop, prints out decoded information.
 display_packets(<<>>) ->
@@ -157,6 +161,10 @@ display_segments(Bin) ->
 
     % Loop over any remaining segments contained in this packet.
     display_segments(SRem2).
+
+%% Function to display a segment.
+display_segment(#segment{header = H, data = D}) ->
+    display_segment(H, D).
 
 %% Function to display a segment. Segment should have been decoded prior to 
 %% calling this function.
