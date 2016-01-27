@@ -17,7 +17,39 @@
 
 -export([
     decode/1, 
-    display/1]).
+    display/1,
+    get_existence_mask/1,
+    get_revisit_index/1,
+    get_dwell_index/1,
+    get_last_dwell_of_revisit/1,
+    get_target_report_count/1,
+    get_dwell_time/1,
+    get_sensor_lat/1,
+    get_sensor_lon/1,
+    get_sensor_alt/1,
+    get_lat_scale_factor/1,
+    get_lon_scale_factor/1,
+    get_spu_along_track/1,
+    get_spu_cross_track/1,
+    get_spu_alt/1,
+    get_sensor_track/1,
+    get_sensor_speed/1,
+    get_sensor_vert_vel/1,
+    get_sensor_track_unc/1,
+    get_sensor_speed_unc/1,
+    get_sensor_vert_vel_unc/1,
+    get_platform_heading/1,
+    get_platform_pitch/1,
+    get_platform_roll/1,
+    get_dwell_center_lat/1,
+    get_dwell_center_lon/1,
+    get_dwell_range_half_extent/1,
+    get_dwell_angle_half_extent/1,
+    get_sensor_heading/1,
+    get_sensor_pitch/1,
+    get_sensor_roll/1,
+    get_mdv/1,
+    get_targets/1]).
 
 -record(dwell_segment, {
     existence_mask,
@@ -256,7 +288,6 @@ decode(<<EM:8/binary,RI:16/integer-unsigned-big,
         mdv = MDV,
         targets = TgtRepList}}.
 
-
 decode_last_dwell_of_revisit(0) -> additional_dwells;
 decode_last_dwell_of_revisit(1) -> no_additional_dwells.
 
@@ -308,4 +339,38 @@ display(DS) ->
     F = fun(TR) -> tgt_report:display(TR, EM) end,
     lists:map(F, DS#dwell_segment.targets).
 
+%% Accessor functions to allow access to the record fields with out creating 
+%% client dependencies on the actual structure.
+get_existence_mask(#dwell_segment{existence_mask = X}) -> X.
+get_revisit_index(#dwell_segment{revisit_index = X}) -> X.
+get_dwell_index(#dwell_segment{dwell_index = X}) -> X.
+get_last_dwell_of_revisit(#dwell_segment{last_dwell_of_revisit = X}) -> X.
+get_target_report_count(#dwell_segment{target_report_count = X}) -> X.
+get_dwell_time(#dwell_segment{dwell_time = X}) -> X.
+get_sensor_lat(#dwell_segment{sensor_lat = X}) -> X.
+get_sensor_lon(#dwell_segment{sensor_lon = X}) -> X.
+get_sensor_alt(#dwell_segment{sensor_alt = X}) -> X.
+get_lat_scale_factor(#dwell_segment{lat_scale_factor = X}) -> X.
+get_lon_scale_factor(#dwell_segment{lon_scale_factor = X}) -> X.
+get_spu_along_track(#dwell_segment{spu_along_track = X}) -> X.
+get_spu_cross_track(#dwell_segment{spu_cross_track = X}) -> X.
+get_spu_alt(#dwell_segment{spu_alt = X}) -> X.
+get_sensor_track(#dwell_segment{sensor_track = X}) -> X.
+get_sensor_speed(#dwell_segment{sensor_speed = X}) -> X.
+get_sensor_vert_vel(#dwell_segment{sensor_vert_vel = X}) -> X.
+get_sensor_track_unc(#dwell_segment{sensor_track_unc = X}) -> X.
+get_sensor_speed_unc(#dwell_segment{sensor_speed_unc = X}) -> X.
+get_sensor_vert_vel_unc(#dwell_segment{sensor_vert_vel_unc = X}) -> X.
+get_platform_heading(#dwell_segment{platform_heading = X}) -> X.
+get_platform_pitch(#dwell_segment{platform_pitch = X}) -> X.
+get_platform_roll(#dwell_segment{platform_roll = X}) -> X.
+get_dwell_center_lat(#dwell_segment{dwell_center_lat = X}) -> X.
+get_dwell_center_lon(#dwell_segment{dwell_center_lon = X}) -> X.
+get_dwell_range_half_extent(#dwell_segment{dwell_range_half_extent = X}) -> X.
+get_dwell_angle_half_extent(#dwell_segment{dwell_angle_half_extent = X}) -> X.
+get_sensor_heading(#dwell_segment{sensor_heading = X}) -> X.
+get_sensor_pitch(#dwell_segment{sensor_pitch = X}) -> X.
+get_sensor_roll(#dwell_segment{sensor_roll = X}) -> X.
+get_mdv(#dwell_segment{mdv = X}) -> X.
+get_targets(#dwell_segment{targets = X}) -> X.
 
