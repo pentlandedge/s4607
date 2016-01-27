@@ -246,43 +246,43 @@ decode_target_classification(255) -> unknown_simulated_target;
 decode_target_classification(_) -> reserved.
  
 display(TR, EM) ->
-    sutils:conditional_display("MTI report index: ~p~n", [TR#tgt_report.mti_report_index], exist_mask:get_mti_report_index(EM)),
-    sutils:conditional_display("Target HR Lat: ~p~n", [TR#tgt_report.target_hr_lat], exist_mask:get_target_hr_lat(EM)),
-    sutils:conditional_display("Target HR Lon: ~p~n", [TR#tgt_report.target_hr_lon], exist_mask:get_target_hr_lon(EM)),
-    sutils:conditional_display("Target Delta Lat: ~p~n", [TR#tgt_report.target_delta_lat], exist_mask:get_target_delta_lat(EM)),
-    sutils:conditional_display("Target Delta Lon: ~p~n", [TR#tgt_report.target_delta_lon], exist_mask:get_target_delta_lon(EM)),
-    sutils:conditional_display("Geodetic Height: ~p~n", [TR#tgt_report.geodetic_height], exist_mask:get_geodetic_height(EM)),
-    sutils:conditional_display("Target vel. LOS.: ~p~n", [TR#tgt_report.target_vel_los], exist_mask:get_target_vel_los(EM)),
-    sutils:conditional_display("Target wrap vel.: ~p~n", [TR#tgt_report.target_wrap_velocity], exist_mask:get_target_wrap_velocity(EM)),
-    sutils:conditional_display("Target SNR: ~p~n", [TR#tgt_report.target_snr], exist_mask:get_target_snr(EM)),
-    sutils:conditional_display("Target classification: ~p~n", [TR#tgt_report.target_classification], exist_mask:get_target_classification(EM)),
-    sutils:conditional_display("Target classification probability: ~p~n", [TR#tgt_report.target_class_prob], exist_mask:get_target_class_prob(EM)),
-    sutils:conditional_display("Target slant range unc.: ~p~n", [TR#tgt_report.target_slant_range_unc], exist_mask:get_target_slant_range_unc(EM)),
-    sutils:conditional_display("Target cross range unc.: ~p~n", [TR#tgt_report.target_cross_range_unc], exist_mask:get_target_cross_range_unc(EM)),
-    sutils:conditional_display("Target height unc.: ~p~n", [TR#tgt_report.target_height_unc], exist_mask:get_target_height_unc(EM)),
-    sutils:conditional_display("Target rad. vel. unc.: ~p~n", [TR#tgt_report.target_rad_vel_unc], exist_mask:get_target_rad_vel_unc(EM)),
-    sutils:conditional_display("Truth tag application: ~p~n", [TR#tgt_report.truth_tag_app], exist_mask:get_truth_tag_app(EM)),
-    sutils:conditional_display("Truth tag entity: ~p~n", [TR#tgt_report.truth_tag_entity], exist_mask:get_truth_tag_entity(EM)),
-    sutils:conditional_display("Target RCS: ~p~n", [TR#tgt_report.target_rcs], exist_mask:get_target_rcs(EM)).
+    sutils:conditional_display("MTI report index: ~p~n", [get_mti_report_index(TR)], exist_mask:get_mti_report_index(EM)),
+    sutils:conditional_display("Target HR Lat: ~p~n", [get_target_hr_lat(TR)], exist_mask:get_target_hr_lat(EM)),
+    sutils:conditional_display("Target HR Lon: ~p~n", [get_target_hr_lon(TR)], exist_mask:get_target_hr_lon(EM)),
+    sutils:conditional_display("Target Delta Lat: ~p~n", [get_target_delta_lat(TR)], exist_mask:get_target_delta_lat(EM)),
+    sutils:conditional_display("Target Delta Lon: ~p~n", [get_target_delta_lon(TR)], exist_mask:get_target_delta_lon(EM)),
+    sutils:conditional_display("Geodetic Height: ~p~n", [get_geodetic_height(TR)], exist_mask:get_geodetic_height(EM)),
+    sutils:conditional_display("Target vel. LOS.: ~p~n", [get_target_vel_los(TR)], exist_mask:get_target_vel_los(EM)),
+    sutils:conditional_display("Target wrap vel.: ~p~n", [get_target_wrap_velocity(TR)], exist_mask:get_target_wrap_velocity(EM)),
+    sutils:conditional_display("Target SNR: ~p~n", [get_target_snr(TR)], exist_mask:get_target_snr(EM)),
+    sutils:conditional_display("Target classification: ~p~n", [get_target_classification(TR)], exist_mask:get_target_classification(EM)),
+    sutils:conditional_display("Target classification probability: ~p~n", [get_target_class_prob(TR)], exist_mask:get_target_class_prob(EM)),
+    sutils:conditional_display("Target slant range unc.: ~p~n", [get_target_slant_range_unc(TR)], exist_mask:get_target_slant_range_unc(EM)),
+    sutils:conditional_display("Target cross range unc.: ~p~n", [get_target_cross_range_unc(TR)], exist_mask:get_target_cross_range_unc(EM)),
+    sutils:conditional_display("Target height unc.: ~p~n", [get_target_height_unc(TR)], exist_mask:get_target_height_unc(EM)),
+    sutils:conditional_display("Target rad. vel. unc.: ~p~n", [get_target_rad_vel_unc(TR)], exist_mask:get_target_rad_vel_unc(EM)),
+    sutils:conditional_display("Truth tag application: ~p~n", [get_truth_tag_app(TR)], exist_mask:get_truth_tag_app(EM)),
+    sutils:conditional_display("Truth tag entity: ~p~n", [get_truth_tag_entity(TR)], exist_mask:get_truth_tag_entity(EM)),
+    sutils:conditional_display("Target RCS: ~p~n", [get_target_rcs(TR)], exist_mask:get_target_rcs(EM)).
 
 %% Accessor functions to allow clients to read the individual record fields.
-get_mti_report_index({mti_report_index = X}) -> X.
-get_target_hr_lat({target_hr_lat = X}) -> X.
-get_target_hr_lon({target_hr_lon = X}) -> X.
-get_target_delta_lat({target_delta_lat = X}) -> X.
-get_target_delta_lon({target_delta_lon = X}) -> X.
-get_geodetic_height({geodetic_height = X}) -> X.
-get_target_vel_los({target_vel_los = X}) -> X.
-get_target_wrap_velocity({target_wrap_velocity = X}) -> X.
-get_target_snr({target_snr = X}) -> X.
-get_target_classification({target_classification = X}) -> X.
-get_target_class_prob({target_class_prob = X}) -> X.
-get_target_slant_range_unc({target_slant_range_unc = X}) -> X.
-get_target_cross_range_unc({target_cross_range_unc = X}) -> X.
-get_target_height_unc({target_height_unc = X}) -> X.
-get_target_rad_vel_unc({target_rad_vel_unc = X}) -> X.
-get_truth_tag_app({truth_tag_app = X}) -> X.
-get_truth_tag_entity({truth_tag_entity = X}) -> X.
-get_target_rcs({target_rcs = X}) -> X.
+get_mti_report_index(#tgt_report{mti_report_index = X}) -> X.
+get_target_hr_lat(#tgt_report{target_hr_lat = X}) -> X.
+get_target_hr_lon(#tgt_report{target_hr_lon = X}) -> X.
+get_target_delta_lat(#tgt_report{target_delta_lat = X}) -> X.
+get_target_delta_lon(#tgt_report{target_delta_lon = X}) -> X.
+get_geodetic_height(#tgt_report{geodetic_height = X}) -> X.
+get_target_vel_los(#tgt_report{target_vel_los = X}) -> X.
+get_target_wrap_velocity(#tgt_report{target_wrap_velocity = X}) -> X.
+get_target_snr(#tgt_report{target_snr = X}) -> X.
+get_target_classification(#tgt_report{target_classification = X}) -> X.
+get_target_class_prob(#tgt_report{target_class_prob = X}) -> X.
+get_target_slant_range_unc(#tgt_report{target_slant_range_unc = X}) -> X.
+get_target_cross_range_unc(#tgt_report{target_cross_range_unc = X}) -> X.
+get_target_height_unc(#tgt_report{target_height_unc = X}) -> X.
+get_target_rad_vel_unc(#tgt_report{target_rad_vel_unc = X}) -> X.
+get_truth_tag_app(#tgt_report{truth_tag_app = X}) -> X.
+get_truth_tag_entity(#tgt_report{truth_tag_entity = X}) -> X.
+get_target_rcs(#tgt_report{target_rcs = X}) -> X.
 
 
