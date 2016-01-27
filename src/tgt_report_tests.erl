@@ -14,11 +14,11 @@
 %% under the License.
 %%
 
--module(all_tests).
+-module(tgt_report_tests).
 
 -include_lib("eunit/include/eunit.hrl").
 
-%% Define a test generator function to run all the tests. 
-all_test_() ->
-    [{module, s4607}, {module, stanag_types}, {module, mission},
-     {module, job_def}, {module, tgt_report}].  
+%% Define a test generator for target reports. 
+tgt_report_test_() ->
+    [].
+
