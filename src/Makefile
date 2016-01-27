@@ -20,6 +20,7 @@ SOURCE = \
     all_tests.erl \
     dwell.erl \
     exist_mask.erl \
+    exist_mask_tests.erl \
     job_def.erl \
     job_def_tests.erl \
     mission.erl \

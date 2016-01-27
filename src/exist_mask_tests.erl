@@ -14,11 +14,12 @@
 %% under the License.
 %%
 
--module(all_tests).
+-module(exist_mask_tests).
 
 -include_lib("eunit/include/eunit.hrl").
 
-%% Define a test generator function to run all the tests. 
-all_test_() ->
-    [{module, s4607}, {module, stanag_types}, {module, mission},
-     {module, job_def}, {module, exist_mask}, {module, tgt_report}].  
+%% Define a test generator for the existence mask. 
+exist_mask_test_() ->
+    [].
+
+
