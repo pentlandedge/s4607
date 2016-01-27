@@ -15,7 +15,27 @@
 %%
 -module(tgt_report).
 
--export([decode/2, display/2]).
+-export([
+    decode/2, 
+    display/2,
+    get_mti_report_index/1,
+    get_target_hr_lat/1,
+    get_target_hr_lon/1,
+    get_target_delta_lat/1,
+    get_target_delta_lon/1,
+    get_geodetic_height/1,
+    get_target_vel_los/1,
+    get_target_wrap_velocity/1,
+    get_target_snr/1,
+    get_target_classification/1,
+    get_target_class_prob/1,
+    get_target_slant_range_unc/1,
+    get_target_cross_range_unc/1,
+    get_target_height_unc/1,
+    get_target_rad_vel_unc/1,
+    get_truth_tag_app/1,
+    get_truth_tag_entity/1,
+    get_target_rcs/1]).
 
 -record(tgt_report, {
     mti_report_index,
@@ -244,4 +264,25 @@ display(TR, EM) ->
     sutils:conditional_display("Truth tag application: ~p~n", [TR#tgt_report.truth_tag_app], exist_mask:get_truth_tag_app(EM)),
     sutils:conditional_display("Truth tag entity: ~p~n", [TR#tgt_report.truth_tag_entity], exist_mask:get_truth_tag_entity(EM)),
     sutils:conditional_display("Target RCS: ~p~n", [TR#tgt_report.target_rcs], exist_mask:get_target_rcs(EM)).
+
+%% Accessor functions to allow clients to read the individual record fields.
+get_mti_report_index({mti_report_index = X}) -> X.
+get_target_hr_lat({target_hr_lat = X}) -> X.
+get_target_hr_lon({target_hr_lon = X}) -> X.
+get_target_delta_lat({target_delta_lat = X}) -> X.
+get_target_delta_lon({target_delta_lon = X}) -> X.
+get_geodetic_height({geodetic_height = X}) -> X.
+get_target_vel_los({target_vel_los = X}) -> X.
+get_target_wrap_velocity({target_wrap_velocity = X}) -> X.
+get_target_snr({target_snr = X}) -> X.
+get_target_classification({target_classification = X}) -> X.
+get_target_class_prob({target_class_prob = X}) -> X.
+get_target_slant_range_unc({target_slant_range_unc = X}) -> X.
+get_target_cross_range_unc({target_cross_range_unc = X}) -> X.
+get_target_height_unc({target_height_unc = X}) -> X.
+get_target_rad_vel_unc({target_rad_vel_unc = X}) -> X.
+get_truth_tag_app({truth_tag_app = X}) -> X.
+get_truth_tag_entity({truth_tag_entity = X}) -> X.
+get_target_rcs({target_rcs = X}) -> X.
+
 
