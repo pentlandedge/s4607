@@ -20,12 +20,25 @@
 
 %% Define a test generator for the existence mask. 
 exist_mask_test_() ->
-    [exist_mask_check1()].
+    [exist_mask_check1(), exist_mask_check2()].
 
 exist_mask_check1() ->
     EM = exist_mask:new([spu_cross_track]), 
     [?_assertEqual(1, exist_mask:get_spu_cross_track(EM)),
      ?_assertEqual(0, exist_mask:get_spu_along_track(EM)),
+     ?_assertEqual(0, exist_mask:get_target_rcs(EM))].
+
+exist_mask_check2() ->
+    EM = exist_mask:new([lat_scale_factor, spu_alt, mti_report_index, 
+        target_hr_lat, target_hr_lon, mdv]), 
+    [?_assertEqual(0, exist_mask:get_spu_cross_track(EM)),
+     ?_assertEqual(1, exist_mask:get_lat_scale_factor(EM)),
+     ?_assertEqual(0, exist_mask:get_spu_along_track(EM)),
+     ?_assertEqual(1, exist_mask:get_spu_alt(EM)),
+     ?_assertEqual(1, exist_mask:get_mti_report_index(EM)),
+     ?_assertEqual(1, exist_mask:get_target_hr_lat(EM)),
+     ?_assertEqual(1, exist_mask:get_target_hr_lon(EM)),
+     ?_assertEqual(1, exist_mask:get_mdv(EM)),
      ?_assertEqual(0, exist_mask:get_target_rcs(EM))].
 
 
