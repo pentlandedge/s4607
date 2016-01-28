@@ -17,6 +17,7 @@
 
 -export([
     decode/2, 
+    encode/2,
     display/2,
     get_mti_report_index/1,
     get_target_hr_lat/1,
@@ -207,6 +208,62 @@ decode(TrBin, EM) ->
         
     {ok, TR, Rem18}.
 
+%% Function to encode a target report binary from the specified record. 
+%% Uses the existence mask to decide which fields to use.
+encode(#tgt_report{
+    mti_report_index = MRI,
+    target_hr_lat = TgtHiResLat,
+    target_hr_lon = TgtHiResLon,
+    target_delta_lat = TgtDeltaLat,
+    target_delta_lon = TgtDeltaLon,
+    geodetic_height = GeodHeight,
+    target_vel_los = TgtVelLos,
+    target_wrap_velocity = TgtWrapVel,
+    target_snr = TgtSnr,
+    target_classification = TgtClassification,
+    target_class_prob = TgtClassProb,
+    target_slant_range_unc = TgtSlantRgeUnc,
+    target_cross_range_unc = TgtCrossRgeUnc,
+    target_height_unc = TgtHeightUnc,
+    target_rad_vel_unc = TgtRadVelUnc,
+    truth_tag_app = TruthTagApp,
+    truth_tag_entity = TruthTagEnt,
+    target_rcs = TgtRcs} = TR, EM) ->
+   
+    % Create a local function to wrap the check of the existence mask and 
+    % the parameter encoding/appending.
+    F = fun({Param, EvalFun, EncFun}, Acc) ->
+            case exist_mask:EvalFun(EM) of 
+                1 -> 
+                    PB = EncFun(Param),
+                    <<Acc/binary,PB/binary>>;
+                0 ->
+                    Acc 
+            end
+        end,
+
+    ParamTable = [
+        {MRI, get_revisit_index, fun stanag_types:integer_to_i16/1},
+        {TgtHiResLat, get_target_hr_lat, fun stanag_types:float_to_sa32/1},
+        {TgtHiResLon, get_target_hr_lon, fun stanag_types:float_to_ba32/1}, 
+        {TgtDeltaLat, get_target_delta_lat, fun stanag_types:integer_to_s16/1}, 
+        {TgtDeltaLon, get_target_delta_lon, fun stanag_types:integer_to_s16/1}, 
+        {GeodHeight, get_geodetic_height, fun stanag_types:integer_to_s16/1}, 
+        {TgtVelLos, get_target_vel_los, fun stanag_types:integer_to_s16/1}, 
+        {TgtWrapVel, get_target_wrap_velocity, fun stanag_types:integer_to_i16/1}, 
+        {TgtSnr, get_target_snr, fun stanag_types:integer_to_i8/1}, 
+        {TgtClassification, get_target_classification, fun encode_target_classification/1}, 
+        {TgtClassProb, get_target_class_prob, fun stanag_types:integer_to_i8/1}, 
+        {TgtSlantRgeUnc, get_target_slant_range_unc, fun stanag_types:integer_to_i16/1}, 
+        {TgtCrossRgeUnc, get_target_cross_range_unc, fun stanag_types:integer_to_i16/1}, 
+        {TgtHeightUnc, get_target_height_unc, fun stanag_types:integer_to_i8/1}, 
+        {TgtRadVelUnc, get_target_rad_vel_unc, fun stanag_types:integer_to_i16/1}, 
+        {TruthTagApp, get_truth_tag_app, fun stanag_types:integer_to_i8/1}, 
+        {TruthTagEnt, get_truth_tag_entity, fun stanag_types:integer_to_i32/1}, 
+        {TgtRcs, get_target_rcs, fun stanag_types:integer_to_s8/1}], 
+
+    lists:foldl(F, <<>>, ParamTable).
+    
 decode_target_classification(<<Val:8>>) ->
     decode_target_classification(Val);
     
@@ -244,6 +301,47 @@ decode_target_classification(143) -> tagging_device;
 decode_target_classification(254) -> other_simulated_target;
 decode_target_classification(255) -> unknown_simulated_target;
 decode_target_classification(_) -> reserved.
+
+%% Function to convert a target classification to the binary representation.
+encode_target_classification(X) when is_atom(X) ->
+    Val = etc(X),
+    <<Val>>.
+
+%% Helper functions with the encode mapping.
+etc(no_information_live_target) -> 0;
+etc(tracked_vehicle_live_target) -> 1;
+etc(wheeled_vehicle_live_target) -> 2;
+etc(rotary_wing_aircraft_live_target) -> 3;
+etc(fixed_wing_aircraft_live_target) -> 4;
+etc(stationary_rotator_live_target) -> 5;
+etc(maritime_live_target) -> 6;
+etc(beacon_live_target) -> 7;
+etc(amphibious_live_target) -> 8;
+etc(person_live_target) -> 9;
+etc(vehicle_live_target) -> 10;
+etc(animal_live_target) -> 11;
+etc(large_multiple_return_live_land_target) -> 12;
+etc(large_multiple_return_live_maritime_target) -> 13;
+etc(other_live_target) -> 126;
+etc(unknown_live_target) -> 127;
+etc(no_information_simulated_target) -> 128;
+etc(tracked_vehicle_simulated_target) -> 129;
+etc(wheeled_vehicle_simulated_target) -> 130;
+etc(rotary_wing_aircraft_simulated_target) -> 131;
+etc(fixed_wing_aircraft_simulated_target) -> 132;
+etc(stationary_rotator_simulated_target) -> 133;
+etc(maritime_simulated_target) -> 134;
+etc(beacon_simulated_target) -> 135;
+etc(amphibious_simulated_target) -> 136;
+etc(person_simulated_target) -> 137;
+etc(vehicle_simulated_target) -> 138;
+etc(animal_simulated_target) -> 139;
+etc(large_multiple_return_simulated_land_target) -> 140;
+etc(large_multiple_return_simulated_maritime_target) -> 141;
+etc(tagging_device) -> 143;
+etc(other_simulated_target) -> 254;
+etc(unknown_simulated_target) -> 255;
+etc(reserved) -> 253.
  
 display(TR, EM) ->
     sutils:conditional_display("MTI report index: ~p~n", 
