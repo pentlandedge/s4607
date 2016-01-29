@@ -18,6 +18,7 @@
 -export([
     decode/2, 
     encode/2,
+    new/1,
     display/2,
     get_mti_report_index/1,
     get_target_hr_lat/1,
@@ -263,7 +264,39 @@ encode(#tgt_report{
         {TgtRcs, get_target_rcs, fun stanag_types:integer_to_s8/1}], 
 
     lists:foldl(F, <<>>, ParamTable).
-    
+
+%% Function to allow the creation of a new target report with a set of 
+%% parameters provided as a list of [{param_name, value}] tuples.
+new(RepParams) ->
+    % Local function to pull the parameter from the list or supply a default
+    % value.
+    F = fun(P, L) ->
+            case lists:keyfind(P, 1, L) of
+                {P, V} -> V;
+                false  -> 0
+            end
+        end,
+
+    #tgt_report{
+        mti_report_index = F(mti_report_index, RepParams),
+        target_hr_lat = F(target_hr_lat, RepParams),
+        target_hr_lon = F(target_hr_lon, RepParams),
+        target_delta_lat = F(target_delta_lat, RepParams),
+        target_delta_lon = F(target_delta_lon, RepParams),
+        geodetic_height = F(geodetic_height, RepParams),
+        target_vel_los = F(target_vel_los, RepParams),
+        target_wrap_velocity = F(target_wrap_velocity, RepParams),
+        target_snr = F(target_snr, RepParams),
+        target_classification = F(target_classification, RepParams),
+        target_class_prob = F(target_class_prob, RepParams),
+        target_slant_range_unc = F(target_slant_range_unc, RepParams),
+        target_cross_range_unc = F(target_cross_range_unc, RepParams),
+        target_height_unc = F(target_height_unc, RepParams),
+        target_rad_vel_unc = F(target_rad_vel_unc, RepParams),
+        truth_tag_app = F(truth_tag_app, RepParams),
+        truth_tag_entity = F(truth_tag_entity, RepParams),
+        target_rcs = F(target_rcs, RepParams)}.
+
 decode_target_classification(<<Val:8>>) ->
     decode_target_classification(Val);
     
