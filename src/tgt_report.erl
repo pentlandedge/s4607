@@ -252,7 +252,7 @@ encode(#tgt_report{
         {GeodHeight, get_geodetic_height, fun stanag_types:integer_to_s16/1}, 
         {TgtVelLos, get_target_vel_los, fun stanag_types:integer_to_s16/1}, 
         {TgtWrapVel, get_target_wrap_velocity, fun stanag_types:integer_to_i16/1}, 
-        {TgtSnr, get_target_snr, fun stanag_types:integer_to_i8/1}, 
+        {TgtSnr, get_target_snr, fun stanag_types:integer_to_s8/1}, 
         {TgtClassification, get_target_classification, fun encode_target_classification/1}, 
         {TgtClassProb, get_target_class_prob, fun stanag_types:integer_to_i8/1}, 
         {TgtSlantRgeUnc, get_target_slant_range_unc, fun stanag_types:integer_to_i16/1}, 
