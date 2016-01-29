@@ -91,7 +91,6 @@ sample_report() ->
     EM = exist_mask:new(FieldList), 
     {EM, tgt_report:new(Params)}.
 
-
 %% Utility function to compare whether floating point values are within a 
 %% specified range.
 almost_equal(V1, V2, Delta) ->
