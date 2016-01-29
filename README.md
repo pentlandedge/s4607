@@ -23,6 +23,16 @@ From the Erlang prompt, open a file in Stanag 4607 format and display its conten
 ```
 The PacketList is a single, hierarchical structure suitable for use in data processing applications.
 
+# Running the escript
+For convenience, the display_4607 script has been provided. The software must have been built before running this. Make the script executable:
+```
+# chmod a+x display_4607
+```
+The script can then be run, and the results written to a file as follows:
+```
+# ./display_4607 /path/to/file > 4607.log
+```
+
 # Running the regression tests
 The project uses Erlang's eunit test system. From the Erlang shell, to run all of the unit tests:
 ```
