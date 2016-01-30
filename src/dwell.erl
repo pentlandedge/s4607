@@ -17,6 +17,7 @@
 
 -export([
     decode/1, 
+    new/1,
     display/1,
     get_existence_mask/1,
     get_revisit_index/1,
@@ -287,6 +288,51 @@ decode(<<EM:8/binary,RI:16/integer-unsigned-big,
         sensor_roll = SensorRoll,
         mdv = MDV,
         targets = TgtRepList}}.
+
+%% Function to create a new dwell report structure from the specified fields.
+new(Fields) ->
+    % Local function to pull the parameter from the list or supply a default
+    % value.
+    F = fun(P, L) ->
+            case lists:keyfind(P, 1, L) of
+                {P, V} -> V;
+                false  -> 0
+            end
+        end,
+
+    #dwell_segment{
+        existence_mask = F(existence_mask, Fields),
+        revisit_index = F(revisit_index, Fields),
+        dwell_index = F(dwell_index, Fields),
+        last_dwell_of_revisit = F(last_dwell_of_revisit, Fields),
+        target_report_count = F(target_report_count, Fields),
+        dwell_time = F(dwell_time, Fields),
+        sensor_lat = F(sensor_lat, Fields),
+        sensor_lon = F(sensor_lon, Fields),
+        sensor_alt = F(sensor_alt, Fields),
+        lat_scale_factor = F(lat_scale_factor, Fields),
+        lon_scale_factor = F(lon_scale_factor, Fields),
+        spu_along_track = F(spu_along_track, Fields),
+        spu_cross_track = F(spu_cross_track, Fields),
+        spu_alt = F(spu_alt, Fields),
+        sensor_track = F(sensor_track, Fields),
+        sensor_speed = F(sensor_speed, Fields),
+        sensor_vert_vel = F(sensor_vert_vel, Fields),
+        sensor_track_unc = F(sensor_track_unc, Fields),
+        sensor_speed_unc = F(sensor_speed_unc, Fields),
+        sensor_vert_vel_unc = F(sensor_vert_vel_unc, Fields),
+        platform_heading = F(platform_heading, Fields),
+        platform_pitch = F(platform_pitch, Fields),
+        platform_roll = F(platform_roll, Fields),
+        dwell_center_lat = F(dwell_center_lat, Fields),
+        dwell_center_lon = F(dwell_center_lon, Fields),
+        dwell_range_half_extent = F(dwell_range_half_extent, Fields),
+        dwell_angle_half_extent = F(dwell_angle_half_extent, Fields),
+        sensor_heading = F(sensor_heading, Fields),
+        sensor_pitch = F(sensor_pitch, Fields),
+        sensor_roll = F(sensor_roll, Fields),
+        mdv = F(mdv, Fields),
+        targets = F(targets, Fields)}.
 
 decode_last_dwell_of_revisit(0) -> additional_dwells;
 decode_last_dwell_of_revisit(1) -> no_additional_dwells.
