@@ -14,12 +14,12 @@
 %% under the License.
 %%
 
--module(all_tests).
+-module(dwell_tests).
 
 -include_lib("eunit/include/eunit.hrl").
 
-%% Define a test generator function to run all the tests. 
-all_test_() ->
-    [{module, s4607}, {module, stanag_types}, {module, mission},
-     {module, job_def}, {module, exist_mask}, {module, tgt_report},
-     {module, dwell}].  
+%% Define a test generator for the dwell segment. 
+dwell_test_() ->
+    [].
+
+
