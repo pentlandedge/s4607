@@ -24,7 +24,13 @@ dwell_test_() ->
 
 creation_checks1() ->
     DS = minimal_dwell(),
-    [?_assertEqual(100, dwell:get_revisit_index(DS))].
+    [?_assertEqual(100, dwell:get_revisit_index(DS)),
+     ?_assertEqual(20000, dwell:get_dwell_index(DS)),
+     ?_assertEqual(no_additional_dwells, dwell:get_last_dwell_of_revisit(DS)),
+     ?_assertEqual(0, dwell:get_target_report_count(DS)),
+     ?_assertEqual(1000000, dwell:get_dwell_time(DS)),
+     ?_assertEqual(-10000, dwell:get_sensor_alt(DS)),
+     ?_assertEqual(350, dwell:get_dwell_angle_half_extent(DS))].
 
 %% Function to create a sample dwell segment with only the mandatory fields
 %% set.
@@ -40,7 +46,7 @@ minimal_dwell() ->
    
     % Set the fields of the dwell segment.
     P = [{existence_mask, EM}, {revisit_index, 100}, {dwell_index, 20000}, 
-         {last_dwell_of_revisit, 1}, {target_report_count, 0}, 
+         {last_dwell_of_revisit, no_additional_dwells}, {target_report_count, 0}, 
          {dwell_time, 1000000}, {sensor_lat, -45.0}, {sensor_lon, 350},
          {sensor_alt, -10000}, {dwell_center_lat, -45.2}, 
          {dwell_center_lon, 350.2}, {dwell_range_half_extent, 255.0}, 
