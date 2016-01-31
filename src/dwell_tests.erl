@@ -24,7 +24,26 @@ dwell_test_() ->
 
 creation_checks1() ->
     DS = minimal_dwell(),
-    [?_assertEqual(100, dwell:get_revisit_index(DS)),
+    EM = dwell:get_existence_mask(DS),
+    [?_assertEqual(1, exist_mask:get_revisit_index(EM)),
+     ?_assertEqual(1, exist_mask:get_dwell_index(EM)),
+     ?_assertEqual(1, exist_mask:get_last_dwell_of_revisit(EM)),
+     ?_assertEqual(1, exist_mask:get_target_report_count(EM)),
+     ?_assertEqual(1, exist_mask:get_dwell_time(EM)),
+     ?_assertEqual(1, exist_mask:get_sensor_lat(EM)),
+     ?_assertEqual(1, exist_mask:get_sensor_lon(EM)),
+     ?_assertEqual(1, exist_mask:get_sensor_alt(EM)),
+     ?_assertEqual(1, exist_mask:get_dwell_range_half_extent(EM)),
+     ?_assertEqual(1, exist_mask:get_dwell_angle_half_extent(EM)),
+     
+     ?_assertEqual(0, exist_mask:get_spu_along_track(EM)),
+     ?_assertEqual(0, exist_mask:get_spu_alt(EM)),
+     ?_assertEqual(0, exist_mask:get_mti_report_index(EM)),
+     ?_assertEqual(0, exist_mask:get_target_hr_lat(EM)),
+     ?_assertEqual(0, exist_mask:get_target_hr_lon(EM)),
+     ?_assertEqual(0, exist_mask:get_mdv(EM)),
+
+     ?_assertEqual(100, dwell:get_revisit_index(DS)),
      ?_assertEqual(20000, dwell:get_dwell_index(DS)),
      ?_assertEqual(no_additional_dwells, dwell:get_last_dwell_of_revisit(DS)),
      ?_assertEqual(0, dwell:get_target_report_count(DS)),
