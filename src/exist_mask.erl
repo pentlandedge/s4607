@@ -241,8 +241,8 @@ encode(#exist_mask{
 %% Function to allow the caller to construct an existence mask by supplying 
 %% a list of atoms specifiying the optional and conditional fields to set.
 new(Fields) when is_list(Fields) ->
-    % Local function to pull a parameter from a list supplied or set a 
-    % default if unused.
+    % Local function to check if a parameter exists in the list supplied
+    % and return 1 if it is and 0 if not.
     F = fun(X) ->
             bool_to_int(lists:member(X, Fields))
         end,
