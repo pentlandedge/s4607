@@ -292,8 +292,6 @@ decode(<<EM:8/binary,RI:16/integer-unsigned-big,
 
 %% Function to encode a dwell segment record in its binary form.
 encode(DS) ->
-
-    io:format("DS: ~p~n", [DS]),
     % Extract the existence mask from the incoming dwell segment.
     EM = get_existence_mask(DS),
 
