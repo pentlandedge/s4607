@@ -236,7 +236,7 @@ encode(#exist_mask{
       D20:1,D21:1,D22:1,D23:1,1:1,1:1,1:1,1:1,D28:1,D29:1,D30:1,D31:1,
       D32_1:1,D32_2:1,D32_3:1,D32_4:1,D32_5:1,D32_6:1,D32_7:1,D32_8:1,
       D32_9:1,D32_10:1,D32_11:1,D32_12:1,D32_13:1,D32_14:1,D32_15:1,D32_16:1,
-      D32_17:1,D32_18:1,16#00>>.
+      D32_17:1,D32_18:1,0,0>>.
 
 %% Function to allow the caller to construct an existence mask by supplying 
 %% a list of atoms specifiying the optional and conditional fields to set.
