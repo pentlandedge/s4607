@@ -17,6 +17,7 @@
 
 -export([
     decode/1, 
+    encode/1,
     new/1,
     display/1,
     get_existence_mask/1,
@@ -289,6 +290,65 @@ decode(<<EM:8/binary,RI:16/integer-unsigned-big,
         mdv = MDV,
         targets = TgtRepList}}.
 
+%% Function to encode a dwell segment record in its binary form.
+encode(DS) ->
+
+    io:format("DS: ~p~n", [DS]),
+    % Extract the existence mask from the incoming dwell segment.
+    EM = get_existence_mask(DS),
+
+    % Create a local function to wrap the check of the existence mask and 
+    % the parameter encoding/appending.
+    % Exploits the trick that the function to access the dwell segment 
+    % fields is the same as that to access the corresponding existence mask
+    % field.
+    F = fun({EvalFun, EncFun}, Acc) ->
+            case exist_mask:EvalFun(EM) of 
+                1 ->
+                    Param = dwell:EvalFun(DS),
+                    PB = EncFun(Param),
+                    <<Acc/binary,PB/binary>>;
+                0 ->
+                    Acc 
+            end
+        end,
+
+    %% Encode does not yet cater for adding the actual target reports.
+    ParamTable = [
+        {get_revisit_index, fun stanag_types:integer_to_i16/1},
+        {get_dwell_index, fun stanag_types:integer_to_i16/1},
+        {get_last_dwell_of_revisit, fun encode_last_dwell_of_revisit/1},
+        {get_target_report_count, fun stanag_types:integer_to_i16/1},
+        {get_dwell_time, fun stanag_types:integer_to_i32/1},
+        {get_sensor_lat, fun stanag_types:float_to_sa32/1},
+        {get_sensor_lon, fun stanag_types:float_to_ba32/1},
+        {get_sensor_alt, fun stanag_types:integer_to_s32/1},
+        {get_lat_scale_factor, fun stanag_types:float_to_sa32/1},
+        {get_lon_scale_factor, fun stanag_types:float_to_ba32/1},
+        {get_spu_along_track, fun stanag_types:integer_to_i32/1},
+        {get_spu_cross_track, fun stanag_types:integer_to_i32/1},
+        {get_spu_alt, fun stanag_types:integer_to_i16/1},
+        {get_sensor_track, fun stanag_types:float_to_ba16/1},
+        {get_sensor_speed, fun stanag_types:integer_to_i32/1},
+        {get_sensor_vert_vel, fun stanag_types:integer_to_s8/1},
+        {get_sensor_track_unc, fun stanag_types:integer_to_i8/1},
+        {get_sensor_speed_unc, fun stanag_types:integer_to_i16/1},
+        {get_sensor_vert_vel_unc, fun stanag_types:integer_to_i16/1},
+        {get_platform_heading, fun stanag_types:float_to_ba16/1},
+        {get_platform_pitch, fun stanag_types:float_to_sa16/1},
+        {get_platform_roll, fun stanag_types:float_to_sa16/1},
+        {get_dwell_center_lat, fun stanag_types:float_to_sa32/1},
+        {get_dwell_center_lon, fun stanag_types:float_to_sa32/1},
+        {get_dwell_range_half_extent, fun stanag_types:float_to_b16/1},
+        {get_dwell_angle_half_extent, fun stanag_types:float_to_ba16/1},
+        {get_sensor_heading, fun stanag_types:float_to_sa16/1},
+        {get_sensor_pitch, fun stanag_types:float_to_sa16/1},
+        {get_sensor_roll, fun stanag_types:float_to_sa16/1},
+        {get_mdv, fun stanag_types:integer_to_i8/1}],
+       
+    EMenc = exist_mask:encode(EM),
+    lists:foldl(F, EMenc, ParamTable).
+
 %% Function to create a new dwell report structure from the specified fields.
 new(Fields) ->
     % Local function to pull the parameter from the list or supply a default
@@ -336,6 +396,9 @@ new(Fields) ->
 
 decode_last_dwell_of_revisit(0) -> additional_dwells;
 decode_last_dwell_of_revisit(1) -> no_additional_dwells.
+
+encode_last_dwell_of_revisit(additional_dwells) -> <<0>>;
+encode_last_dwell_of_revisit(no_additional_dwells) -> <<1>>.
 
 %% Function to walk through a binary containing a number of target reports,
 %% decoding each returning as a list of reports.
