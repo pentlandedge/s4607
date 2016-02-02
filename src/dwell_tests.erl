@@ -18,7 +18,7 @@
 
 -include_lib("eunit/include/eunit.hrl").
 
--export([minimal_dwell/0]).
+-export([minimal_dwell/0, one_target_dwell/0]).
 
 %% Define a test generator for the dwell segment. 
 dwell_test_() ->
@@ -111,6 +111,49 @@ minimal_dwell() ->
          {dwell_angle_half_extent, 350}],
 
     % Use the parameters to construct a new dwell segment.
+    dwell:new(P).
+
+%% Function to create a sample dwell with a single target report in it.
+one_target_dwell() ->
+    % Create a list of fields for the existence mask (excluding the target
+    % report).
+    F = [existence_mask, revisit_index, dwell_index, last_dwell_of_revisit,
+         target_report_count, dwell_time, sensor_lat, sensor_lon, 
+         sensor_alt, dwell_center_lat, dwell_center_lon, 
+         dwell_range_half_extent, dwell_angle_half_extent, targets],
+  
+    % The fields of the target report.
+    Params = [{mti_report_index, 34}, {target_hr_lat, -33.3}, 
+              {target_hr_lon, 357.57}, {target_delta_lat, -45},
+              {target_delta_lon, 46}, {geodetic_height, 5000},
+              {target_vel_los, 32000}, {target_wrap_velocity, 40000},
+              {target_snr, -128}, {target_classification, vehicle_live_target},
+              {target_class_prob, 90}, {target_slant_range_unc, 1000},
+              {target_cross_range_unc, 2000}, {target_height_unc, 200},
+              {target_rad_vel_unc, 5000}, {truth_tag_app, 200},
+              {truth_tag_entity, 10000}, {target_rcs, 10}],
+
+    % Extract the list of fields in the target report.
+    FieldList = [K || {K, _V} <- Params],
+
+    % Splice together all the fields that make up the existence mask.
+    Efields = F ++ FieldList,
+
+    % Create the existence mask.
+    EM = exist_mask:new(Efields), 
+   
+    % Create the target report.
+    TgtRep = tgt_report:new(Params),
+
+    % Set the fields of the dwell segment.
+    P = [{existence_mask, EM}, {revisit_index, 100}, {dwell_index, 20000}, 
+         {last_dwell_of_revisit, no_additional_dwells}, {target_report_count, 0}, 
+         {dwell_time, 1000000}, {sensor_lat, -45.0}, {sensor_lon, 350},
+         {sensor_alt, -10000}, {dwell_center_lat, -45.2}, 
+         {dwell_center_lon, 350.2}, {dwell_range_half_extent, 255.0}, 
+         {dwell_angle_half_extent, 350}, {targets, [TgtRep]}],
+
+    % Create and return the dwell segment.
     dwell:new(P).
 
 %% Utility function to compare whether floating point values are within a 
