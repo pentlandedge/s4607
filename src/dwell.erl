@@ -345,7 +345,24 @@ encode(DS) ->
         {get_mdv, fun stanag_types:integer_to_i8/1}],
        
     EMenc = exist_mask:encode(EM),
-    lists:foldl(F, EMenc, ParamTable).
+    % Produce a binary dwell segment, missing only the target reports.
+    Bin1 = lists:foldl(F, EMenc, ParamTable),
+    % Append any target reports.
+    encode_target_reports(get_target_report_count(DS), get_targets(DS), EM, Bin1).
+
+%% Helper function for the dwell encode: encodes all of the target reports.
+%% InitBin can be set to the dwell report prior to adding the target reports
+%% so that the target reports are automatically added to the end of the 
+%% dwell segment.
+encode_target_reports(0, _RepList, _EM, InitBin) -> 
+    InitBin;
+encode_target_reports(RepCount, RepList, EM, InitBin) ->
+    RepCount = length(RepList),
+    F = fun(Rep, Acc) ->
+            Bin = tgt_report:encode(Rep, EM),
+            <<Acc/binary,Bin/binary>>
+        end,
+    lists:foldl(F, InitBin, RepList).
 
 %% Function to create a new dwell report structure from the specified fields.
 new(Fields) ->
