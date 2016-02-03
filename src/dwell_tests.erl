@@ -22,7 +22,7 @@
 
 %% Define a test generator for the dwell segment. 
 dwell_test_() ->
-    [creation_checks1(), encode_decode_check1()].
+    [creation_checks1(), encode_decode_check1(), encode_decode_check2()].
 
 creation_checks1() ->
     DS = minimal_dwell(),
@@ -89,6 +89,43 @@ encode_decode_check1() ->
      ?_assertEqual(-10000, dwell:get_sensor_alt(DS)),
      ?_assert(almost_equal(255.0, dwell:get_dwell_range_half_extent(DS), 0.0000001)),
      ?_assert(almost_equal(350.0, dwell:get_dwell_angle_half_extent(DS), 0.1))].
+
+%% Second encode/decode check, this time with a target report included in 
+%% the dwell segment.
+encode_decode_check2() ->
+    TD = one_target_dwell(),
+    EM = dwell:get_existence_mask(TD),
+    Bin = dwell:encode(TD),
+    {ok, DS} = dwell:decode(Bin),
+    [?_assertEqual(1, exist_mask:get_revisit_index(EM)),
+     ?_assertEqual(1, exist_mask:get_dwell_index(EM)),
+     ?_assertEqual(1, exist_mask:get_last_dwell_of_revisit(EM)),
+     ?_assertEqual(1, exist_mask:get_target_report_count(EM)),
+     ?_assertEqual(1, exist_mask:get_dwell_time(EM)),
+     ?_assertEqual(1, exist_mask:get_sensor_lat(EM)),
+     ?_assertEqual(1, exist_mask:get_sensor_lon(EM)),
+     ?_assertEqual(1, exist_mask:get_sensor_alt(EM)),
+     ?_assertEqual(1, exist_mask:get_dwell_range_half_extent(EM)),
+     ?_assertEqual(1, exist_mask:get_dwell_angle_half_extent(EM)),
+     
+     ?_assertEqual(0, exist_mask:get_spu_along_track(EM)),
+     ?_assertEqual(0, exist_mask:get_spu_alt(EM)),
+     ?_assertEqual(1, exist_mask:get_mti_report_index(EM)),
+     ?_assertEqual(1, exist_mask:get_target_hr_lat(EM)),
+     ?_assertEqual(1, exist_mask:get_target_hr_lon(EM)),
+     ?_assertEqual(0, exist_mask:get_mdv(EM)),
+
+     ?_assertEqual(100, dwell:get_revisit_index(DS)),
+     ?_assertEqual(20000, dwell:get_dwell_index(DS)),
+     ?_assertEqual(no_additional_dwells, dwell:get_last_dwell_of_revisit(DS)),
+     ?_assertEqual(1, dwell:get_target_report_count(DS)),
+     ?_assertEqual(1000000, dwell:get_dwell_time(DS)),
+     ?_assert(almost_equal(-45.0, dwell:get_sensor_lat(DS), 0.0000001)),
+     ?_assert(almost_equal(350.0, dwell:get_sensor_lon(DS), 0.0000001)),
+     ?_assertEqual(-10000, dwell:get_sensor_alt(DS)),
+     ?_assert(almost_equal(255.0, dwell:get_dwell_range_half_extent(DS), 0.0000001)),
+     ?_assert(almost_equal(350.0, dwell:get_dwell_angle_half_extent(DS), 0.1))].
+
 
 %% Function to create a sample dwell segment with only the mandatory fields
 % set.
