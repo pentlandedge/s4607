@@ -356,8 +356,9 @@ encode(DS) ->
 %% dwell segment.
 encode_target_reports(0, _RepList, _EM, InitBin) -> 
     InitBin;
-encode_target_reports(RepCount, RepList, EM, InitBin) ->
-    RepCount = length(RepList),
+encode_target_reports(RepCount, RepList, EM, InitBin) 
+    when RepCount =:= length(RepList) ->
+
     F = fun(Rep, Acc) ->
             Bin = tgt_report:encode(Rep, EM),
             <<Acc/binary,Bin/binary>>
