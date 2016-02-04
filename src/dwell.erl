@@ -429,6 +429,8 @@ decode_target_report_list(Bin, EM, TgtCount, AccTgts) when TgtCount > 0 ->
     decode_target_report_list(Rem, EM, TgtCount-1, [TR|AccTgts]).
 
 display(DS) ->
+    io:format("****************************************~n"),
+    io:format("** @dwell~n"),
     EM = DS#dwell_segment.existence_mask,
     exist_mask:display(EM),
     io:format("Revisit index: ~p~n", [get_revisit_index(DS)]),

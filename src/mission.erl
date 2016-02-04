@@ -95,6 +95,8 @@ decode_platform_type(255) -> other;
 decode_platform_type(_) -> future_use.
 
 display(MSeg) ->
+    io:format("****************************************~n"),
+    io:format("** @mission~n"),
     io:format("Mission Plan: ~p~n", [MSeg#mission_segment.mission_plan]),
     io:format("Flight Plan: ~p~n", [MSeg#mission_segment.flight_plan]),
     io:format("Plat. Type: ~p~n", [MSeg#mission_segment.platform_type]),

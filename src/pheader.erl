@@ -120,6 +120,8 @@ decode_platform_id(<<X:10/binary>>) ->
     sutils:trim_trailing_spaces(binary_to_list(X)).
 
 display(PktHdr) ->
+    io:format("****************************************~n"),
+    io:format("** @pheader~n"),
     io:format("Version: ~p~n", [get_version_id(PktHdr)]),
     io:format("Packet size: ~p~n", [get_packet_size(PktHdr)]), 
     io:format("Nationality: ~p~n", [get_nationality(PktHdr)]),

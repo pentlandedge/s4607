@@ -266,6 +266,8 @@ decode_geoid_model(3) -> flat_earth;
 decode_geoid_model(_) -> reserved.
 
 display(JDS) ->
+    io:format("****************************************~n"),
+    io:format("** @job_def~n"),
     io:format("Job ID: ~p~n", [JDS#job_def.job_id]), 
     io:format("Sensor ID type: ~p~n", [JDS#job_def.sensor_id_type]), 
     io:format("Sensor ID model: ~p~n", [JDS#job_def.sensor_id_model]), 

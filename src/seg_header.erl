@@ -50,6 +50,8 @@ decode_segment_type(102) -> job_acknowledge;
 decode_segment_type(_) -> reserved.
 
 display(SegHdr) ->
+    io:format("****************************************~n"),
+    io:format("** @seg_header~n"),
     io:format("Segment type: ~p~n", [get_segment_type(SegHdr)]),
     io:format("Segment size: ~p~n", [get_segment_size(SegHdr)]).
 

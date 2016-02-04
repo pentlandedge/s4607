@@ -377,6 +377,8 @@ etc(unknown_simulated_target) -> 255;
 etc(reserved) -> 253.
  
 display(TR, EM) ->
+    io:format("****************************************~n"),
+    io:format("** @tgt_report~n"),
     sutils:conditional_display("MTI report index: ~p~n", 
         [get_mti_report_index(TR)], 
         exist_mask:get_mti_report_index(EM)),

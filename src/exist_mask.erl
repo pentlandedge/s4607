@@ -301,6 +301,8 @@ bool_to_int(true) -> 1;
 bool_to_int(false) -> 0.
 
 display(EM) ->
+    io:format("****************************************~n"),
+    io:format("** @existence_mask~n"),
     io:format("Revisit index: ~p~n", [get_revisit_index(EM)]),
     io:format("Dwell index: ~p~n", [get_dwell_index(EM)]),
     io:format("Last dwell of revisit: ~p~n", [get_last_dwell_of_revisit(EM)]),
