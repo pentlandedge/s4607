@@ -22,7 +22,8 @@
 
 %% Define a test generator for the dwell segment. 
 dwell_test_() ->
-    [creation_checks1(), encode_decode_check1(), encode_decode_check2()].
+    [creation_checks1(), encode_decode_check1(), encode_decode_check2(), 
+     encode_decode_check3()].
 
 creation_checks1() ->
     DS = minimal_dwell(),
@@ -126,6 +127,20 @@ encode_decode_check2() ->
      ?_assert(almost_equal(255.0, dwell:get_dwell_range_half_extent(DS), 0.0000001)),
      ?_assert(almost_equal(350.0, dwell:get_dwell_angle_half_extent(DS), 0.1))].
 
+%% Third encode/decode check, this time with three target reports included in 
+%% the dwell segment.
+encode_decode_check3() ->
+    TD = three_targets_dwell(),
+    Bin = dwell:encode(TD),
+    {ok, DS} = dwell:decode(Bin),
+    [T1,T2,T3] = dwell:get_targets(DS),
+    [?_assertEqual(3, dwell:get_target_report_count(DS)),
+     ?_assert(almost_equal(-33.3, tgt_report:get_target_hr_lat(T1), 0.0000001)),
+     ?_assert(almost_equal(-33.4, tgt_report:get_target_hr_lat(T2), 0.0000001)),
+     ?_assert(almost_equal(-33.5, tgt_report:get_target_hr_lat(T3), 0.0000001)),
+     ?_assertEqual(3000, tgt_report:get_geodetic_height(T1)),
+     ?_assertEqual(4000, tgt_report:get_geodetic_height(T2)),
+     ?_assertEqual(5000, tgt_report:get_geodetic_height(T3))].
 
 %% Function to create a sample dwell segment with only the mandatory fields
 % set.
