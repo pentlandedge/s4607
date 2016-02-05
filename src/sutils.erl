@@ -25,14 +25,17 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Utility functions
 
+% Function to remove trailing space characters (not all whitespace) from a
+% list
 trim_trailing_spaces(Str) ->
     Rev = lists:reverse(Str),
     F = fun(C) -> C =:= $\  end,
     RStrip = lists:dropwhile(F, Rev),
     lists:reverse(RStrip).
 
+% Function adds spaces to the specified string to make it of length N.
 add_trailing_spaces(Str, N) when length(Str) < N ->
-    % Inelegant list splice.
+    % Inelegant list splice, creates a list of spaces first.
     Trail = [$  || _ <- lists:seq(1, N - length(Str))],
     lists:append(Str, Trail);
 add_trailing_spaces(Str, N) when length(Str) =:= N ->
