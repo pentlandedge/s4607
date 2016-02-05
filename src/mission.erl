@@ -17,6 +17,7 @@
 
 -export([
     decode/1, 
+    encode/1, 
     display/1, 
     decode_platform_type/1,
     encode_platform_type/1,
@@ -51,6 +52,25 @@ decode(<<M1:12/binary, M2:12/binary, M3, M4:10/binary,
     {ok, #mission_segment{mission_plan = Mission, flight_plan = Flight, 
         platform_type = Type, platform_config = Config, year = Year,
         month = Month, day = Day}}.
+
+%% Function takes a mission segment and returns an ecoded binary form.
+encode(#mission_segment{mission_plan = MP, flight_plan = FP, 
+    platform_type = Type, platform_config = Config,
+    year = Year, month = Month, day = Day}) ->
+
+    % Declare a local function to pad the strings and convert. 
+    F = fun(Str, N) ->
+            Padded = sutils:add_trailing_spaces(Str, N),
+            list_to_binary(Padded)
+        end,
+    
+    B1 = F(MP, 12),
+    B2 = F(FP, 12),
+    B3 = encode_platform_type(Type),
+    B4 = F(Config, 10),
+    B5 = stanag_types:integer_to_i16(Year),
+
+    <<B1/binary,B2/binary,B3/binary,B4/binary,B5/binary,Month,Day>>.
 
 decode_platform_type(0) -> unidentified;
 decode_platform_type(1) -> acs;
