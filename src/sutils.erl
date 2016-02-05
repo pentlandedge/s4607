@@ -17,6 +17,7 @@
 
 -export([
     trim_trailing_spaces/1,
+    add_trailing_spaces/2,
     conditional_extract/5,
     conditional_display/3,
     extract_data/2]).
@@ -29,6 +30,13 @@ trim_trailing_spaces(Str) ->
     F = fun(C) -> C =:= $\  end,
     RStrip = lists:dropwhile(F, Rev),
     lists:reverse(RStrip).
+
+add_trailing_spaces(Str, N) when length(Str) < N ->
+    % Inelegant list splice.
+    Trail = [$  || _ <- lists:seq(1, N - length(Str))],
+    lists:append(Str, Trail);
+add_trailing_spaces(Str, N) when length(Str) =:= N ->
+    Str.
 
 %% Function to conditionally extract a paramater from the front of a binary
 %% based on the state of a mask bit.
