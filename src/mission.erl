@@ -40,7 +40,7 @@
     day}).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Mission segment decoding functions.
+%% Mission segment decoding/encoding functions.
 
 decode(<<M1:12/binary, M2:12/binary, M3, M4:10/binary, 
     Year:16/integer-unsigned-big, Month, Day>>) ->
