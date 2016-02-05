@@ -19,6 +19,7 @@
     decode/1, 
     display/1, 
     decode_platform_type/1,
+    encode_platform_type/1,
     get_mission_plan/1,
     get_flight_plan/1,
     get_platform_type/1,
@@ -93,6 +94,49 @@ decode_platform_type(38) -> warrior;
 decode_platform_type(39) -> twin_otter;
 decode_platform_type(255) -> other;
 decode_platform_type(_) -> future_use.
+
+encode_platform_type(unidentified) -> 0;
+encode_platform_type(acs) -> 1;
+encode_platform_type(arl_m) -> 2;
+encode_platform_type(sentinel) -> 3;
+encode_platform_type(rotary_wing_radar) -> 4;
+encode_platform_type(global_hawk_navy) -> 5;
+encode_platform_type(horizon) -> 6;
+encode_platform_type(e_8) -> 7;
+encode_platform_type(p_3c) -> 8;
+encode_platform_type(predator) -> 9;
+encode_platform_type(radarsat2) -> 10;
+encode_platform_type(u_2) -> 11;
+encode_platform_type(e_10) -> 12;
+encode_platform_type(ugs_single) -> 13;
+encode_platform_type(ugs_cluster) -> 14;
+encode_platform_type(ground_based) -> 15;
+encode_platform_type(uav_army) -> 16;
+encode_platform_type(uav_marines) -> 17;
+encode_platform_type(uav_navy) -> 18;
+encode_platform_type(uav_air_force) -> 19;
+encode_platform_type(global_hawk_air_force) -> 20;
+encode_platform_type(global_hawk_australia) -> 21;
+encode_platform_type(global_hawk_germany) -> 22;
+encode_platform_type(paul_revere) -> 23;
+encode_platform_type(mariner_uav) -> 24;
+encode_platform_type(bac_111) -> 25;
+encode_platform_type(coyote) -> 26;
+encode_platform_type(king_air) -> 27;
+encode_platform_type(limit) -> 28;
+encode_platform_type(nrl_np_3b) -> 29;
+encode_platform_type(solstar_x) -> 30;
+encode_platform_type(watchkeeper) -> 31;
+encode_platform_type(alliance_ground_surveillance) -> 32;
+encode_platform_type(stryker) -> 33;
+encode_platform_type(ags_hale_uav) -> 34;
+encode_platform_type(sidm) -> 35;
+encode_platform_type(reaper) -> 36;
+encode_platform_type(warrior_a) -> 37;
+encode_platform_type(warrior) -> 38;
+encode_platform_type(twin_otter) -> 39;
+encode_platform_type(other) -> 255;
+encode_platform_type(future_use) -> 254.
 
 display(MSeg) ->
     io:format("****************************************~n"),
