@@ -18,6 +18,7 @@
 -export([
     decode/1, 
     encode/1, 
+    new/7,
     display/1, 
     decode_platform_type/1,
     encode_platform_type/1,
@@ -71,6 +72,12 @@ encode(#mission_segment{mission_plan = MP, flight_plan = FP,
     B5 = stanag_types:integer_to_i16(Year),
 
     <<B1/binary,B2/binary,B3/binary,B4/binary,B5/binary,Month,Day>>.
+
+%% Simple function to create a mission segment from the supplied parameters.
+new(Mission, Flight, Type, Config, Year, Month, Day) ->
+    #mission_segment{mission_plan = Mission, flight_plan = Flight, 
+        platform_type = Type, platform_config = Config, year = Year,
+        month = Month, day = Day}.
 
 decode_platform_type(0) -> unidentified;
 decode_platform_type(1) -> acs;
