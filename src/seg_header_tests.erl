@@ -20,12 +20,20 @@
 
 %% Define a test generator for the decoding of the segment header. 
 seg_header_test_() ->
-    [header_check1()].
+    [header_check1(), header_check2()].
 
 header_check1() ->
-    Hdr1 = seg_header:decode(sample_seg_header1()),
-    [?_assertEqual(free_text, seg_header:get_segment_type(Hdr1))].
+    Hdr = seg_header:decode(sample_seg_header1()),
+    [?_assertEqual(free_text, seg_header:get_segment_type(Hdr)),
+     ?_assertEqual(100, seg_header:get_segment_size(Hdr))].
+
+header_check2() ->
+    Hdr = seg_header:decode(sample_seg_header2()),
+    [?_assertEqual(job_request, seg_header:get_segment_type(Hdr)),
+     ?_assertEqual(16909060, seg_header:get_segment_size(Hdr))].
 
 sample_seg_header1() ->
     <<6,0,0,0,100>>.
 
+sample_seg_header2() ->
+    <<101,1,2,3,4>>.
