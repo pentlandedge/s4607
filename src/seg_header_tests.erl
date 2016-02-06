@@ -18,7 +18,14 @@
 
 -include_lib("eunit/include/eunit.hrl").
 
-%% Define a test generator for the decoding of the mission segment. 
+%% Define a test generator for the decoding of the segment header. 
 seg_header_test_() ->
-    [].
+    [header_check1()].
+
+header_check1() ->
+    Hdr1 = seg_header:decode(sample_seg_header1()),
+    [?_assertEqual(free_text, seg_header:get_segment_type(Hdr1))].
+
+sample_seg_header1() ->
+    <<6,0,0,0,100>>.
 
