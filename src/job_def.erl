@@ -17,6 +17,7 @@
 
 -export([
     decode/1, 
+    encode/1,
     new/1,
     display/1,
     get_job_id/1,
@@ -115,6 +116,10 @@ decode(<<JobID:32,SIDT,SIDM:6/binary,TFF:1/binary,Pri,
         ns_val_false_alarm_density = decode_range_ns(J26, 0, 254, 255),
         terr_elev_model = decode_terrain_elev_model(J27),
         geoid_model = decode_geoid_model(J28)}}.
+
+%% Function to produce a binary encoded version of a job definition segment.
+encode(_JD) ->
+    ok.
 
 %% Function to create a new job definition segment from a supplied list of 
 %% {parameter, Value} tuples.
