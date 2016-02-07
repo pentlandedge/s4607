@@ -131,7 +131,8 @@ encode(JD) ->
     ParamList = 
     [{fun get_job_id/1, fun stanag_types:integer_to_i32/1},
      {fun get_sensor_id_type/1, fun encode_sensor_id_type/1},
-     {fun get_sensor_id_model/1, fun encode_sensor_id_model/1}
+     {fun get_sensor_id_model/1, fun encode_sensor_id_model/1},
+     {fun get_target_filt_flag/1, fun encode_target_filtering_flag/1}
     ],
     
     lists:foldl(F, <<>>, ParamList).
@@ -269,6 +270,27 @@ decode_target_filtering_flag(<<0:5,B2:1,B1:1,B0:1>>) ->
             0 -> L2 
          end,
     L3.
+
+%% Function to encode the target filtering flag
+encode_target_filtering_flag(FlagList) ->
+    AF = lists:member(area_filtering_intersection_dwell_bounding, FlagList),
+    AB = lists:member(area_blanking_unspecified_area, FlagList),
+    SB = lists:member(sector_blanking_unspecified_area, FlagList),
+    
+    % Convert from booleans to integers.
+    F = fun(Flag) -> 
+            case Flag of 
+                true -> 1;
+                false -> 0
+            end
+        end,
+
+    B0 = F(AF),
+    B1 = F(AB),
+    B2 = F(SB),
+
+    % Combine all bits into a binary.
+    <<0:5,B2,B1,B0>>.
 
 %% Function to decode the various radar modes for different systems.
 decode_radar_mode(0) -> {unspecified_mode, generic};
