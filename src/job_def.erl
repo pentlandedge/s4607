@@ -129,7 +129,9 @@ encode(JD) ->
 
     % List of parameters in the how to fetch/encode.
     ParamList = 
-    [{fun get_sensor_id_type/1, fun encode_sensor_id_type/1}
+    [{fun get_job_id/1, fun stanag_types:integer_to_i32/1},
+     {fun get_sensor_id_type/1, fun encode_sensor_id_type/1},
+     {fun get_sensor_id_model/1, fun encode_sensor_id_model/1}
     ],
     
     lists:foldl(F, <<>>, ParamList).
@@ -245,6 +247,10 @@ esid(no_statement) -> 255.
 
 decode_sensor_id_model(Bin) ->
     sutils:trim_trailing_spaces(binary_to_list(Bin)).
+
+encode_sensor_id_model(M) ->
+    Pad = sutils:add_trailing_spaces(M, 6),
+    list_to_binary(Pad).
 
 %% Function to decode the bits in the target filtering flag.
 decode_target_filtering_flag(<<0>>) -> 
