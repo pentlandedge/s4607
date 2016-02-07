@@ -118,8 +118,21 @@ decode(<<JobID:32,SIDT,SIDM:6/binary,TFF:1/binary,Pri,
         geoid_model = decode_geoid_model(J28)}}.
 
 %% Function to produce a binary encoded version of a job definition segment.
-encode(_JD) ->
-    ok.
+encode(JD) ->
+    % Function to encode each parameter in the list and append to an 
+    % accumulated binary.
+    F = fun({GetFun, EncFun}, Acc) ->
+            P = GetFun(JD),
+            Bin = EncFun(P),
+            <<Acc/binary,Bin/binary>>
+        end,
+
+    % List of parameters in the how to fetch/encode.
+    ParamList = 
+    [{fun get_sensor_id_type/1, fun encode_sensor_id_type/1}
+    ],
+    
+    lists:foldl(F, <<>>, ParamList).
 
 %% Function to create a new job definition segment from a supplied list of 
 %% {parameter, Value} tuples.
@@ -163,7 +176,6 @@ new(ParamList) ->
         terr_elev_model = F(terr_elev_model, ParamList, none_specified),
         geoid_model = F(geoid_model, ParamList, none_specified)}.
 
-
 decode_sensor_id_type(0) -> unidentified;
 decode_sensor_id_type(1) -> other;
 decode_sensor_id_type(2) -> hisar;
@@ -194,6 +206,42 @@ decode_sensor_id_type(26) -> anzpy_1;
 decode_sensor_id_type(27) -> vader;
 decode_sensor_id_type(255) -> no_statement;
 decode_sensor_id_type(_) -> available_future_use.
+
+%% Function to encode the sensor ID type as a binary.
+encode_sensor_id_type(Type) ->
+    Val = esid(Type),
+    <<Val>>.
+
+esid(unidentified) -> 0;
+esid(other) -> 1;
+esid(hisar) -> 2;
+esid(astor) -> 3;
+esid(rotary_wing_radar) -> 4;
+esid(global_hawk_sensor) -> 5;
+esid(horizon) -> 6;
+esid(apy_3) -> 7;
+esid(apy_6) -> 8;
+esid(apy_8) -> 9;
+esid(radarsat2) -> 10;
+esid(asars_2a) -> 11;
+esid(tesar) -> 12;
+esid(mp_rtip) -> 13;
+esid(apg_77) -> 14;
+esid(apg_79) -> 15;
+esid(apg_81) -> 16;
+esid(apg_6v1) -> 17;
+esid(dpy_1) -> 18;
+esid(sidm) -> 19;
+esid(limit) -> 20;
+esid(tcar) -> 21;
+esid(lsrs) -> 22;
+esid(ugs_single_sensor) -> 23;
+esid(ugs_cluster_sensor) -> 24;
+esid(imaster_gmti) -> 25;
+esid(anzpy_1) -> 26;
+esid(vader) -> 27;
+esid(available_future_use) -> 254;
+esid(no_statement) -> 255.
 
 decode_sensor_id_model(Bin) ->
     sutils:trim_trailing_spaces(binary_to_list(Bin)).
