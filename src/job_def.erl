@@ -17,6 +17,7 @@
 
 -export([
     decode/1, 
+    new/1,
     display/1,
     get_job_id/1,
     get_sensor_id_type/1,
@@ -114,6 +115,49 @@ decode(<<JobID:32,SIDT,SIDM:6/binary,TFF:1/binary,Pri,
         ns_val_false_alarm_density = decode_range_ns(J26, 0, 254, 255),
         terr_elev_model = decode_terrain_elev_model(J27),
         geoid_model = decode_geoid_model(J28)}}.
+
+%% Function to create a new job definition segment from a supplied list of 
+%% {parameter, Value} tuples.
+new(ParamList) ->
+    % Local function to pull the parameter from the list or use a default
+    % value.
+    F = fun(P, L, D) ->
+            case lists:keyfind(P, 1, L) of
+                {P, V} -> V;
+                false  -> D 
+            end
+        end,
+
+    #job_def{
+        job_id = F(job_id, ParamList, 1),
+        sensor_id_type = F(sensor_id_type, ParamList, no_statement),
+        sensor_id_model = F(sensor_id_model, ParamList, ""),
+        target_filt_flag = F(target_filt_flag, ParamList, no_filtering),
+        priority = F(priority, ParamList, 99),
+        bounding_a_lat = F(bounding_a_lat, ParamList, 0.0),
+        bounding_a_lon = F(bounding_a_lon, ParamList, 0.0),
+        bounding_b_lat = F(bounding_b_lat, ParamList, 0.0),
+        bounding_b_lon = F(bounding_b_lon, ParamList, 0.0),
+        bounding_c_lat = F(bounding_c_lat, ParamList, 0.0),
+        bounding_c_lon = F(bounding_c_lon, ParamList, 0.0),
+        bounding_d_lat = F(bounding_d_lat, ParamList, 0.0),
+        bounding_d_lon = F(bounding_d_lon, ParamList, 0.0),
+        radar_mode = F(radar_mode, ParamList, {unspecified_mode, generic}),
+        nom_rev_int = F(nom_rev_int, ParamList, 0),
+        ns_pos_unc_along_track = F(ns_pos_unc_along_track, ParamList, no_statement),
+        ns_pos_unc_cross_track = F(ns_pos_unc_cross_track, ParamList, no_statement),
+        ns_pos_unc_alt = F(ns_pos_unc_alt, ParamList, no_statement),
+        ns_pos_unc_heading = F(ns_pos_unc_heading, ParamList, no_statement),
+        ns_pos_unc_sensor_speed = F(ns_pos_unc_sensor_speed, ParamList, no_statement),
+        ns_val_slant_range_std_dev = F(ns_val_slant_range_std_dev, ParamList, no_statement),
+        ns_val_cross_range_std_dev = F(ns_val_cross_range_std_dev, ParamList, no_statement),
+        ns_val_tgt_vel_los_std_dev = F(ns_val_tgt_vel_los_std_dev, ParamList, no_statement),
+        ns_val_mdv = F(ns_val_mdv, ParamList, no_statement),
+        ns_val_det_prob = F(ns_val_det_prob, ParamList, no_statement),
+        ns_val_false_alarm_density = F(ns_val_false_alarm_density, ParamList, no_statement),
+        terr_elev_model = F(terr_elev_model, ParamList, none_specified),
+        geoid_model = F(geoid_model, ParamList, none_specified)}.
+
 
 decode_sensor_id_type(0) -> unidentified;
 decode_sensor_id_type(1) -> other;
