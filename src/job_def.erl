@@ -132,7 +132,16 @@ encode(JD) ->
     [{fun get_job_id/1, fun stanag_types:integer_to_i32/1},
      {fun get_sensor_id_type/1, fun encode_sensor_id_type/1},
      {fun get_sensor_id_model/1, fun encode_sensor_id_model/1},
-     {fun get_target_filt_flag/1, fun encode_target_filtering_flag/1}
+     {fun get_target_filt_flag/1, fun encode_target_filtering_flag/1},
+     {fun get_priority/1, fun encode_priority/1},
+     {fun get_bounding_a_lat/1, fun stanag_types:float_to_sa32/1},
+     {fun get_bounding_a_lon/1, fun stanag_types:float_to_ba32/1},
+     {fun get_bounding_b_lat/1, fun stanag_types:float_to_sa32/1},
+     {fun get_bounding_b_lon/1, fun stanag_types:float_to_ba32/1},
+     {fun get_bounding_c_lat/1, fun stanag_types:float_to_ba32/1},
+     {fun get_bounding_c_lon/1, fun stanag_types:float_to_ba32/1},
+     {fun get_bounding_d_lat/1, fun stanag_types:float_to_sa32/1},
+     {fun get_bounding_d_lon/1, fun stanag_types:float_to_ba32/1}
     ],
     
     lists:foldl(F, <<>>, ParamList).
@@ -291,6 +300,10 @@ encode_target_filtering_flag(FlagList) ->
 
     % Combine all bits into a binary.
     <<0:5,B2,B1,B0>>.
+
+% Function to encode the radar priority.
+encode_priority(end_of_job) -> <<255>>;
+encode_priority(X) when X >= 1, X =< 99 -> <<X>>.
 
 %% Function to decode the various radar modes for different systems.
 decode_radar_mode(0) -> {unspecified_mode, generic};
