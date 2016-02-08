@@ -313,6 +313,8 @@ decode_target_filtering_flag(<<0:5,B2:1,B1:1,B0:1>>) ->
     L3.
 
 %% Function to encode the target filtering flag
+encode_target_filtering_flag(no_filtering) ->
+    <<0>>;
 encode_target_filtering_flag(FlagList) ->
     AF = lists:member(area_filtering_intersection_dwell_bounding, FlagList),
     AB = lists:member(area_blanking_unspecified_area, FlagList),

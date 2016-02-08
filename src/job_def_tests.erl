@@ -22,7 +22,7 @@
 
 %% Define a test generator for the decoding of the mission segment. 
 job_def_test_() ->
-    [job1_checks()].
+    [job1_checks(), job_def_encode_decode()].
 
 job1_checks() ->
     {ok, JD1} = job_def:decode(job_def1()),
@@ -33,6 +33,22 @@ job1_checks() ->
      ?_assertEqual(23, job_def:get_priority(JD1)),
      ?_assertEqual(flat_earth, job_def:get_geoid_model(JD1))].
 
+job_def_encode_decode() ->
+    JD = sample_job_def(),
+    EJD = job_def:encode(JD),
+    {ok, DEJD} = job_def:decode(EJD),
+    [?_assertEqual(100, job_def:get_job_id(DEJD)),
+     ?_assertEqual(rotary_wing_radar, job_def:get_sensor_id_type(DEJD)),
+     ?_assertEqual("Heli 1", job_def:get_sensor_id_model(DEJD)),
+     ?_assertEqual(no_filtering, job_def:get_target_filt_flag(DEJD)),
+     ?_assertEqual(30, job_def:get_priority(DEJD)),
+     ?_assertEqual({monopulse_calibration, asars_aip}, job_def:get_radar_mode(DEJD)),
+     ?_assertEqual(100, job_def:get_ns_val_det_prob(DEJD)),
+     ?_assertEqual(254, job_def:get_ns_val_false_alarm_density(DEJD)),
+     ?_assertEqual(dgm50, job_def:get_terr_elev_model(DEJD)),
+     ?_assertEqual(geo96, job_def:get_geoid_model(DEJD))].
+
+
 job_def1() ->
     <<1,2,3,4, 5, "Model1", 0, 23, 
       64,0,0,0, "õUUU", 64,0,0,0, "õUUU", 64,0,0,0, "õUUU", 64,0,0,0, "õUUU",
@@ -41,13 +57,20 @@ job_def1() ->
 
 sample_job_def() ->
     P = [{job_id, 100}, {sensor_id_type, rotary_wing_radar},
-         {sensor_id_model, "Heli 1"}, {target_filt_flag, []}, {priority, 30},
+         {sensor_id_model, "Heli 1"}, {target_filt_flag, no_filtering}, {priority, 30},
          {bounding_a_lat, 33.3}, {bounding_a_lon, 3.45},
          {bounding_b_lat, 23.4}, {bounding_b_lon, 350},
          {bounding_c_lat, -45.0}, {bounding_c_lon, 2.45},
          {bounding_d_lat, -60.0}, {bounding_d_lon, 140},
          {radar_mode, {monopulse_calibration, asars_aip}}, {nom_rev_int, 65000},
-         {ns_pos_unc_along_track, no_statement}],
+         {ns_pos_unc_along_track, no_statement}, 
+         {ns_pos_unc_cross_track, 5000}, {ns_pos_unc_alt, 20000},
+         {ns_pos_unc_heading, 45}, {ns_pos_unc_sensor_speed, 65534},
+         {ns_val_slant_range_std_dev, 100}, 
+         {ns_val_cross_range_std_dev, no_statement},
+         {ns_val_tgt_vel_los_std_dev, 4000}, {ns_val_mdv, no_statement},
+         {ns_val_det_prob, 100}, {ns_val_false_alarm_density, 254},
+         {terr_elev_model, dgm50}, {geoid_model, geo96}],
 
     job_def:new(P).
 
