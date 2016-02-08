@@ -171,7 +171,9 @@ encode(JD) ->
          {fun get_ns_val_tgt_vel_los_std_dev/1, J23Fun},
          {fun get_ns_val_mdv/1, J24Fun},
          {fun get_ns_val_det_prob/1, J25Fun},
-         {fun get_ns_val_false_alarm_density/1, J26Fun}
+         {fun get_ns_val_false_alarm_density/1, J26Fun},
+         {fun get_terr_elev_model/1, fun encode_terrain_elev_model/1},
+         {fun get_geoid_model/1, fun encode_geoid_model/1}
         ],
     
     lists:foldl(F, <<>>, ParamList).
@@ -511,12 +513,46 @@ decode_terrain_elev_model(12) -> sthd;
 decode_terrain_elev_model(13) -> sedris;
 decode_terrain_elev_model(_) -> reserved.
 
+%% Encode the terrain elevation parameter as a binary.
+encode_terrain_elev_model(X) ->
+    Val = etev(X),
+    <<Val>>.
+
+%% Helper function with the mapping from model -> integer.
+etev(none_specified) -> 0;
+etev(dted0) -> 1;
+etev(dted1) -> 2;
+etev(dted2) -> 3;
+etev(dted3) -> 4;
+etev(dted4) -> 5;
+etev(dted5) -> 6;
+etev(srtm1) -> 7;
+etev(srtm2) -> 8;
+etev(dgm50) -> 9;
+etev(dgm250) -> 10;
+etev(ithd) -> 11;
+etev(sthd) -> 12;
+etev(sedris) -> 13;
+etev(reserved) -> 255.
+
 %% Decode the Geoid model parameter.
 decode_geoid_model(0) -> none_specified;
 decode_geoid_model(1) -> egm96;
 decode_geoid_model(2) -> geo96;
 decode_geoid_model(3) -> flat_earth;
 decode_geoid_model(_) -> reserved.
+
+%% Function to encode the Geoid model parameter as a binary.
+encode_geoid_model(X) ->
+    Val = egm(X),
+    <<Val>>.
+
+% Helper functioon to map Geoid models to the integer value.
+egm(none_specified) -> 0;
+egm(egm96) -> 1;
+egm(geo96) -> 2;
+egm(flat_earth) -> 3;
+egm(reserved) -> 255.
 
 display(JDS) ->
     io:format("****************************************~n"),
