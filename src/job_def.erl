@@ -127,23 +127,40 @@ encode(JD) ->
             <<Acc/binary,Bin/binary>>
         end,
 
+    % Shorthand for the type conversion functions.
+    I8Fun = fun stanag_types:integer_to_i8/1,
+    I16Fun = fun stanag_types:integer_to_i16/1,
+    
+    % Generate the encoding functions for the range/no statement encodes.
+    J16Fun = gen_encode_range_ns(0, 10000, 65535, I16Fun),
+    J17Fun = J16Fun,
+    J18Fun = gen_encode_range_ns(0, 20000, 65535, I16Fun),
+    J19Fun = gen_encode_range_ns(0, 45, 255, I8Fun),
+    J20Fun = gen_encode_range_ns(0, 65534, 65535, I16Fun),
+
     % List of parameters in the how to fetch/encode.
     ParamList = 
-    [{fun get_job_id/1, fun stanag_types:integer_to_i32/1},
-     {fun get_sensor_id_type/1, fun encode_sensor_id_type/1},
-     {fun get_sensor_id_model/1, fun encode_sensor_id_model/1},
-     {fun get_target_filt_flag/1, fun encode_target_filtering_flag/1},
-     {fun get_priority/1, fun encode_priority/1},
-     {fun get_bounding_a_lat/1, fun stanag_types:float_to_sa32/1},
-     {fun get_bounding_a_lon/1, fun stanag_types:float_to_ba32/1},
-     {fun get_bounding_b_lat/1, fun stanag_types:float_to_sa32/1},
-     {fun get_bounding_b_lon/1, fun stanag_types:float_to_ba32/1},
-     {fun get_bounding_c_lat/1, fun stanag_types:float_to_ba32/1},
-     {fun get_bounding_c_lon/1, fun stanag_types:float_to_ba32/1},
-     {fun get_bounding_d_lat/1, fun stanag_types:float_to_sa32/1},
-     {fun get_bounding_d_lon/1, fun stanag_types:float_to_ba32/1},
-     {fun get_radar_mode/1, fun encode_radar_mode/1}
-    ],
+        [{fun get_job_id/1, fun stanag_types:integer_to_i32/1},
+         {fun get_sensor_id_type/1, fun encode_sensor_id_type/1},
+         {fun get_sensor_id_model/1, fun encode_sensor_id_model/1},
+         {fun get_target_filt_flag/1, fun encode_target_filtering_flag/1},
+         {fun get_priority/1, fun encode_priority/1},
+         {fun get_bounding_a_lat/1, fun stanag_types:float_to_sa32/1},
+         {fun get_bounding_a_lon/1, fun stanag_types:float_to_ba32/1},
+         {fun get_bounding_b_lat/1, fun stanag_types:float_to_sa32/1},
+         {fun get_bounding_b_lon/1, fun stanag_types:float_to_ba32/1},
+         {fun get_bounding_c_lat/1, fun stanag_types:float_to_ba32/1},
+         {fun get_bounding_c_lon/1, fun stanag_types:float_to_ba32/1},
+         {fun get_bounding_d_lat/1, fun stanag_types:float_to_sa32/1},
+         {fun get_bounding_d_lon/1, fun stanag_types:float_to_ba32/1},
+         {fun get_radar_mode/1, fun encode_radar_mode/1},
+         {fun get_nom_rev_int/1, fun stanag_types:integer_to_i16/1},
+         {fun get_ns_pos_unc_along_track/1, J16Fun},
+         {fun get_ns_pos_unc_cross_track/1, J17Fun},
+         {fun get_ns_pos_unc_alt/1, J18Fun},
+         {fun get_ns_pos_unc_heading/1, J19Fun},
+         {fun get_ns_pos_unc_sensor_speed/1, J20Fun}
+        ],
     
     lists:foldl(F, <<>>, ParamList).
 
@@ -446,6 +463,18 @@ limit_cross_range_std_dev(X) when X >= 0.0 -> X.
 %% Generic range decode with lower, upper and no statement values.
 decode_range_ns(X, _, _, NS) when X =:= NS -> no_statement;
 decode_range_ns(X, L, U, _) when X >= L, X =< U -> X.
+
+%% Generator function: returns a fun to convert the range value, customised
+%% to the particular parameter and range specified.
+gen_encode_range_ns(L, U, NS, ConvFun) ->
+    fun(X) ->
+        ConvFun(erns(X, L, U, NS))
+    end.
+
+%% Helper function for encoding the range: checks the limits and for the
+%% presence of a no_statement atom.
+erns(no_statement, _, _, NS) -> NS;
+erns(X, L, U, _) when X >= L, X =< U -> X.
 
 %% Decode the terrain elevation model parameter.
 decode_terrain_elev_model(0) -> none_specified;
