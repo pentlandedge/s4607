@@ -141,7 +141,8 @@ encode(JD) ->
      {fun get_bounding_c_lat/1, fun stanag_types:float_to_ba32/1},
      {fun get_bounding_c_lon/1, fun stanag_types:float_to_ba32/1},
      {fun get_bounding_d_lat/1, fun stanag_types:float_to_sa32/1},
-     {fun get_bounding_d_lon/1, fun stanag_types:float_to_ba32/1}
+     {fun get_bounding_d_lon/1, fun stanag_types:float_to_ba32/1},
+     {fun get_radar_mode/1, fun encode_radar_mode/1}
     ],
     
     lists:foldl(F, <<>>, ParamList).
@@ -366,6 +367,73 @@ decode_radar_mode(121) -> {wide_area_gmti, vader};
 decode_radar_mode(122) -> {dismount_gmti, vader};
 decode_radar_mode(123) -> {hrr_gmti, vader};
 decode_radar_mode(_) -> {available_for_future_use, reserved}.
+
+%% Function to encode the radar mode as a binary.
+encode_radar_mode({_System, _Mode} = RM) ->
+    Value = erm(RM),
+    <<Value>>.
+
+%% Helper function for encoding the radar mode.
+erm({unspecified_mode, generic}) -> 0;
+erm({mti, generic}) -> 1;
+erm({hrr, generic}) -> 2;
+erm({uhrr, generic}) -> 3;
+erm({hur, generic}) -> 4;
+erm({fti, generic}) -> 5;
+erm({attack_control_satc, joint_stars}) -> 11;
+erm({attack_control, joint_stars}) -> 12;
+erm({satc, joint_stars}) -> 13;
+erm({attack_planning_satc, joint_stars}) -> 14;
+erm({attack_planning, joint_stars}) -> 15;
+erm({med_res_sector_search, joint_stars}) -> 16;
+erm({low_res_sector_search, joint_stars}) -> 17;
+erm({wide_area_search_grca, joint_stars}) -> 18;
+erm({wide_area_search_rrca, joint_stars}) -> 19;
+erm({attack_plannning_with_tracking, joint_stars}) -> 20;
+erm({attack_control_with_tracking, joint_stars}) -> 21;
+erm({wide_area_mti, asars_aip}) -> 31;
+erm({coarse_res_search, asars_aip}) -> 32;
+erm({med_res_search, asars_aip}) -> 33;
+erm({high_res_search, asars_aip}) -> 34;
+erm({point_imaging, asars_aip}) -> 35;
+erm({swath_mti, asars_aip}) -> 36;
+erm({repetititve_point_imaging, asars_aip}) -> 37;
+erm({monopulse_calibration, asars_aip}) -> 38;
+erm({search, asars_2}) -> 51;
+erm({emti_wide_frame_search, asars_2}) -> 52;
+erm({emti_narrow_frame_search, asars_2}) -> 53;
+erm({emti_augmented_spot, asars_2}) -> 54;
+erm({emti_wide_area_mti, asars_2}) -> 55;
+erm({gmti_ppi_mode, tuav}) -> 61;
+erm({gmti_expanded_mode, tuav}) -> 62;
+erm({narrow_sector_search, arl_m}) -> 63;
+erm({single_beam_scan, arl_m}) -> 64;
+erm({wide_area, arl_m}) -> 65;
+erm({grca, reserved}) -> 81;
+erm({rrca, reserved}) -> 82;
+erm({sector_search, reserved}) -> 83;
+erm({horizon_basic, horizon}) -> 84;
+erm({horizon_high_sensitivity, horizon}) -> 85;
+erm({horizon_burn_through, horizon}) -> 86;
+erm({creso_acquisition, creso}) -> 87;
+erm({creso_count, creso}) -> 88;
+erm({was_mti_exo, astor}) -> 94;
+erm({was_mti_endo_exo, astor}) -> 95;
+erm({ss_mti_exo, astor}) -> 96;
+erm({ss_mti_endo_exo, astor}) -> 97;
+erm({test_status_mode, reserved}) -> 100;
+erm({mti_spot_scan, lynx_i_ii}) -> 101;
+erm({mti_arc_scan, lynx_i_ii}) -> 102;
+erm({hrr_mti_spot_scan, lynx_i_ii}) -> 103;
+erm({hrr_mti_arc_scan, lynx_i_ii}) -> 104;
+erm({grca, global_hawk}) -> 111;
+erm({rrca, global_hawk}) -> 112;
+erm({gmti_hrr, global_hawk}) -> 113;
+erm({small_area_gmti, vader}) -> 120;
+erm({wide_area_gmti, vader}) -> 121;
+erm({dismount_gmti, vader}) -> 122;
+erm({hrr_gmti, vader}) -> 123;
+erm({available_for_future_use, reserved}) -> 255.
 
 %% Function to decode the cross-range standard deviation parameter.
 decode_cross_range_std_dev(X) ->
