@@ -137,6 +137,12 @@ encode(JD) ->
     J18Fun = gen_encode_range_ns(0, 20000, 65535, I16Fun),
     J19Fun = gen_encode_range_ns(0, 45, 255, I8Fun),
     J20Fun = gen_encode_range_ns(0, 65534, 65535, I16Fun),
+    J21Fun = J20Fun,
+    
+    J23Fun = gen_encode_range_ns(0, 5000, 65535, I16Fun),
+    J24Fun = gen_encode_range_ns(0, 254, 255, I8Fun),
+    J25Fun = gen_encode_range_ns(0, 100, 255, I8Fun),
+    J26Fun = gen_encode_range_ns(0, 254, 255, I8Fun),
 
     % List of parameters in the how to fetch/encode.
     ParamList = 
@@ -159,7 +165,13 @@ encode(JD) ->
          {fun get_ns_pos_unc_cross_track/1, J17Fun},
          {fun get_ns_pos_unc_alt/1, J18Fun},
          {fun get_ns_pos_unc_heading/1, J19Fun},
-         {fun get_ns_pos_unc_sensor_speed/1, J20Fun}
+         {fun get_ns_pos_unc_sensor_speed/1, J20Fun},
+         {fun get_ns_val_slant_range_std_dev/1, J21Fun},
+         
+         {fun get_ns_val_tgt_vel_los_std_dev/1, J23Fun},
+         {fun get_ns_val_mdv/1, J24Fun},
+         {fun get_ns_val_det_prob/1, J25Fun},
+         {fun get_ns_val_false_alarm_density/1, J26Fun}
         ],
     
     lists:foldl(F, <<>>, ParamList).
