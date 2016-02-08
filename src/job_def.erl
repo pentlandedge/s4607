@@ -167,7 +167,7 @@ encode(JD) ->
          {fun get_ns_pos_unc_heading/1, J19Fun},
          {fun get_ns_pos_unc_sensor_speed/1, J20Fun},
          {fun get_ns_val_slant_range_std_dev/1, J21Fun},
-         
+         {fun get_ns_val_cross_range_std_dev/1, fun encode_cross_range_std_dev/1}, 
          {fun get_ns_val_tgt_vel_los_std_dev/1, J23Fun},
          {fun get_ns_val_mdv/1, J24Fun},
          {fun get_ns_val_det_prob/1, J25Fun},
@@ -471,6 +471,12 @@ decode_cross_range_std_dev(X) ->
 
 limit_cross_range_std_dev(X) when X >= 180.0 -> no_statement;
 limit_cross_range_std_dev(X) when X >= 0.0 -> X.
+
+% Function to encode the cross range std. dev. parameter.
+encode_cross_range_std_dev(no_statement) ->
+    stanag_types:float_to_ba16(200.0);
+encode_cross_range_std_dev(X) ->
+    stanag_types:float_to_ba16(X).
 
 %% Generic range decode with lower, upper and no statement values.
 decode_range_ns(X, _, _, NS) when X =:= NS -> no_statement;
