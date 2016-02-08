@@ -331,7 +331,7 @@ encode_target_filtering_flag(FlagList) ->
     B2 = F(SB),
 
     % Combine all bits into a binary.
-    <<0:5,B2,B1,B0>>.
+    <<0:5,B2:1,B1:1,B0:1>>.
 
 % Function to encode the radar priority.
 encode_priority(end_of_job) -> <<255>>;

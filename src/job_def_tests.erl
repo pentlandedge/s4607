@@ -16,6 +16,8 @@
 
 -module(job_def_tests).
 
+-export([sample_job_def/0]).
+
 -include_lib("eunit/include/eunit.hrl").
 
 %% Define a test generator for the decoding of the mission segment. 
@@ -36,3 +38,16 @@ job_def1() ->
       64,0,0,0, "õUUU", 64,0,0,0, "õUUU", 64,0,0,0, "õUUU", 64,0,0,0, "õUUU",
       1, 1,0, 255,255, 1,0, 16#27,16#10, 45, 0,128, 
       255,255, 127,74, 0,100, 5, 90, 3, 1, 3>>.
+
+sample_job_def() ->
+    P = [{job_id, 100}, {sensor_id_type, rotary_wing_radar},
+         {sensor_id_model, "Heli 1"}, {target_filt_flag, []}, {priority, 30},
+         {bounding_a_lat, 33.3}, {bounding_a_lon, 3.45},
+         {bounding_b_lat, 23.4}, {bounding_b_lon, 350},
+         {bounding_c_lat, -45.0}, {bounding_c_lon, 2.45},
+         {bounding_d_lat, -60.0}, {bounding_d_lon, 140},
+         {radar_mode, {monopulse_calibration, asars_aip}}, {nom_rev_int, 65000},
+         {ns_pos_unc_along_track, no_statement}],
+
+    job_def:new(P).
+
