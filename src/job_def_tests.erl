@@ -37,11 +37,21 @@ job_def_encode_decode() ->
     JD = sample_job_def(),
     EJD = job_def:encode(JD),
     {ok, DEJD} = job_def:decode(EJD),
+    Delta = 0.00001,
     [?_assertEqual(100, job_def:get_job_id(DEJD)),
      ?_assertEqual(rotary_wing_radar, job_def:get_sensor_id_type(DEJD)),
      ?_assertEqual("Heli 1", job_def:get_sensor_id_model(DEJD)),
      ?_assertEqual(no_filtering, job_def:get_target_filt_flag(DEJD)),
      ?_assertEqual(30, job_def:get_priority(DEJD)),
+     ?_assert(almost_equal(33.3, job_def:get_bounding_a_lat(DEJD), Delta)),
+     ?_assert(almost_equal(3.45, job_def:get_bounding_a_lon(DEJD), Delta)),
+     ?_assert(almost_equal(23.4, job_def:get_bounding_b_lat(DEJD), Delta)),
+     ?_assert(almost_equal(350.0, job_def:get_bounding_b_lon(DEJD), Delta)),
+     ?_assert(almost_equal(-45.0, job_def:get_bounding_c_lat(DEJD), Delta)),
+     ?_assert(almost_equal(2.45, job_def:get_bounding_c_lon(DEJD), Delta)),
+     ?_assert(almost_equal(-60.0, job_def:get_bounding_d_lat(DEJD), Delta)),
+     ?_assert(almost_equal(140.0, job_def:get_bounding_d_lon(DEJD), Delta)),
+
      ?_assertEqual({monopulse_calibration, asars_aip}, job_def:get_radar_mode(DEJD)),
      ?_assertEqual(100, job_def:get_ns_val_det_prob(DEJD)),
      ?_assertEqual(254, job_def:get_ns_val_false_alarm_density(DEJD)),
@@ -74,3 +84,8 @@ sample_job_def() ->
 
     job_def:new(P).
 
+%% Utility function to compare whether floating point values are within a 
+%% specified range.
+almost_equal(V1, V2, Delta) ->
+    abs(V1 - V2) =< Delta.
+ 

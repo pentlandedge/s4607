@@ -155,7 +155,7 @@ encode(JD) ->
          {fun get_bounding_a_lon/1, fun stanag_types:float_to_ba32/1},
          {fun get_bounding_b_lat/1, fun stanag_types:float_to_sa32/1},
          {fun get_bounding_b_lon/1, fun stanag_types:float_to_ba32/1},
-         {fun get_bounding_c_lat/1, fun stanag_types:float_to_ba32/1},
+         {fun get_bounding_c_lat/1, fun stanag_types:float_to_sa32/1},
          {fun get_bounding_c_lon/1, fun stanag_types:float_to_ba32/1},
          {fun get_bounding_d_lat/1, fun stanag_types:float_to_sa32/1},
          {fun get_bounding_d_lon/1, fun stanag_types:float_to_ba32/1},
