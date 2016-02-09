@@ -22,4 +22,4 @@
 all_test_() ->
     [{module, s4607}, {module, stanag_types}, {module, mission},
      {module, job_def}, {module, exist_mask}, {module, tgt_report},
-     {module, dwell}, {module, seg_header}].  
+     {module, dwell}, {module, seg_header}, {module, pheader}].  

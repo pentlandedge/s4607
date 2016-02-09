@@ -27,6 +27,7 @@ SOURCE = \
     mission.erl \
     mission_tests.erl \
     pheader.erl \
+    pheader_tests.erl \
     s4607.erl \
     s4607_tests.erl \
     seg_header.erl \
