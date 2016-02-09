@@ -17,6 +17,7 @@
 
 -export([
     decode/1, 
+    new/1,
     display/1, 
     decode_us_packet_code/1,
     get_version_id/1,
@@ -70,6 +71,30 @@ decode(<<P1:2/binary, PktSize:32/integer-unsigned-big,
         classification = Class, class_system = Sys, packet_code = Code, 
         exercise_ind = Ex, platform_id = PlatId, mission_id = MissId, 
         job_id = JobId}.
+
+%% Function to create a new packet header from the list of parameters 
+%% supplied as {key, Value} pairs.
+new(ParamList) ->
+    % Local function to pull the parameter from the list or use a default
+    % value.
+    F = fun(P, L, D) ->
+            case lists:keyfind(P, 1, L) of
+                {P, V} -> V;
+                false  -> D 
+            end
+        end,
+
+    #pheader{
+        version = F(version, ParamList, {3,0}),
+        packet_size = F(packet_size, ParamList, 32), 
+        nationality = F(nationality, ParamList, "XN"), 
+        classification = F(classification, ParamList, unclassified), 
+        class_system = F(class_system, ParamList, "XN"), 
+        packet_code = F(packet_code, ParamList, none), 
+        exercise_ind = F(exercise_ind, ParamList, exercise_real), 
+        platform_id = F(platform_id, ParamList, ""), 
+        mission_id = F(mission_id, ParamList, 0), 
+        job_id = F(job_id, ParamList, 0)}. 
 
 decode_version(<<M,N>>) ->
     {M - $0, N - $0}.
