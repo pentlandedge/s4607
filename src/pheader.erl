@@ -89,7 +89,9 @@ encode(PH) ->
         [{fun get_version_id/1, fun encode_version/1},
          {fun get_packet_size/1, fun stanag_types:integer_to_i32/1},
          {fun get_nationality/1, fun encode_nationality/1},
-         {fun get_classification/1, fun encode_classification/1}],
+         {fun get_classification/1, fun encode_classification/1},
+         {fun get_class_system/1, fun encode_class_system/1},
+         {fun get_packet_code/1, fun encode_us_packet_code/1}],
 
     % Encode all of the parameters
     lists:foldl(F, <<>>, ParamList).
@@ -154,6 +156,13 @@ decode_class_system(<<"  ">>) ->
 decode_class_system(<<X:2/binary>>) ->
     {ok, binary_to_list(X)}.
 
+encode_class_system(CS) ->
+    Val = enc_class_sys(CS),
+    list_to_binary(Val).
+
+enc_class_sys(none) -> "  ";
+enc_class_sys(L) when length(L) =:= 2 -> L.
+
 decode_us_packet_code(16#0000) -> {ok, none};
 decode_us_packet_code(16#0001) -> {ok, nocontract};
 decode_us_packet_code(16#0002) -> {ok, orcon};
@@ -172,6 +181,41 @@ decode_us_packet_code(16#2000) -> {ok, rel_nato};
 decode_us_packet_code(16#4000) -> {ok, rel_4_eyes};
 decode_us_packet_code(16#8000) -> {ok, rel_9_eyes};
 decode_us_packet_code(_) -> {error, unknown_packet_code}.
+
+encode_us_packet_code(none) -> 
+    <<16#0000:16>>;
+encode_us_packet_code(nocontract) -> 
+    <<16#0001:16>>;
+encode_us_packet_code(orcon) -> 
+    <<16#0002:16>>;
+encode_us_packet_code(propin) -> 
+    <<16#0004:16>>;
+encode_us_packet_code(wnintel) -> 
+    <<16#0008:16>>;
+encode_us_packet_code(national_only) -> 
+    <<16#0010:16>>;
+encode_us_packet_code(limdis) -> 
+    <<16#0020:16>>;
+encode_us_packet_code(fouo) -> 
+    <<16#0040:16>>;
+encode_us_packet_code(efto) -> 
+    <<16#0080:16>>;
+encode_us_packet_code(lim_off_use) -> 
+    <<16#0100:16>>;
+encode_us_packet_code(noncompartment) -> 
+    <<16#0200:16>>;
+encode_us_packet_code(special_control) -> 
+    <<16#0400:16>>;
+encode_us_packet_code(special_intel) -> 
+    <<16#0800:16>>;
+encode_us_packet_code(warning_notice) -> 
+    <<16#1000:16>>;
+encode_us_packet_code(rel_nato) -> 
+    <<16#2000:16>>;
+encode_us_packet_code(rel_4_eyes) -> 
+    <<16#4000:16>>;
+encode_us_packet_code(rel_9_eyes) -> 
+    <<16#8000:16>>.
 
 decode_exercise_indicator(0) -> {ok, operation_real};
 decode_exercise_indicator(1) -> {ok, operation_simulated};
