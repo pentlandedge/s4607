@@ -84,10 +84,12 @@ encode(PH) ->
             <<Acc/binary,Bin/binary>>
         end,
 
-
     % List of parameters and a suitable encoding function.
     ParamList = 
-        [{fun get_version_id/1, fun encode_version/1}],
+        [{fun get_version_id/1, fun encode_version/1},
+         {fun get_packet_size/1, fun stanag_types:integer_to_i32/1},
+         {fun get_nationality/1, fun encode_nationality/1},
+         {fun get_classification/1, fun encode_classification/1}],
 
     % Encode all of the parameters
     lists:foldl(F, <<>>, ParamList).
@@ -127,12 +129,25 @@ encode_version({M,N}) ->
 decode_nationality(<<X:2/binary>>) ->
     binary_to_list(X).
 
+encode_nationality(Nat) when length(Nat) =:= 2 ->
+    list_to_binary(Nat).
+
 decode_classification(1) -> {ok, top_secret};
 decode_classification(2) -> {ok, secret};
 decode_classification(3) -> {ok, confidential};
 decode_classification(4) -> {ok, restricted};
 decode_classification(5) -> {ok, unclassified};
 decode_classification(X) -> {unknown_classification, X}.
+
+encode_classification(C) ->
+    Val = enc_class(C),
+    <<Val>>.
+
+enc_class(top_secret) -> 1;
+enc_class(secret) -> 2;
+enc_class(confidential) -> 3;
+enc_class(restricted) -> 4;
+enc_class(unclassified) -> 5.
 
 decode_class_system(<<"  ">>) ->
     {ok, none};
