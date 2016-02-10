@@ -17,6 +17,7 @@
 
 -export([
     decode/1, 
+    encode/1,
     new/1,
     display/1, 
     decode_us_packet_code/1,
@@ -72,6 +73,25 @@ decode(<<P1:2/binary, PktSize:32/integer-unsigned-big,
         exercise_ind = Ex, platform_id = PlatId, mission_id = MissId, 
         job_id = JobId}.
 
+%% Function to encode a packet header in its binary form.
+encode(PH) ->
+
+    % Function to encode each parameter in the list and append to an 
+    % accumulated binary.
+    F = fun({GetFun, EncFun}, Acc) ->
+            P = GetFun(PH),
+            Bin = EncFun(P),
+            <<Acc/binary,Bin/binary>>
+        end,
+
+
+    % List of parameters and a suitable encoding function.
+    ParamList = 
+        [{fun get_version_id/1, fun encode_version/1}],
+
+    % Encode all of the parameters
+    lists:foldl(F, <<>>, ParamList).
+
 %% Function to create a new packet header from the list of parameters 
 %% supplied as {key, Value} pairs.
 new(ParamList) ->
@@ -98,6 +118,11 @@ new(ParamList) ->
 
 decode_version(<<M,N>>) ->
     {M - $0, N - $0}.
+
+encode_version({M,N}) ->
+    V1 = M + $0,
+    V2 = N + $0,
+    <<V1,V2>>.
 
 decode_nationality(<<X:2/binary>>) ->
     binary_to_list(X).
