@@ -91,7 +91,8 @@ encode(PH) ->
          {fun get_nationality/1, fun encode_nationality/1},
          {fun get_classification/1, fun encode_classification/1},
          {fun get_class_system/1, fun encode_class_system/1},
-         {fun get_packet_code/1, fun encode_us_packet_code/1}],
+         {fun get_packet_code/1, fun encode_us_packet_code/1},
+         {fun get_exercise_indicator/1, fun encode_exercise_indicator/1}],
 
     % Encode all of the parameters
     lists:foldl(F, <<>>, ParamList).
@@ -224,6 +225,13 @@ decode_exercise_indicator(128) -> {ok, exercise_real};
 decode_exercise_indicator(129) -> {ok, exercise_simulated};
 decode_exercise_indicator(130) -> {ok, exercise_synthesized};
 decode_exercise_indicator(_) -> {error, reserved}.
+
+encode_exercise_indicator(operation_real) -> <<0>>;
+encode_exercise_indicator(operation_simulated) -> <<1>>;
+encode_exercise_indicator(operation_synthesized) -> <<2>>;
+encode_exercise_indicator(exercise_real) -> <<128>>;
+encode_exercise_indicator(exercise_simulated) -> <<129>>;
+encode_exercise_indicator(exercise_synthesized) -> <<130>>.
 
 decode_platform_id(<<X:10/binary>>) ->
     sutils:trim_trailing_spaces(binary_to_list(X)).
