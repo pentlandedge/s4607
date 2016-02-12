@@ -85,6 +85,12 @@ encode_decode_check1() ->
     [?_assertEqual({3, 1}, pheader:get_version_id(DEPH)),
      ?_assertEqual(250, pheader:get_packet_size(DEPH)),
      ?_assertEqual("UK", pheader:get_nationality(DEPH)),
+     ?_assertEqual(top_secret, pheader:get_classification(DEPH)),
+     ?_assertEqual("UK", pheader:get_class_system(DEPH)),
+     ?_assertEqual(rel_9_eyes, pheader:get_packet_code(DEPH)),
+     ?_assertEqual(operation_real, pheader:get_exercise_indicator(DEPH)),
+     ?_assertEqual("Pico1", pheader:get_platform_id(DEPH)),
+     ?_assertEqual(16#11223344, pheader:get_mission_id(DEPH)),
      ?_assertEqual(16#55667788, pheader:get_job_id(DEPH))].
     
 %% Sample packet header for test data.
