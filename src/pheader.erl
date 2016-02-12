@@ -92,7 +92,10 @@ encode(PH) ->
          {fun get_classification/1, fun encode_classification/1},
          {fun get_class_system/1, fun encode_class_system/1},
          {fun get_packet_code/1, fun encode_us_packet_code/1},
-         {fun get_exercise_indicator/1, fun encode_exercise_indicator/1}],
+         {fun get_exercise_indicator/1, fun encode_exercise_indicator/1},
+         {fun get_platform_id/1, fun encode_platform_id/1},
+         {fun get_mission_id/1, fun stanag_types:integer_to_i32/1},
+         {fun get_job_id/1, fun stanag_types:integer_to_i32/1}],
 
     % Encode all of the parameters
     lists:foldl(F, <<>>, ParamList).
@@ -235,6 +238,10 @@ encode_exercise_indicator(exercise_synthesized) -> <<130>>.
 
 decode_platform_id(<<X:10/binary>>) ->
     sutils:trim_trailing_spaces(binary_to_list(X)).
+
+encode_platform_id(PlatID) when is_list(PlatID), length(PlatID) =< 10 ->
+    Pad = sutils:add_trailing_spaces(PlatID, 10),
+    list_to_binary(Pad).
 
 display(PktHdr) ->
     io:format("****************************************~n"),
