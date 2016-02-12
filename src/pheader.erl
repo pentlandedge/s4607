@@ -117,7 +117,7 @@ new(ParamList) ->
         packet_size = F(packet_size, ParamList, 32), 
         nationality = F(nationality, ParamList, "XN"), 
         classification = F(classification, ParamList, unclassified), 
-        class_system = F(class_system, ParamList, "XN"), 
+        class_system = F(class_system, ParamList, "  "), 
         packet_code = F(packet_code, ParamList, none), 
         exercise_ind = F(exercise_ind, ParamList, exercise_real), 
         platform_id = F(platform_id, ParamList, ""), 
