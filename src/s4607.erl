@@ -52,7 +52,7 @@ decode_packets(<<>>, Acc) ->
     lists:reverse(Acc);
 decode_packets(Bin, Acc) ->
     {ok, Hdr, R1} = extract_packet_header(Bin),
-    H1 = pheader:decode(Hdr),
+    {ok, H1} = pheader:decode(Hdr),
     
     % The size in the header includes the header itself.
     PayloadSize = pheader:get_packet_size(H1) - byte_size(Hdr),

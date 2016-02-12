@@ -68,10 +68,10 @@ decode(<<P1:2/binary, PktSize:32/integer-unsigned-big,
     MissId = stanag_types:i32_to_integer(P9),
     JobId = stanag_types:i32_to_integer(P10),
     
-    #pheader{version = Ver, packet_size = PktSize, nationality = Nat, 
+    {ok, #pheader{version = Ver, packet_size = PktSize, nationality = Nat, 
         classification = Class, class_system = Sys, packet_code = Code, 
         exercise_ind = Ex, platform_id = PlatId, mission_id = MissId, 
-        job_id = JobId}.
+        job_id = JobId}}.
 
 %% Function to encode a packet header in its binary form.
 encode(PH) ->
