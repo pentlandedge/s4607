@@ -17,6 +17,8 @@
 
 -export([
     decode/1, 
+    %encode/1,
+    new/2,
     display/1, 
     decode_segment_type/1,
     get_segment_type/1,
@@ -31,6 +33,10 @@
 decode(<<S1, SegSize:32/integer-unsigned-big>>) ->
     SegType = decode_segment_type(S1),
     #seg_header{type = SegType, size = SegSize}.
+
+%% Function to create a new segment header record.
+new(Type, Size) ->
+    #seg_header{type = Type, size = Size}.
 
 decode_segment_type(1) -> mission;
 decode_segment_type(2) -> dwell;
