@@ -32,7 +32,7 @@
 %% Decode the segment header binary. 
 decode(<<S1, SegSize:32/integer-unsigned-big>>) ->
     SegType = decode_segment_type(S1),
-    #seg_header{type = SegType, size = SegSize}.
+    {ok, #seg_header{type = SegType, size = SegSize}}.
 
 %% Function to encode a segment header as a binary.
 encode(#seg_header{type = T, size = S}) ->

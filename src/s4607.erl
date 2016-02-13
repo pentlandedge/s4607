@@ -75,7 +75,7 @@ decode_segments(<<>>, Acc) ->
 decode_segments(Bin, Acc) ->
     % Get the segment header.
     {ok, SegHdr, SRem} = extract_segment_header(Bin),
-    SH = seg_header:decode(SegHdr),
+    {ok, SH} = seg_header:decode(SegHdr),
 
     % The size in the header includes the header itself.
     PayloadSize = seg_header:get_segment_size(SH) - byte_size(SegHdr),
