@@ -23,7 +23,8 @@
     display_packets/1,
     display_packet/1,
     display_segments/1,
-    display_segment/1]).
+    display_segment/1,
+    segment_encode/2]).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Record definitions.
@@ -156,4 +157,30 @@ extract_segment_header(<<Hdr:5/binary,Rest/binary>>) ->
 extract_segment_data(Bin, Len) ->
     sutils:extract_data(Bin, Len).
 
+%% Calculates the size of a segment from the supplied binary, adjusting for
+%% the segment header. The value calculated should be used in the segment
+%% header.
+calculate_segment_size(SegBin) when is_binary(SegBin) ->
+    SegHdrSize = 32,
+    SegBinSize = byte_size(SegBin),
+    SegHdrSize + SegBinSize.
+
+%% Function to create a binary encoded segment.
+segment_encode(mission, SegRec) ->
+    DataBin = mission:encode(SegRec),
+    seg_enc(mission, DataBin);
+segment_encode(dwell, SegRec) ->
+    DataBin = dwell:encode(SegRec),
+    seg_enc(dwell, DataBin);
+segment_encode(job_definition, SegRec) ->
+    DataBin = job_def:encode(SegRec),
+    seg_enc(job_definition, DataBin).
+
+%% Helper function to encode the whole segment as a binary.
+%% Calculates the size of the segment to construct the segment header.
+seg_enc(Type, DataBin) ->
+    Size = calculate_segment_size(DataBin),
+    SegHdr = seg_header:new(Type, Size),
+    HdrBin = seg_header:encode(SegHdr),
+    <<HdrBin/binary,DataBin/binary>>.
 
