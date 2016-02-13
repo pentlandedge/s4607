@@ -17,7 +17,7 @@
 
 -export([
     decode/1, 
-    %encode/1,
+    encode/1,
     new/2,
     display/1, 
     decode_segment_type/1,
@@ -33,6 +33,11 @@
 decode(<<S1, SegSize:32/integer-unsigned-big>>) ->
     SegType = decode_segment_type(S1),
     #seg_header{type = SegType, size = SegSize}.
+
+%% Function to encode a segment header as a binary.
+encode(#seg_header{type = T, size = S}) ->
+    TypeBin = encode_segment_type(T),
+    <<TypeBin/binary, S:32/integer-unsigned-big>>.
 
 %% Function to create a new segment header record.
 new(Type, Size) ->
@@ -54,6 +59,28 @@ decode_segment_type(13) -> platform_location;
 decode_segment_type(101) -> job_request;
 decode_segment_type(102) -> job_acknowledge;
 decode_segment_type(_) -> reserved.
+
+%% Function to encode the segment type field as a binary.
+encode_segment_type(T) ->
+    Val = encode_type(T),
+    <<Val>>.
+
+%% Helper function with the type mappings.
+encode_type(mission) -> 1;
+encode_type(dwell) -> 2;
+encode_type(hrr) -> 3;
+encode_type(reserved) -> 4;
+encode_type(job_definition) -> 5;
+encode_type(free_text) -> 6;
+encode_type(low_reflectivity_index) -> 7;
+encode_type(group) -> 8;
+encode_type(attached_target) -> 9;
+encode_type(test_and_status) -> 10;
+encode_type(system_specific) -> 11;
+encode_type(processing_history) -> 12;
+encode_type(platform_location) -> 13;
+encode_type(job_request) -> 101;
+encode_type(job_acknowledge) -> 102.
 
 display(SegHdr) ->
     io:format("****************************************~n"),
