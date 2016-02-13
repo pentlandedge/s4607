@@ -20,10 +20,13 @@
     decode/1,
     extract_packet_header/1,
     extract_packet_data/2,
+    decode_segments/2,
+    new_segment/2,
     display_packets/1,
     display_packet/1,
     display_segments/1,
     display_segment/1,
+    segment_encode/1,
     segment_encode/2]).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -103,6 +106,9 @@ decode_segments(Bin, Acc) ->
     % Loop over any remaining segments contained in this packet.
     decode_segments(SRem2, [Seg|Acc]).
 
+new_segment(SegHdr, SegRec) ->
+    #segment{header = SegHdr, data = SegRec}.
+
 display_packet(#packet{header = H, segments = Slist}) ->
     pheader:display(H),
     display_segments(Slist).
@@ -165,6 +171,17 @@ calculate_segment_size(SegBin) when is_binary(SegBin) ->
     SegBinSize = byte_size(SegBin),
     SegHdrSize + SegBinSize.
 
+%% Function to create an encoded segment from a segment record.
+segment_encode(#segment{header = SH, data = SegRec}) ->
+    case seg_header:get_segment_type(SH) of
+        mission -> 
+            HdrBin = seg_header:encode(SH),
+            DataBin = mission:encode(SegRec),
+            {ok, <<HdrBin/binary,DataBin/binary>>};
+        _       ->
+            {error, unsupported_segment_type}
+    end.
+       
 %% Function to create a binary encoded segment.
 segment_encode(mission, SegRec) ->
     DataBin = mission:encode(SegRec),
