@@ -19,6 +19,7 @@
     decode/1, 
     encode/1,
     new/1,
+    payload_size/0,
     display/1,
     get_job_id/1,
     get_sensor_id_type/1,
@@ -219,6 +220,9 @@ new(ParamList) ->
         ns_val_false_alarm_density = F(ns_val_false_alarm_density, ParamList, no_statement),
         terr_elev_model = F(terr_elev_model, ParamList, none_specified),
         geoid_model = F(geoid_model, ParamList, none_specified)}.
+
+%% Function to return the size of the job definition segment payload.
+payload_size() -> 68.
 
 decode_sensor_id_type(0) -> unidentified;
 decode_sensor_id_type(1) -> other;

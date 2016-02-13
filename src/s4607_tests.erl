@@ -19,7 +19,7 @@
 -include_lib("eunit/include/eunit.hrl").
 
 s4607_test_() ->
-    [encode_mission_segment_check()].
+    [encode_mission_segment_check(), encode_job_def_segment_check()].
    
 encode_mission_segment_check() ->
     % Create a mission segment.
@@ -46,4 +46,22 @@ encode_mission_segment_check() ->
      ?_assertEqual(2, mission:get_month(DS)),
      ?_assertEqual(5, mission:get_day(DS))].
 
+encode_job_def_segment_check() ->
+    % Create a job definition segment.
+    JD = job_def_tests:sample_job_def(),
 
+    % Create a segment header.
+    SH = seg_header:new(job_definition, 5 + job_def:payload_size()),
+
+    % Create the complete segment record.
+    Seg = s4607:new_segment(SH, JD),
+    
+    % Encode the segment.
+    {ok, ES} = s4607:segment_encode(Seg),
+
+    % Decode the segment again.
+    [{_, _, DS}] = s4607:decode_segments(ES, []),
+
+    % Check a couple of the fields. 
+    [?_assertEqual(rotary_wing_radar, job_def:get_sensor_id_type(DS)),
+     ?_assertEqual(dgm50, job_def:get_terr_elev_model(DS))].
