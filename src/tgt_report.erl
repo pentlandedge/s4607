@@ -19,6 +19,7 @@
     decode/2, 
     encode/2,
     new/1,
+    payload_size/1,
     display/2,
     get_mti_report_index/1,
     get_target_hr_lat/1,
@@ -296,6 +297,11 @@ new(RepParams) ->
         truth_tag_app = F(truth_tag_app, RepParams),
         truth_tag_entity = F(truth_tag_entity, RepParams),
         target_rcs = F(target_rcs, RepParams)}.
+
+%% Function to calculate the size in bytes of a target report, depending upon
+%% which fields have been set in the existence mask.
+payload_size(_EM) ->
+     ok.
 
 decode_target_classification(<<Val:8>>) ->
     decode_target_classification(Val);
