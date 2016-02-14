@@ -52,12 +52,8 @@ encode_job_def_segment_check() ->
     % Create a job definition segment.
     JD = job_def_tests:sample_job_def(),
 
-    % Create a segment header.
-    SegSize = seg_header:header_size() + job_def:payload_size(),
-    SH = seg_header:new(job_definition, SegSize),
-
     % Create the complete segment record.
-    Seg = s4607:new_segment(SH, JD),
+    Seg = segment:new(job_definition, JD),
     
     % Encode the segment.
     {ok, ES} = s4607:segment_encode(Seg),

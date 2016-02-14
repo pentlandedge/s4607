@@ -15,3 +15,21 @@
 %%
 -module(segment).
 
+-export([new/2]).
+
+-record(segment, {header, data}).
+
+%% Function to create a new segment record. 
+%% Caller can either supply the segment header record or simply pass the 
+%% segment type, and the function will create the segment header.
+new(job_definition, SegRec) ->
+    % Create a segment header.
+    SegSize = seg_header:header_size() + job_def:payload_size(),
+    SH = seg_header:new(job_definition, SegSize),
+
+    % Create the complete segment record.
+    new(SH, SegRec);
+
+%% Variant that takes a pre-constructed segment header.
+new(SegHdr, SegRec) ->
+    #segment{header = SegHdr, data = SegRec}.
