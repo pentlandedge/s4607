@@ -18,9 +18,11 @@
 -export([
     read_file/1,
     decode/1,
+    encode_packet/1,
+    new_packet/2,
+    packet_payload_size/1,
     extract_packet_header/1,
     extract_packet_data/2,
-    decode_segments/2,
     display_packets/1,
     display_packet/1,
     display_segments/1]).
@@ -29,8 +31,6 @@
 %% Record definitions.
 
 -record(packet, {header, segments}).
-
--record(segment, {header, data}).
 
 %-record(decode_status, {status, error_list}).
 
@@ -61,7 +61,7 @@ decode_packets(Bin, Acc) ->
     {ok, PktData, R2} = extract_packet_data(R1, PayloadSize),
 
     % Loop through all the segments in the packet.
-    SegRecList = decode_segments(PktData, []),
+    SegRecList = segment:decode_segments(PktData, []),
 
     % Build the packet structure.
     Pkt = #packet{header = H1, segments = SegRecList}, 
@@ -69,39 +69,21 @@ decode_packets(Bin, Acc) ->
     % Loop over any remaining packets, adding each to the list. 
     decode_packets(R2, [Pkt|Acc]).
 
-decode_segments(<<>>, Acc) ->
-    lists:reverse(Acc);
-decode_segments(Bin, Acc) ->
-    % Get the segment header.
-    {ok, SegHdr, SRem} = extract_segment_header(Bin),
-    {ok, SH} = seg_header:decode(SegHdr),
+encode_packet(_Pkt) ->
+    ok.
 
-    % The size in the header includes the header itself.
-    PayloadSize = seg_header:get_segment_size(SH) - byte_size(SegHdr),
+new_packet(PktHdr, SegList) ->
+    #packet{header = PktHdr, segments = SegList}.
 
-    % Get the packet data payload.
-    {ok, SegData, SRem2} = extract_segment_data(SRem, PayloadSize),
+packet_payload_size(SegList) ->
+    F = fun(Seg, Acc) ->
+            SegHdr = segment:get_header(Seg),
+            SegSize = segment:get_segment_size(SegHdr),
+            Acc + SegSize
+        end,
 
-    % Switch on the segment type
-    case seg_header:get_segment_type(SH) of
-        mission -> 
-            {ok, SegRec} = mission:decode(SegData),
-            Seg = #segment{header = SH, data = SegRec};
-        dwell   ->
-            {ok, SegRec} = dwell:decode(SegData),
-            Seg = #segment{header = SH, data = SegRec};
-        job_definition ->
-            {ok, SegRec} = job_def:decode(SegData),
-            Seg = #segment{header = SH, data = SegRec};
-        _       ->
-            % Leave the data in binary form if we don't know how to decode it.
-            Seg = #segment{header = SH, data = SegData}
-
-    end,
-
-    % Loop over any remaining segments contained in this packet.
-    decode_segments(SRem2, [Seg|Acc]).
-
+    lists:foldl(F, 0, SegList).
+            
 display_packet(#packet{header = H, segments = Slist}) ->
     pheader:display(H),
     display_segments(Slist).
@@ -124,15 +106,6 @@ extract_packet_header(<<Hdr:32/binary,Rest/binary>>) ->
 %% Extracts the data payload from a packet from the supplied binary
 %% (which should have had the header removed already).
 extract_packet_data(Bin, Len) ->
-    sutils:extract_data(Bin, Len).
-
-%% Extracts the first binary portion associated with a segment header.
-extract_segment_header(<<Hdr:5/binary,Rest/binary>>) ->
-    {ok, Hdr, Rest}.
-
-%% Extracts the segment payload from the supplied binary
-%% (which should have had the header removed already).
-extract_segment_data(Bin, Len) ->
     sutils:extract_data(Bin, Len).
 
 %% Calculates the size of a segment from the supplied binary, adjusting for

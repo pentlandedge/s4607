@@ -33,7 +33,7 @@ encode_mission_segment_check() ->
     {ok, ES} = segment:encode(Seg),
 
     % Decode the segment again.
-    [{_, _, DS}] = s4607:decode_segments(ES, []),
+    [{_, _, DS}] = segment:decode_segments(ES, []),
 
     % Check the fields in the decoded segment match what we expect.
     [?_assertEqual("Drifter 1", mission:get_mission_plan(DS)),
@@ -55,7 +55,7 @@ encode_job_def_segment_check() ->
     {ok, ES} = segment:encode(Seg),
 
     % Decode the segment again.
-    [{_, _, DS}] = s4607:decode_segments(ES, []),
+    [{_, _, DS}] = segment:decode_segments(ES, []),
 
     % Check a couple of the fields. 
     [?_assertEqual(rotary_wing_radar, job_def:get_sensor_id_type(DS)),
@@ -72,7 +72,7 @@ encode_dwell_segment_check1() ->
     {ok, ES} = segment:encode(Seg),
 
     % Decode the segment again.
-    [{_, _, DS}] = s4607:decode_segments(ES, []),
+    [{_, _, DS}] = segment:decode_segments(ES, []),
 
     % Fetch the target report.
     [TR] = dwell:get_targets(DS),
@@ -92,7 +92,7 @@ encode_dwell_segment_check2() ->
     {ok, ES} = segment:encode(Seg),
 
     % Decode the segment again.
-    [{_, _, DS}] = s4607:decode_segments(ES, []),
+    [{_, _, DS}] = segment:decode_segments(ES, []),
 
     % Check a couple of the fields. 
     [?_assertEqual(100, dwell:get_revisit_index(DS)),

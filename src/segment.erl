@@ -15,9 +15,51 @@
 %%
 -module(segment).
 
--export([encode/1, new/2, display/1, display/2]).
+-export([
+    decode_segments/2,
+    encode/1, 
+    new/2, 
+    display/1, 
+    display/2, 
+    get_header/1, 
+    get_data/1]).
 
 -record(segment, {header, data}).
+
+%% Function to decode a list of segments contained within the payload of 
+%% a packet.
+decode_segments(<<>>, Acc) ->
+    lists:reverse(Acc);
+decode_segments(Bin, Acc) ->
+    % Get the segment header.
+    {ok, SegHdr, SRem} = extract_segment_header(Bin),
+    {ok, SH} = seg_header:decode(SegHdr),
+
+    % The size in the header includes the header itself.
+    PayloadSize = seg_header:get_segment_size(SH) - byte_size(SegHdr),
+
+    % Get the packet data payload.
+    {ok, SegData, SRem2} = extract_segment_data(SRem, PayloadSize),
+
+    % Switch on the segment type
+    case seg_header:get_segment_type(SH) of
+        mission -> 
+            {ok, SegRec} = mission:decode(SegData),
+            Seg = #segment{header = SH, data = SegRec};
+        dwell   ->
+            {ok, SegRec} = dwell:decode(SegData),
+            Seg = #segment{header = SH, data = SegRec};
+        job_definition ->
+            {ok, SegRec} = job_def:decode(SegData),
+            Seg = #segment{header = SH, data = SegRec};
+        _       ->
+            % Leave the data in binary form if we don't know how to decode it.
+            Seg = #segment{header = SH, data = SegData}
+
+    end,
+
+    % Loop over any remaining segments contained in this packet.
+    decode_segments(SRem2, [Seg|Acc]).
 
 %% Function to create an encoded segment from a segment record.
 encode(#segment{header = SH, data = SegRec}) ->
@@ -90,4 +132,16 @@ display(SegHdr, SegRec) ->
             ok
     end. 
 
+%% Extracts the first binary portion associated with a segment header.
+extract_segment_header(<<Hdr:5/binary,Rest/binary>>) ->
+    {ok, Hdr, Rest}.
+
+%% Extracts the segment payload from the supplied binary
+%% (which should have had the header removed already).
+extract_segment_data(Bin, Len) ->
+    sutils:extract_data(Bin, Len).
+
+%% Accessor functions.
+get_header(#segment{header = H}) -> H.
+get_data(#segment{data = D}) -> D.
 
