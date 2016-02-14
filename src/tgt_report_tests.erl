@@ -20,7 +20,8 @@
 
 %% Define a test generator for target reports. 
 tgt_report_test_() ->
-    [creation_checks1(), encode_decode_checks(), payload_size_checks()].
+    [creation_checks1(), encode_decode_checks(), payload_size_check1(),
+     payload_size_check2()].
 
 creation_checks1() ->
     % Create a target report and check all the fields.
@@ -75,7 +76,7 @@ encode_decode_checks() ->
      ?_assertEqual(<<>>, Rem)].
 
 %% Checks of the payload size calculation.
-payload_size_checks() ->
+payload_size_check1() ->
     % Create a sample report (all parameters). 
     {EM, R1} = sample_report(),
 
@@ -86,6 +87,17 @@ payload_size_checks() ->
     Bin = tgt_report:encode(R1, EM),
 
     [?_assertEqual(PaySize, byte_size(Bin))].
+
+%% Payload size check for a target report with some parameters 
+%% excluded.
+payload_size_check2() ->
+    FieldList = [mti_report_index, target_hr_lat, target_hr_lon, 
+        geodetic_height, target_vel_los, target_wrap_velocity, target_snr,
+        target_rcs],
+
+    EM = exist_mask:new(FieldList), 
+    PaySize = tgt_report:payload_size(EM),
+    [?_assertEqual(PaySize, 18)].
 
 %% Function to create a sample target report. Sets all fields to a value.
 sample_report() ->
