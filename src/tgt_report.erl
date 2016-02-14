@@ -300,8 +300,38 @@ new(RepParams) ->
 
 %% Function to calculate the size in bytes of a target report, depending upon
 %% which fields have been set in the existence mask.
-payload_size(_EM) ->
-     ok.
+payload_size(EM) ->
+    
+    SizeList = [
+        {fun get_mti_report_index/1, 2},
+        {fun get_target_hr_lat/1, 4},
+        {fun get_target_hr_lon/1, 4},
+        {fun get_target_delta_lat/1, 2},
+        {fun get_target_delta_lon/1, 2},
+        {fun get_geodetic_height/1, 2},
+        {fun get_target_vel_los/1, 2},
+        {fun get_target_wrap_velocity/1, 2},
+        {fun get_target_snr/1, 1},
+        {fun get_target_classification/1, 1},
+        {fun get_target_class_prob/1, 1},
+        {fun get_target_slant_range_unc/1, 2},
+        {fun get_target_cross_range_unc/1, 2},
+        {fun get_target_height_unc/1, 1},
+        {fun get_target_rad_vel_unc/1, 2},
+        {fun get_truth_tag_app/1, 1},
+        {fun get_truth_tag_entity/1, 4},
+        {fun get_target_rcs/1, 1}],
+ 
+    % Define a function to accumulate the size.
+    F = fun({GetF, Size}, Acc) ->
+            case GetF(EM) of
+                1 -> Acc + Size;
+                0 -> Acc
+            end
+        end,
+
+    % Accumulate the total size for all the included parameters.
+    lists:foldl(F, 0, SizeList).
 
 decode_target_classification(<<Val:8>>) ->
     decode_target_classification(Val);
