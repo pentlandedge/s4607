@@ -68,3 +68,4 @@ new(dwell, SegRec) ->
 %% Variant that takes a pre-constructed segment header.
 new(SegHdr, SegRec) ->
     #segment{header = SegHdr, data = SegRec}.
+
