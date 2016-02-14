@@ -23,7 +23,7 @@
 %% Define a test generator for the dwell segment. 
 dwell_test_() ->
     [creation_checks1(), encode_decode_check1(), encode_decode_check2(), 
-     encode_decode_check3()].
+     encode_decode_check3(), payload_size_check1()].
 
 creation_checks1() ->
     DS = minimal_dwell(),
@@ -141,6 +141,15 @@ encode_decode_check3() ->
      ?_assertEqual(3000, tgt_report:get_geodetic_height(T1)),
      ?_assertEqual(4000, tgt_report:get_geodetic_height(T2)),
      ?_assertEqual(5000, tgt_report:get_geodetic_height(T3))].
+
+%% Check the payload_size computation for a dwell segment with multiple
+%% target reports.
+payload_size_check1() ->
+    TD = three_targets_dwell(),
+    Bin = dwell:encode(TD),
+    PaySize = dwell:payload_size(TD),
+
+    [?_assertEqual(PaySize, byte_size(Bin))].
 
 %% Function to create a sample dwell segment with only the mandatory fields
 % set.

@@ -19,6 +19,7 @@
     decode/1, 
     encode/1,
     new/1,
+    payload_size/1,
     payload_size/2,
     display/1,
     get_existence_mask/1,
@@ -411,11 +412,15 @@ new(Fields) ->
         mdv = F(mdv, Fields),
         targets = F(targets, Fields)}.
 
+%% Convenience wrapper to calculate the expected size of a dwell segment
+%% once encoded.
+payload_size(#dwell_segment{existence_mask = EM, target_report_count = TC}) ->
+    payload_size(EM, TC).
+
 %% Function to calculate the size of an encoded dwell segment payload from 
 %% the existence mask and the target report count.
 payload_size(EM, TgtRepCount) ->
     SizeList = [         
-        {get_existence_mask, 8},
         {get_revisit_index, 2},
         {get_dwell_index, 2},
         {get_last_dwell_of_revisit, 1},
@@ -449,15 +454,16 @@ payload_size(EM, TgtRepCount) ->
        
     % Define a function to accumulate the size.
     F = fun({GetF, Size}, Acc) ->
-            case GetF(EM) of
+            case exist_mask:GetF(EM) of
                 1 -> Acc + Size;
                 0 -> Acc
             end
         end,
 
     % Accumulate the total size for all the included parameters (excluding
-    % the target reports).
-    DwellSize = lists:foldl(F, 0, SizeList),
+    % the target reports). Initial size of 8 is to allow for the existence
+    % mask itself.
+    DwellSize = lists:foldl(F, 8, SizeList),
 
     % Calculate the size for the target reports.
     TgtRepSize = TgtRepCount * tgt_report:payload_size(EM),
