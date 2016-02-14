@@ -15,10 +15,29 @@
 %%
 -module(segment).
 
--export([new/2]).
+-export([encode/1, new/2]).
 
 -record(segment, {header, data}).
 
+%% Function to create an encoded segment from a segment record.
+encode(#segment{header = SH, data = SegRec}) ->
+    case seg_header:get_segment_type(SH) of
+        mission -> 
+            HdrBin = seg_header:encode(SH),
+            DataBin = mission:encode(SegRec),
+            {ok, <<HdrBin/binary,DataBin/binary>>};
+        job_definition ->
+            HdrBin = seg_header:encode(SH),
+            DataBin = job_def:encode(SegRec),
+            {ok, <<HdrBin/binary,DataBin/binary>>};
+        dwell ->
+            HdrBin = seg_header:encode(SH),
+            DataBin = dwell:encode(SegRec),
+            {ok, <<HdrBin/binary,DataBin/binary>>};
+        _       ->
+            {error, unsupported_segment_type}
+    end.
+ 
 %% Function to create a new segment record. 
 %% Caller can either supply the segment header record or simply pass the 
 %% segment type, and the function will create the segment header.

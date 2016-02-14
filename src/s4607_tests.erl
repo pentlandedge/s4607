@@ -30,7 +30,7 @@ encode_mission_segment_check() ->
     Seg = segment:new(mission, MS),
 
     % Encode the segment.
-    {ok, ES} = s4607:segment_encode(Seg),
+    {ok, ES} = segment:encode(Seg),
 
     % Decode the segment again.
     [{_, _, DS}] = s4607:decode_segments(ES, []),
@@ -52,7 +52,7 @@ encode_job_def_segment_check() ->
     Seg = segment:new(job_definition, JD),
     
     % Encode the segment.
-    {ok, ES} = s4607:segment_encode(Seg),
+    {ok, ES} = segment:encode(Seg),
 
     % Decode the segment again.
     [{_, _, DS}] = s4607:decode_segments(ES, []),
@@ -69,7 +69,7 @@ encode_dwell_segment_check1() ->
     Seg = segment:new(dwell, Dwell),
 
     % Encode the segment.
-    {ok, ES} = s4607:segment_encode(Seg),
+    {ok, ES} = segment:encode(Seg),
 
     % Decode the segment again.
     [{_, _, DS}] = s4607:decode_segments(ES, []),
@@ -89,7 +89,7 @@ encode_dwell_segment_check2() ->
     Seg = segment:new(dwell, Dwell),
     
     % Encode the segment.
-    {ok, ES} = s4607:segment_encode(Seg),
+    {ok, ES} = segment:encode(Seg),
 
     % Decode the segment again.
     [{_, _, DS}] = s4607:decode_segments(ES, []),

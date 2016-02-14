@@ -25,7 +25,6 @@
     display_packet/1,
     display_segments/1,
     display_segment/1,
-    segment_encode/1,
     segment_encode/2]).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -166,26 +165,7 @@ calculate_segment_size(SegBin) when is_binary(SegBin) ->
     SegHdrSize = 32,
     SegBinSize = byte_size(SegBin),
     SegHdrSize + SegBinSize.
-
-%% Function to create an encoded segment from a segment record.
-segment_encode(#segment{header = SH, data = SegRec}) ->
-    case seg_header:get_segment_type(SH) of
-        mission -> 
-            HdrBin = seg_header:encode(SH),
-            DataBin = mission:encode(SegRec),
-            {ok, <<HdrBin/binary,DataBin/binary>>};
-        job_definition ->
-            HdrBin = seg_header:encode(SH),
-            DataBin = job_def:encode(SegRec),
-            {ok, <<HdrBin/binary,DataBin/binary>>};
-        dwell ->
-            HdrBin = seg_header:encode(SH),
-            DataBin = dwell:encode(SegRec),
-            {ok, <<HdrBin/binary,DataBin/binary>>};
-        _       ->
-            {error, unsupported_segment_type}
-    end.
-       
+      
 %% Function to create a binary encoded segment.
 segment_encode(mission, SegRec) ->
     DataBin = mission:encode(SegRec),
