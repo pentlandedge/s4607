@@ -15,7 +15,7 @@
 %%
 -module(segment).
 
--export([encode/1, new/2]).
+-export([encode/1, new/2, display/1, display/2]).
 
 -record(segment, {header, data}).
 
@@ -68,4 +68,26 @@ new(dwell, SegRec) ->
 %% Variant that takes a pre-constructed segment header.
 new(SegHdr, SegRec) ->
     #segment{header = SegHdr, data = SegRec}.
+
+%% Function to display a segment.
+display(#segment{header = H, data = D}) ->
+    display(H, D).
+
+%% Function to display a segment. Segment should have been decoded prior to 
+%% calling this function.
+display(SegHdr, SegRec) ->
+    seg_header:display(SegHdr),
+    
+    % Switch on the segment type and display the segment data.
+    case seg_header:get_segment_type(SegHdr) of
+        mission -> 
+            mission:display(SegRec);
+        dwell   ->
+            dwell:display(SegRec);
+        job_definition ->
+            job_def:display(SegRec); 
+        _       -> 
+            ok
+    end. 
+
 

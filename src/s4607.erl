@@ -23,8 +23,7 @@
     decode_segments/2,
     display_packets/1,
     display_packet/1,
-    display_segments/1,
-    display_segment/1]).
+    display_segments/1]).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Record definitions.
@@ -114,30 +113,9 @@ display_packets(PktLst) when is_list(PktLst) ->
 
 %% Function to display a list of segments
 display_segments(Slist) ->
-    lists:map(fun display_segment/1, Slist),
+    lists:map(fun segment:display/1, Slist),
     ok.
     
-%% Function to display a segment.
-display_segment(#segment{header = H, data = D}) ->
-    display_segment(H, D).
-
-%% Function to display a segment. Segment should have been decoded prior to 
-%% calling this function.
-display_segment(SegHdr, SegRec) ->
-    seg_header:display(SegHdr),
-    
-    % Switch on the segment type and display the segment data.
-    case seg_header:get_segment_type(SegHdr) of
-        mission -> 
-            mission:display(SegRec);
-        dwell   ->
-            dwell:display(SegRec);
-        job_definition ->
-            job_def:display(SegRec); 
-        _       -> 
-            ok
-    end. 
-
 %% Extracts the first portion of the binary of the size required for a packet
 %% header. Returns the unused portion to allow further processing.
 extract_packet_header(<<Hdr:32/binary,Rest/binary>>) ->
