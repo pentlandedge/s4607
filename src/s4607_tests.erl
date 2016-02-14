@@ -26,12 +26,8 @@ encode_mission_segment_check() ->
     % Create a mission segment.
     MS = mission:new("Drifter 1", "A1234", other, "Build 1", 2016, 2, 5),
 
-    % Create a segment header.
-    SegSize = seg_header:header_size() + mission:payload_size(),
-    SH = seg_header:new(mission, SegSize),
-
     % Create a complete segment with the header and payload.
-    Seg = s4607:new_segment(SH, MS),
+    Seg = segment:new(mission, MS),
 
     % Encode the segment.
     {ok, ES} = s4607:segment_encode(Seg),
@@ -69,13 +65,9 @@ encode_dwell_segment_check1() ->
     % Create a dwell segment.
     Dwell = dwell_tests:one_target_dwell(),
     
-    % Create a segment header.
-    SegSize = seg_header:header_size() + dwell:payload_size(Dwell),
-    SH = seg_header:new(dwell, SegSize),
-
     % Create the complete segment record.
-    Seg = s4607:new_segment(SH, Dwell),
-    
+    Seg = segment:new(dwell, Dwell),
+
     % Encode the segment.
     {ok, ES} = s4607:segment_encode(Seg),
 
@@ -92,13 +84,9 @@ encode_dwell_segment_check1() ->
 encode_dwell_segment_check2() ->
     % Create a dwell segment.
     Dwell = dwell_tests:minimal_dwell(),
-    
-    % Create a segment header.
-    SegSize = seg_header:header_size() + dwell:payload_size(Dwell),
-    SH = seg_header:new(dwell, SegSize),
 
     % Create the complete segment record.
-    Seg = s4607:new_segment(SH, Dwell),
+    Seg = segment:new(dwell, Dwell),
     
     % Encode the segment.
     {ok, ES} = s4607:segment_encode(Seg),
@@ -109,3 +97,4 @@ encode_dwell_segment_check2() ->
     % Check a couple of the fields. 
     [?_assertEqual(100, dwell:get_revisit_index(DS)),
      ?_assertEqual(-10000, dwell:get_sensor_alt(DS))].
+

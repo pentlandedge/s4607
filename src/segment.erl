@@ -30,6 +30,22 @@ new(job_definition, SegRec) ->
     % Create the complete segment record.
     new(SH, SegRec);
 
+new(mission, SegRec) ->
+    % Create a segment header.
+    SegSize = seg_header:header_size() + mission:payload_size(),
+    SH = seg_header:new(mission, SegSize),
+
+    % Create the complete segment record.
+    new(SH, SegRec);
+
+new(dwell, SegRec) ->
+    % Create a segment header.
+    SegSize = seg_header:header_size() + dwell:payload_size(SegRec),
+    SH = seg_header:new(dwell, SegSize),
+
+    % Create the complete segment record.
+    new(SH, SegRec);
+
 %% Variant that takes a pre-constructed segment header.
 new(SegHdr, SegRec) ->
     #segment{header = SegHdr, data = SegRec}.
