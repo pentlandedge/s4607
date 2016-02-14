@@ -19,6 +19,7 @@
     decode/1, 
     encode/1,
     new/2,
+    header_size/0,
     display/1, 
     decode_segment_type/1,
     get_segment_type/1,
@@ -42,6 +43,9 @@ encode(#seg_header{type = T, size = S}) ->
 %% Function to create a new segment header record.
 new(Type, Size) ->
     #seg_header{type = Type, size = Size}.
+
+%% Function to return the size of the seg header in bytes.
+header_size() -> 5.
 
 decode_segment_type(1) -> mission;
 decode_segment_type(2) -> dwell;

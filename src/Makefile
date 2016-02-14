@@ -32,6 +32,7 @@ SOURCE = \
     s4607_tests.erl \
     seg_header.erl \
     seg_header_tests.erl \
+    segment.erl \
     stanag_types.erl \
     stanag_types_tests.erl \
     sutils.erl \

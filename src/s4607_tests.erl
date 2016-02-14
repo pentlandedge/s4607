@@ -27,7 +27,8 @@ encode_mission_segment_check() ->
     MS = mission:new("Drifter 1", "A1234", other, "Build 1", 2016, 2, 5),
 
     % Create a segment header.
-    SH = seg_header:new(mission, 5 + mission:payload_size()),
+    SegSize = seg_header:header_size() + mission:payload_size(),
+    SH = seg_header:new(mission, SegSize),
 
     % Create a complete segment with the header and payload.
     Seg = s4607:new_segment(SH, MS),
@@ -52,7 +53,8 @@ encode_job_def_segment_check() ->
     JD = job_def_tests:sample_job_def(),
 
     % Create a segment header.
-    SH = seg_header:new(job_definition, 5 + job_def:payload_size()),
+    SegSize = seg_header:header_size() + job_def:payload_size(),
+    SH = seg_header:new(job_definition, SegSize),
 
     % Create the complete segment record.
     Seg = s4607:new_segment(SH, JD),
@@ -72,7 +74,8 @@ encode_dwell_segment_check1() ->
     Dwell = dwell_tests:one_target_dwell(),
     
     % Create a segment header.
-    SH = seg_header:new(dwell, 5 + dwell:payload_size(Dwell)),
+    SegSize = seg_header:header_size() + dwell:payload_size(Dwell),
+    SH = seg_header:new(dwell, SegSize),
 
     % Create the complete segment record.
     Seg = s4607:new_segment(SH, Dwell),
@@ -95,7 +98,8 @@ encode_dwell_segment_check2() ->
     Dwell = dwell_tests:minimal_dwell(),
     
     % Create a segment header.
-    SH = seg_header:new(dwell, 5 + dwell:payload_size(Dwell)),
+    SegSize = seg_header:header_size() + dwell:payload_size(Dwell),
+    SH = seg_header:new(dwell, SegSize),
 
     % Create the complete segment record.
     Seg = s4607:new_segment(SH, Dwell),
