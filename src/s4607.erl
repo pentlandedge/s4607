@@ -21,7 +21,6 @@
     extract_packet_header/1,
     extract_packet_data/2,
     decode_segments/2,
-    new_segment/2,
     display_packets/1,
     display_packet/1,
     display_segments/1,
@@ -105,9 +104,6 @@ decode_segments(Bin, Acc) ->
 
     % Loop over any remaining segments contained in this packet.
     decode_segments(SRem2, [Seg|Acc]).
-
-new_segment(SegHdr, SegRec) ->
-    #segment{header = SegHdr, data = SegRec}.
 
 display_packet(#packet{header = H, segments = Slist}) ->
     pheader:display(H),
