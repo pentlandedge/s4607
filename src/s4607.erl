@@ -18,6 +18,7 @@
 -export([
     read_file/1,
     decode/1,
+    encode_packets/1,
     encode_packet/1,
     new_packet/2,
     packet_payload_size/1,
@@ -69,12 +70,30 @@ decode_packets(Bin, Acc) ->
     % Loop over any remaining packets, adding each to the list. 
     decode_packets(R2, [Pkt|Acc]).
 
-encode_packet(_Pkt) ->
-    ok.
+%% Function to encode a list of packets. Returns a list of binaries, does
+%% not flatten them.
+encode_packets(PktList) ->
+    lists:map(fun encode_packet/1, PktList).
 
+%% Function to encode a packet as a binary.
+encode_packet(#packet{header = H, segments = S}) ->
+    HdrBin = pheader:encode(H),
+    F = fun(Seg, Acc) ->
+            SegBin = segment:encode(Seg),
+            <<Acc/binary, SegBin/binary>>
+        end,
+
+    % Fold up the packet header and the list of segments as a single 
+    % binary. This is not strictly necessary:could leave as a list of 
+    % binaries and let the IO routines flatten the data.
+    lists:foldl(F, HdrBin, S).
+
+%% Function to create a new packet structure.
 new_packet(PktHdr, SegList) ->
     #packet{header = PktHdr, segments = SegList}.
 
+%% Function to calculate the expected size of a list of segments after 
+%% encoding.
 packet_payload_size(SegList) ->
     F = fun(Seg, Acc) ->
             SegHdr = segment:get_header(Seg),
@@ -83,7 +102,8 @@ packet_payload_size(SegList) ->
         end,
 
     lists:foldl(F, 0, SegList).
-            
+    
+%% Function to display a packet.
 display_packet(#packet{header = H, segments = Slist}) ->
     pheader:display(H),
     display_segments(Slist).
