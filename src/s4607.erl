@@ -182,6 +182,10 @@ segment_encode(#segment{header = SH, data = SegRec}) ->
             HdrBin = seg_header:encode(SH),
             DataBin = job_def:encode(SegRec),
             {ok, <<HdrBin/binary,DataBin/binary>>};
+        dwell ->
+            HdrBin = seg_header:encode(SH),
+            DataBin = dwell:encode(SegRec),
+            {ok, <<HdrBin/binary,DataBin/binary>>};
         _       ->
             {error, unsupported_segment_type}
     end.

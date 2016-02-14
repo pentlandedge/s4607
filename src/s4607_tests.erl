@@ -19,7 +19,8 @@
 -include_lib("eunit/include/eunit.hrl").
 
 s4607_test_() ->
-    [encode_mission_segment_check(), encode_job_def_segment_check()].
+    [encode_mission_segment_check(), encode_job_def_segment_check(),
+     encode_dwell_segment_check()].
    
 encode_mission_segment_check() ->
     % Create a mission segment.
@@ -65,3 +66,23 @@ encode_job_def_segment_check() ->
     % Check a couple of the fields. 
     [?_assertEqual(rotary_wing_radar, job_def:get_sensor_id_type(DS)),
      ?_assertEqual(dgm50, job_def:get_terr_elev_model(DS))].
+
+encode_dwell_segment_check() ->
+    % Create a dwell segment.
+    Dwell = dwell_tests:minimal_dwell(),
+    
+    % Create a segment header.
+    SH = seg_header:new(dwell, 5 + dwell:payload_size(Dwell)),
+
+    % Create the complete segment record.
+    Seg = s4607:new_segment(SH, Dwell),
+    
+    % Encode the segment.
+    {ok, ES} = s4607:segment_encode(Seg),
+
+    % Decode the segment again.
+    [{_, _, DS}] = s4607:decode_segments(ES, []),
+
+    % Check a couple of the fields. 
+    [?_assertEqual(100, dwell:get_revisit_index(DS)),
+     ?_assertEqual(-10000, dwell:get_sensor_alt(DS))].
