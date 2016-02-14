@@ -20,7 +20,7 @@
 
 %% Define a test generator for target reports. 
 tgt_report_test_() ->
-    [creation_checks1(), encode_decode_checks()].
+    [creation_checks1(), encode_decode_checks(), payload_size_checks()].
 
 creation_checks1() ->
     % Create a target report and check all the fields.
@@ -73,6 +73,19 @@ encode_decode_checks() ->
      ?_assertEqual(10000, tgt_report:get_truth_tag_entity(TR)),
      ?_assertEqual(10, tgt_report:get_target_rcs(TR)),
      ?_assertEqual(<<>>, Rem)].
+
+%% Checks of the payload size calculation.
+payload_size_checks() ->
+    % Create a sample report (all parameters). 
+    {EM, R1} = sample_report(),
+
+    % Compute the payload size expected after encoding.
+    PaySize = tgt_report:payload_size(EM),
+
+    % Encode it
+    Bin = tgt_report:encode(R1, EM),
+
+    [?_assertEqual(PaySize, byte_size(Bin))].
 
 %% Function to create a sample target report. Sets all fields to a value.
 sample_report() ->
