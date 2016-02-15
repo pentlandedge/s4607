@@ -19,6 +19,7 @@
     decode/1, 
     encode/1,
     new/1,
+    header_size/0,
     display/1, 
     decode_us_packet_code/1,
     get_version_id/1,
@@ -123,6 +124,9 @@ new(ParamList) ->
         platform_id = F(platform_id, ParamList, ""), 
         mission_id = F(mission_id, ParamList, 0), 
         job_id = F(job_id, ParamList, 0)}. 
+
+%% Function to return the size of the packet header.
+header_size() -> 32.
 
 decode_version(<<M,N>>) ->
     {M - $0, N - $0}.

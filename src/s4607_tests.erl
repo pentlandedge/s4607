@@ -20,7 +20,8 @@
 
 s4607_test_() ->
     [encode_mission_segment_check(), encode_job_def_segment_check(),
-     encode_dwell_segment_check1(), encode_dwell_segment_check2()].
+     encode_dwell_segment_check1(), encode_dwell_segment_check2(),
+     mission_packet_encode()].
    
 encode_mission_segment_check() ->
     % Create a mission segment.
@@ -98,3 +99,44 @@ encode_dwell_segment_check2() ->
     [?_assertEqual(100, dwell:get_revisit_index(DS)),
      ?_assertEqual(-10000, dwell:get_sensor_alt(DS))].
 
+mission_packet_encode() ->
+    % Create a mission segment.
+    MS = mission:new("Drifter 1", "A1234", other, "Build 1", 2016, 2, 5),
+
+    % Create a complete segment with the header and payload.
+    Seg = segment:new(mission, MS),
+
+    % Work out the size of the packet.
+    PaySize = s4607:packet_payload_size([Seg]),
+    Size = pheader:header_size() + PaySize,
+
+    % List the parameters for the packet header. 
+    PL = [{version, {3, 1}}, {packet_size, Size}, {nationality, "UK"},
+          {classification, top_secret}, {class_system, "UK"}, 
+          {packet_code, rel_9_eyes}, {exercise_ind, operation_real},
+          {platform_id, "Pico1"}, {mission_id, 16#11223344},
+          {job_id, 16#55667788}],
+
+    % Create a packet header.
+    PktHdr = pheader:new(PL),
+
+    % Wrap the segment inside a packet.
+    Pack = s4607:new_packet(PktHdr, [Seg]),
+
+    % Encode the packet.
+    EP = s4607:encode_packet(Pack),
+
+    % Decode it again.
+    [DP] = s4607:decode(EP),
+
+    % Pull out the individual records.
+    DPH = s4607:get_packet_header(DP),
+    [DPS] = s4607:get_packet_segments(DP),
+    SegHdr = segment:get_header(DPS),
+    MissSeg = segment:get_data(DPS),
+
+    % Run some checks on the decoded packet and check it is what we expect.
+    [?_assertEqual(Size, pheader:get_packet_size(DPH)),
+     ?_assertEqual(mission, seg_header:get_segment_type(SegHdr)),
+     ?_assertEqual(44, seg_header:get_segment_size(SegHdr)),
+     ?_assertEqual(other, mission:get_platform_type(MissSeg))].

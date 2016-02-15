@@ -26,7 +26,9 @@
     extract_packet_data/2,
     display_packets/1,
     display_packet/1,
-    display_segments/1]).
+    display_segments/1,
+    get_packet_header/1,
+    get_packet_segments/1]).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Record definitions.
@@ -79,7 +81,7 @@ encode_packets(PktList) when is_list(PktList) ->
 encode_packet(#packet{header = H, segments = S}) ->
     HdrBin = pheader:encode(H),
     F = fun(Seg, Acc) ->
-            SegBin = segment:encode(Seg),
+            {ok, SegBin} = segment:encode(Seg),
             <<Acc/binary, SegBin/binary>>
         end,
 
@@ -97,7 +99,7 @@ new_packet(PktHdr, SegList) ->
 packet_payload_size(SegList) ->
     F = fun(Seg, Acc) ->
             SegHdr = segment:get_header(Seg),
-            SegSize = segment:get_segment_size(SegHdr),
+            SegSize = seg_header:get_segment_size(SegHdr),
             Acc + SegSize
         end,
 
@@ -135,4 +137,8 @@ extract_packet_data(Bin, Len) ->
 %    SegHdrSize = 32,
 %    SegBinSize = byte_size(SegBin),
 %    SegHdrSize + SegBinSize.
+
+%% Accessor functions for pulling out the fields of the packet.
+get_packet_header(#packet{header = X}) -> X.
+get_packet_segments(#packet{segments = X}) -> X.
       
