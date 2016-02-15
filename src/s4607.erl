@@ -72,7 +72,7 @@ decode_packets(Bin, Acc) ->
 
 %% Function to encode a list of packets. Returns a list of binaries, does
 %% not flatten them.
-encode_packets(PktList) ->
+encode_packets(PktList) when is_list(PktList) ->
     lists:map(fun encode_packet/1, PktList).
 
 %% Function to encode a packet as a binary.
