@@ -28,7 +28,8 @@
     display_packet/1,
     display_segments/1,
     get_packet_header/1,
-    get_packet_segments/1]).
+    get_packet_segments/1,
+    update_properties/2]).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Record definitions.
@@ -141,4 +142,14 @@ extract_packet_data(Bin, Len) ->
 %% Accessor functions for pulling out the fields of the packet.
 get_packet_header(#packet{header = X}) -> X.
 get_packet_segments(#packet{segments = X}) -> X.
-      
+
+%% Function to update a set of options in a property list.
+update_properties(NewProperties, PropList) ->
+    %% Local function to update a property in a list.
+    D = fun({K,_V} = New, AccList) ->
+            Reduced = proplists:delete(K, AccList),
+            [New|Reduced]
+        end,
+
+    %% Update all the new settings in the list.
+    lists:foldl(D, PropList, NewProperties).
