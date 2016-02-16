@@ -29,7 +29,8 @@
     display_segments/1,
     get_packet_header/1,
     get_packet_segments/1,
-    update_properties/2]).
+    update_properties/2,
+    packet_generator/1]).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Record definitions.
@@ -153,3 +154,24 @@ update_properties(NewProperties, PropList) ->
 
     %% Update all the new settings in the list.
     lists:foldl(D, PropList, NewProperties).
+
+%% Function that returns a function that will generate a packet from a list
+%% of segments, patching the packet_size field in the packet header each
+%% time it is called. The other parameters specified in HeaderParams will 
+%% be used for each packet generated.
+packet_generator(HeaderParams) ->
+    fun(SegList) ->
+        % Work out the size of the packet.
+        PaySize = s4607:packet_payload_size(SegList),
+        Size = pheader:header_size() + PaySize,
+
+        % Update the size of the packet in the header parameters.
+        HP = update_properties([{packet_size, Size}], HeaderParams),
+
+        % Create a packet header.
+        PktHdr = pheader:new(HP),
+
+        % Wrap the segments inside a packet.
+        s4607:new_packet(PktHdr, SegList)
+    end.
+    
