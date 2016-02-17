@@ -38,3 +38,35 @@ The project uses Erlang's eunit test system. From the Erlang shell, to run all o
 ```
 4> eunit:test(all_tests).
 ```
+
+# Encoding a segment inside a packet structure.
+As an example, consider creating a mission segment, encapsulating it inside a packet, then encoding into Stanag 4607 binary form. The first step is to create the mission segment payload. This is done by first creating a the segment record then adding the segment header:
+```
+5> MS = mission:new("Drifter 1", "A1234", other, "Build 1", 2016, 2, 5).
+```
+The parameters supplied to mission:new() correspond to the segment parameters. The next step is to create the full segment combining the segment header and payload:
+
+```
+6> Seg = segment:new(mission, MS),
+```
+The segment:new() function automatically creates the segment header from the segment type specifier and from the length of the mission segment payload.
+To create a full Stanag 4607 packet, it is necessary to add a packet header. The packet header contains a number of fields. Most of these are constant over a job, but the size field changes with each new packet. For ease of use a packet generator function has been provided which returns a function that captures (using a closure) the list of constant header parameters, and patches the size field each time. For example, the variable PL is a property list containing the parameters to use when creating packet headers, and the variable Gen is actually a function taking a list of segments as parameters:
+```
+7> PL = [{version, {3, 1}}, {nationality, "UK"},
+         {classification, unclassified}, {class_system, "UK"}, 
+         {packet_code, none}, {exercise_ind, exercise_real},
+         {platform_id, "Plat1"}, {mission_id, 16#11223344},
+         {job_id, 16#55667788}].
+
+8> Gen = s4607:packet_generator(PL),
+```
+We can then pass in our list of segments (just one in this case) to create a complete packet structure:
+```
+9> Packet = Gen([Seg]), 
+```
+To convert this to binary encoded form, we can do the following:
+```
+10> EncodedPacket = s4607:encode_packet(Pack),
+```
+This encoded packet can then be written to file using the normal IO libraries.
+
