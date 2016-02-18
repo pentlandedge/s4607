@@ -33,7 +33,7 @@ The script can then be run, and the results written to a file as follows:
 ## ./display_4607 /path/to/file > 4607.log
 ```
 
-# Running the regression tests
+## Running the regression tests
 The project uses Erlang's eunit test system. From the Erlang shell, to run all of the unit tests:
 ```
 4> eunit:test(all_tests).
