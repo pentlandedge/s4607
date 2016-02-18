@@ -4,13 +4,13 @@ Stanag 4607 library written in Erlang. Stanag 4607 is a NATO standard for sharin
 This software is still under development, but can now decode the packet header, dwell, mission and job definition segments. Further improvements including better test coverage will follow in due course. 
 
 The software has been released under an Apache free software license.
-# Building
+## Building
 It is necessary to have Erlang installed, and the compiler erlc available on the path. The software can be built (on a Linux platform) by moving to the src directory and running make:
 ```
 # cd src
 # make
 ```
-# Decoding a Stanag 4607 file
+## Decoding a Stanag 4607 file
 From the root directory, the Erlang shell can be started as follows:
 ```
 # erl -pa ebin
@@ -23,14 +23,14 @@ From the Erlang prompt, open a file in Stanag 4607 format and display its conten
 ```
 The PacketList is a single, hierarchical structure suitable for use in data processing applications.
 
-# Running the escript
+## Running the escript
 For convenience, the display_4607 script has been provided. The software must have been built before running this. Make the script executable:
 ```
-# chmod a+x display_4607
+## chmod a+x display_4607
 ```
 The script can then be run, and the results written to a file as follows:
 ```
-# ./display_4607 /path/to/file > 4607.log
+## ./display_4607 /path/to/file > 4607.log
 ```
 
 # Running the regression tests
@@ -39,7 +39,7 @@ The project uses Erlang's eunit test system. From the Erlang shell, to run all o
 4> eunit:test(all_tests).
 ```
 
-# Encoding a segment inside a packet structure.
+## Encoding a segment inside a packet structure.
 As an example, consider creating a mission segment, encapsulating it inside a packet, then encoding into Stanag 4607 binary form. The first step is to create the mission segment payload. 
 ```
 5> MS = mission:new("Drifter 1", "A1234", other, "Build 1", 2016, 2, 5).
@@ -70,13 +70,13 @@ The function Gen can be called repeatedly with new lists of segments, and the si
 ```
 This encoded packet can then be written to file using the normal IO libraries.
 
-# Extracting segments from a list of packets.
+## Extracting segments from a list of packets.
 A flattened list of segments can be extracted from a list of packets in the following manner:
 ```
 11> SegList = s4607:get_segments(PacketList).
 ```
 It is also possible to extract a filtered list of segments of specified types:
 ```
-12> FiltSegList = s4607:get_segments_by_type([dwell, mission], [PacketList]).
+12> FiltSegList = s4607:get_segments_by_type([dwell, mission], PacketList).
 ```
 
