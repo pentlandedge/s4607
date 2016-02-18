@@ -30,7 +30,8 @@
     get_packet_header/1,
     get_packet_segments/1,
     update_properties/2,
-    packet_generator/1]).
+    packet_generator/1,
+    get_segments/1]).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Record definitions.
@@ -174,4 +175,17 @@ packet_generator(HeaderParams) ->
         % Wrap the segments inside a packet.
         s4607:new_packet(PktHdr, SegList)
     end.
-    
+   
+
+%% Function to extract a list of segments from a list of packets.
+get_segments(PacketList) when is_list(PacketList) ->
+    % Local function to extract the segments from a single packet.
+    F = fun(#packet{segments = Segs}) ->
+            Segs
+        end,
+
+    % Extract a nested list of segments from the packet list.
+    NestSegs = lists:map(F, PacketList),
+    % Flatten the list.
+    lists:flatten(NestSegs).
+
