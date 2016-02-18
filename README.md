@@ -70,3 +70,13 @@ The function Gen can be called repeatedly with new lists of segments, and the si
 ```
 This encoded packet can then be written to file using the normal IO libraries.
 
+# Extracting segments from a list of packets.
+A flattened list of segments can be extracted from a list of packets in the following manner:
+```
+11> SegList = s4607:get_segments(PacketList).
+```
+It is also possible to extract a filtered list of segments of specified types:
+```
+12> FiltSegList = s4607:get_segments_by_type([dwell, mission], [PacketList]).
+```
+
