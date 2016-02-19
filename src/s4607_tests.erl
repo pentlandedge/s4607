@@ -21,7 +21,7 @@
 s4607_test_() ->
     [encode_mission_segment_check(), encode_job_def_segment_check(),
      encode_dwell_segment_check1(), encode_dwell_segment_check2(),
-     mission_packet_encode(), job_def_packet_encode()].
+     mission_packet_encode(), job_def_packet_encode(), dwell_packet_encode()].
    
 encode_mission_segment_check() ->
     % Create a mission segment.
@@ -198,4 +198,69 @@ job_def_packet_encode() ->
      ?_assertEqual(dgm50, job_def:get_terr_elev_model(DEJD)),
      ?_assertEqual(geo96, job_def:get_geoid_model(DEJD))].
 
+dwell_packet_encode() ->
+    % List the parameters for the packet header (no need to set size). 
+    PL = [{version, {3, 1}}, {nationality, "UK"},
+          {classification, top_secret}, {class_system, "UK"}, 
+          {packet_code, rel_9_eyes}, {exercise_ind, operation_real},
+          {platform_id, "Pico1"}, {mission_id, 16#11223344},
+          {job_id, 16#55667788}],
 
+    % Create a generator function
+    Gen = s4607:packet_generator(PL),
+
+    % Create a dwell segment to encode.
+    DS = dwell_tests:one_target_dwell(),
+    
+    % Create a complete segment with the header and payload.
+    Seg = segment:new(dwell, DS),
+
+    % Create a packet with the new segment.
+    Pack = Gen([Seg]), 
+    
+    % Encode the packet.
+    EP = s4607:encode_packet(Pack),
+
+    % Decode it again.
+    [DP] = s4607:decode(EP),
+
+    % Pull out the individual records.
+    [DPS] = s4607:get_packet_segments(DP),
+    SegHdr = segment:get_header(DPS),
+    DEDS = segment:get_data(DPS),
+    EM = dwell:get_existence_mask(DEDS),
+
+    [?_assertEqual(dwell, seg_header:get_segment_type(SegHdr)),
+     ?_assertEqual(1, exist_mask:get_revisit_index(EM)),
+     ?_assertEqual(1, exist_mask:get_dwell_index(EM)),
+     ?_assertEqual(1, exist_mask:get_last_dwell_of_revisit(EM)),
+     ?_assertEqual(1, exist_mask:get_target_report_count(EM)),
+     ?_assertEqual(1, exist_mask:get_dwell_time(EM)),
+     ?_assertEqual(1, exist_mask:get_sensor_lat(EM)),
+     ?_assertEqual(1, exist_mask:get_sensor_lon(EM)),
+     ?_assertEqual(1, exist_mask:get_sensor_alt(EM)),
+     ?_assertEqual(1, exist_mask:get_dwell_range_half_extent(EM)),
+     ?_assertEqual(1, exist_mask:get_dwell_angle_half_extent(EM)),
+     
+     ?_assertEqual(0, exist_mask:get_spu_along_track(EM)),
+     ?_assertEqual(0, exist_mask:get_spu_alt(EM)),
+     ?_assertEqual(1, exist_mask:get_mti_report_index(EM)),
+     ?_assertEqual(1, exist_mask:get_target_hr_lat(EM)),
+     ?_assertEqual(1, exist_mask:get_target_hr_lon(EM)),
+     ?_assertEqual(0, exist_mask:get_mdv(EM)),
+
+     ?_assertEqual(100, dwell:get_revisit_index(DEDS)),
+     ?_assertEqual(20000, dwell:get_dwell_index(DEDS)),
+     ?_assertEqual(no_additional_dwells, dwell:get_last_dwell_of_revisit(DS)),
+     ?_assertEqual(1, dwell:get_target_report_count(DEDS)),
+     ?_assertEqual(1000000, dwell:get_dwell_time(DEDS)),
+     ?_assert(almost_equal(-45.0, dwell:get_sensor_lat(DEDS), 0.0000001)),
+     ?_assert(almost_equal(350.0, dwell:get_sensor_lon(DEDS), 0.0000001)),
+     ?_assertEqual(-10000, dwell:get_sensor_alt(DEDS)),
+     ?_assert(almost_equal(255.0, dwell:get_dwell_range_half_extent(DEDS), 0.0000001)),
+     ?_assert(almost_equal(350.0, dwell:get_dwell_angle_half_extent(DEDS), 0.1))].
+
+%% Utility function to compare whether floating point values are within a 
+%% specified range.
+almost_equal(V1, V2, Delta) ->
+    abs(V1 - V2) =< Delta.
