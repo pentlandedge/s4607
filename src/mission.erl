@@ -29,7 +29,8 @@
     get_platform_config/1,
     get_year/1,
     get_month/1,
-    get_day/1]).
+    get_day/1,
+    get_time/1]).
 
 -record(mission_segment, {
     mission_plan, 
@@ -206,4 +207,8 @@ get_month(#mission_segment{month = M}) -> M.
 
 %% Accessor function for the day field.
 get_day(#mission_segment{day = D}) -> D.
+
+%% Convenience function to allow a caller to extract all of the time fields
+%% as a single tuple.
+get_time(#mission_segment{year = Y, month = M, day = D}) -> {Y, M, D}.
 
