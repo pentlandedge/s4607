@@ -20,6 +20,7 @@
     encode/2,
     new/1,
     payload_size/1,
+    to_dict/2,
     display/2,
     get_mti_report_index/1,
     get_target_hr_lat/1,
@@ -332,6 +333,63 @@ payload_size(EM) ->
 
     % Accumulate the total size for all the included parameters.
     lists:foldl(F, 0, SizeList).
+
+%% Function to convert a target report to a dict. Uses the existence mask to
+%% add only the valid parameters.
+to_dict(#tgt_report{
+    mti_report_index = MRI,
+    target_hr_lat = TgtHiResLat,
+    target_hr_lon = TgtHiResLon,
+    target_delta_lat = TgtDeltaLat,
+    target_delta_lon = TgtDeltaLon,
+    geodetic_height = GeodHeight,
+    target_vel_los = TgtVelLos,
+    target_wrap_velocity = TgtWrapVel,
+    target_snr = TgtSnr,
+    target_classification = TgtClassification,
+    target_class_prob = TgtClassProb,
+    target_slant_range_unc = TgtSlantRgeUnc,
+    target_cross_range_unc = TgtCrossRgeUnc,
+    target_height_unc = TgtHeightUnc,
+    target_rad_vel_unc = TgtRadVelUnc,
+    truth_tag_app = TruthTagApp,
+    truth_tag_entity = TruthTagEnt,
+    target_rcs = TgtRcs} = TR, EM) ->
+
+    % Define a table of the form [{A, C, V}] where A is an atom field name,
+    % C is an existence mask checker function, and V is the value of the 
+    % field.
+    ParamTable = [
+        {mti_report_index, fun exist_mask:get_mti_report_index/1, MRI},
+        {target_hr_lat, fun exist_mask:get_target_hr_lat/1, TgtHiResLat},
+        {target_hr_lon, fun exist_mask:get_target_hr_lon/1, TgtHiResLon},
+        {target_delta_lat, fun exist_mask:get_target_delta_lat/1, TgtDeltaLat},
+        {target_delta_lon, fun exist_mask:get_target_delta_lon/1, TgtDeltaLon},
+        {geodetic_height, fun exist_mask:get_geodetic_height/1, GeodHeight},
+        {target_vel_los, fun exist_mask:get_target_vel_los/1, TgtVelLos},
+        {target_wrap_velocity, fun exist_mask:get_target_wrap_velocity/1, TgtWrapVel},
+        {target_snr, fun exist_mask:get_target_snr/1, TgtSnr},
+        {target_classification, fun exist_mask:get_target_classification/1, TgtClassification},
+        {target_class_prob, fun exist_mask:get_target_class_prob/1, TgtClassProb},
+        {target_slant_range_unc, fun exist_mask:get_target_slant_range_unc/1, TgtSlantRgeUnc},
+        {target_cross_range_unc, fun exist_mask:get_target_cross_range_unc/1, TgtCrossRgeUnc},
+        {target_height_unc, fun exist_mask:get_target_height_unc/1, TgtHeightUnc},
+        {target_rad_vel_unc, fun exist_mask:get_target_rad_vel_unc/1, TgtRadVelUnc},
+        {truth_tag_app, fun exist_mask:get_truth_tag_app/1, TruthTagApp},
+        {truth_tag_entity, fun exist_mask:get_truth_tag_entity/1, TruthTagEnt},
+        {target_rcs, fun exist_mask:get_target_rcs/1, TgtRcs}],
+
+    % Define a local function to convert all of the available parameters to 
+    % a dictionary.
+
+    F = fun({At, GetF, Val}, Acc) ->
+            case GetF(EM) of
+                1 -> dict:store(At, Val, Acc);
+                0 -> Acc
+            end
+        end,
+
+    lists:foldl(F, dict:new(), ParamTable).
 
 decode_target_classification(<<Val:8>>) ->
     decode_target_classification(Val);
