@@ -26,11 +26,11 @@ The PacketList is a single, hierarchical structure suitable for use in data proc
 ## Running the escript
 For convenience, the display_4607 script has been provided. The software must have been built before running this. Make the script executable:
 ```
-## chmod a+x display_4607
+# chmod a+x display_4607
 ```
 The script can then be run, and the results written to a file as follows:
 ```
-## ./display_4607 /path/to/file > 4607.log
+# ./display_4607 /path/to/file > 4607.log
 ```
 
 ## Running the regression tests
