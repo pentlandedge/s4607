@@ -21,6 +21,7 @@
     new/1,
     payload_size/1,
     payload_size/2,
+    to_dict/1,
     display/1,
     get_existence_mask/1,
     get_revisit_index/1,
@@ -470,6 +471,69 @@ payload_size(EM, TgtRepCount) ->
 
     % Return the combined total of the dwell and the target reports.
     DwellSize + TgtRepSize.
+
+%% Function to convert the dwell segment into a dictionary.
+to_dict(DS) ->
+    % Extract the existence mask from the incoming dwell segment.
+    EM = get_existence_mask(DS),
+
+    % Table definition with of the form [{Name, Accessor}].
+    % The accessor function name is used with both the dwell segment and the
+    % existence mask.
+    ParamTable = [
+        {revisit_index, get_revisit_index},
+        {dwell_index, get_dwell_index},
+        {last_dwell_of_revisit, get_last_dwell_of_revisit},
+        {target_report_count, get_target_report_count},
+        {dwell_time, get_dwell_time},
+        {sensor_lat, get_sensor_lat},
+        {sensor_lon, get_sensor_lon},
+        {sensor_alt, get_sensor_alt},
+        {lat_scale_factor, get_lat_scale_factor},
+        {lon_scale_factor, get_lon_scale_factor},
+        {spu_along_track, get_spu_along_track},
+        {spu_cross_track, get_spu_cross_track},
+        {spu_alt, get_spu_alt},
+        {sensor_track, get_sensor_track},
+        {sensor_speed, get_sensor_speed},
+        {sensor_vert_vel, get_sensor_vert_vel},
+        {sensor_track_unc, get_sensor_track_unc},
+        {sensor_speed_unc, get_sensor_speed_unc},
+        {sensor_vert_vel_unc, get_sensor_vert_vel_unc},
+        {platform_heading, get_platform_heading},
+        {platform_pitch, get_platform_pitch},
+        {platform_roll, get_platform_roll},
+        {get_dwell_center_lat, get_dwell_center_lat},
+        {get_dwell_center_lon, get_dwell_center_lon},
+        {get_dwell_range_half_extent, get_dwell_range_half_extent},
+        {get_dwell_angle_half_extent, get_dwell_angle_half_extent},
+        {get_sensor_heading, get_sensor_heading},
+        {get_sensor_pitch, get_sensor_pitch},
+        {get_sensor_roll, get_sensor_roll},
+        {get_mdv, get_mdv}],
+    
+    % Function to convert each field present in the existence mask into a 
+    % dictionary element.
+    F = fun({Param, GetFn}, Acc) ->
+            case exist_mask:GetFn(EM) of
+                1 ->
+                   P = dwell:GetFn(DS),
+                   dict:store(Param, P, Acc);
+                0 ->
+                    Acc
+            end
+        end,
+
+    Dict1 = lists:foldl(F, dict:new(), ParamTable),
+
+    % Add the target reports. Convert a list of records to a list of 
+    % dictionaries.
+    Targets = dwell:get_targets(DS),
+    T = fun(TgtRep) ->
+            tgt_report:to_dict(TgtRep, EM)
+        end,
+    TgtDictList = lists:map(T, Targets),
+    dict:store(targets, TgtDictList, Dict1).
 
 decode_last_dwell_of_revisit(0) -> additional_dwells;
 decode_last_dwell_of_revisit(1) -> no_additional_dwells.
