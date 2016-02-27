@@ -1,0 +1,14 @@
+{application, s4607,
+ [
+  {description, "An Erlang Stanag 4607 library"},
+  {vsn, "1"},
+  {modules, [
+             s4607
+            ]},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {env, []}
+ ]}.
