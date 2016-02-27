@@ -5,10 +5,9 @@ This software is still under development, but can now decode the packet header, 
 
 The software has been released under an Apache free software license.
 ## Building
-It is necessary to have Erlang installed, and the compiler erlc available on the path. The software can be built (on a Linux platform) by moving to the src directory and running make:
+It is necessary to have Erlang installed, and the compiler erlc available on the path. The rebar tool is used to control the build process, so it is also necessary to have a copy of rebar available on the path. The software can be built (on a Linux platform) using rebar: 
 ```
-# cd src
-# make
+# rebar compile 
 ```
 ## Decoding a Stanag 4607 file
 From the root directory, the Erlang shell can be started as follows:
@@ -34,11 +33,11 @@ The script can then be run, and the results written to a file as follows:
 ```
 
 ## Running the regression tests
-The project uses Erlang's eunit test system. From the Erlang shell, to run all of the unit tests:
+The project uses Erlang's eunit test system, controlled from rebar. 
 ```
-4> eunit:test(all_tests).
+# rebar compile eunit
 ```
-
+This will rebuild the project including the eunit tests and then execute all of the tests.
 ## Encoding a segment inside a packet structure.
 As an example, consider creating a mission segment, encapsulating it inside a packet, then encoding into Stanag 4607 binary form. The first step is to create the mission segment payload. 
 ```
