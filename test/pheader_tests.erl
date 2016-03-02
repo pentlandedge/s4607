@@ -39,7 +39,9 @@ size_checks() ->
     
 class_checks() -> 
     {ok, Hdr1} = pheader:decode(sample_header1()),
-    [?_assertEqual(top_secret, pheader:get_classification(Hdr1))].
+    {ok, Hdr2} = pheader:decode(sample_header2()),
+    [?_assertEqual(top_secret, pheader:get_classification(Hdr1)),
+     ?_assertEqual(no_classification, pheader:get_classification(Hdr2))].
 
 class_sys_checks() -> 
     {ok, Hdr1} = pheader:decode(sample_header1()),
@@ -113,4 +115,6 @@ default_new_checks() ->
 sample_header1() ->
     <<"12",0,0,0,32, "UK", 1, "XN", 0, 1, 128, "ABCDEFGHIJ", 0, 0, 0, 5, 0, 0, 0, 6>>.
 
+sample_header2() ->
+    <<"12",0,0,0,32, "UK", 6, "XN", 0, 1, 128, "ABCDEFGHIJ", 0, 0, 0, 5, 0, 0, 0, 6>>.
 

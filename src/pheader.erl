@@ -147,6 +147,7 @@ decode_classification(2) -> {ok, secret};
 decode_classification(3) -> {ok, confidential};
 decode_classification(4) -> {ok, restricted};
 decode_classification(5) -> {ok, unclassified};
+decode_classification(6) -> {ok, no_classification};
 decode_classification(X) -> {unknown_classification, X}.
 
 encode_classification(C) ->
