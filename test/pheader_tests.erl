@@ -41,7 +41,12 @@ class_checks() ->
     {ok, Hdr1} = pheader:decode(sample_header1()),
     {ok, Hdr2} = pheader:decode(sample_header2()),
     [?_assertEqual(top_secret, pheader:get_classification(Hdr1)),
-     ?_assertEqual(no_classification, pheader:get_classification(Hdr2))].
+     ?_assertEqual(no_classification, pheader:get_classification(Hdr2)),
+     ?_assertEqual({ok, secret}, pheader:decode_classification(2)),
+     ?_assertEqual({ok, confidential}, pheader:decode_classification(3)),
+     ?_assertEqual({ok, restricted}, pheader:decode_classification(4)),
+     ?_assertEqual({ok, unclassified}, pheader:decode_classification(5)),
+     ?_assertEqual({unknown_classification, 7}, pheader:decode_classification(7))].
 
 class_sys_checks() -> 
     {ok, Hdr1} = pheader:decode(sample_header1()),
@@ -49,11 +54,20 @@ class_sys_checks() ->
 
 sec_code_checks() -> 
     {ok, Hdr1} = pheader:decode(sample_header1()),
-    [?_assertEqual(nocontract, pheader:get_packet_code(Hdr1))].
+    {ok, Hdr2} = pheader:decode(sample_header2()),
+    [?_assertEqual(nocontract, pheader:get_packet_code(Hdr1)),
+     ?_assertEqual(orcon, pheader:get_packet_code(Hdr2))].
 
 exercise_ind_checks() ->
     {ok, Hdr1} = pheader:decode(sample_header1()),
-    [?_assertEqual(exercise_real, pheader:get_exercise_indicator(Hdr1))].
+    {ok, Hdr2} = pheader:decode(sample_header2()),
+    [?_assertEqual(exercise_real, pheader:get_exercise_indicator(Hdr1)),
+     ?_assertEqual(exercise_simulated, pheader:get_exercise_indicator(Hdr2)),
+     ?_assertEqual({ok, operation_real}, pheader:decode_exercise_indicator(0)),
+     ?_assertEqual({ok, operation_simulated}, pheader:decode_exercise_indicator(1)),
+     ?_assertEqual({ok, operation_synthesized}, pheader:decode_exercise_indicator(2)),
+     ?_assertEqual({ok, exercise_synthesized}, pheader:decode_exercise_indicator(130)),
+     ?_assertEqual({error, reserved}, pheader:decode_exercise_indicator(3))].
 
 platform_id_checks() ->
     {ok, Hdr1} = pheader:decode(sample_header1()),
@@ -99,6 +113,10 @@ default_new_checks() ->
     % Create a new packet header with the default parameters.
     PH = pheader:new([]),
 
+    % Display it (IO will be swallowed by eunit but at least exercises the 
+    % diplay routine.
+    pheader:display(PH),
+
     % Check the parameters in the decoded version are as expected.
     [?_assertEqual({3, 0}, pheader:get_version_id(PH)),
      ?_assertEqual(32, pheader:get_packet_size(PH)),
@@ -116,5 +134,5 @@ sample_header1() ->
     <<"12",0,0,0,32, "UK", 1, "XN", 0, 1, 128, "ABCDEFGHIJ", 0, 0, 0, 5, 0, 0, 0, 6>>.
 
 sample_header2() ->
-    <<"12",0,0,0,32, "UK", 6, "XN", 0, 1, 128, "ABCDEFGHIJ", 0, 0, 0, 5, 0, 0, 0, 6>>.
+    <<"12",0,0,0,32, "UK", 6, "XN", 0, 2, 129, "ABCDEFGHIJ", 0, 0, 0, 5, 0, 0, 0, 6>>.
 
