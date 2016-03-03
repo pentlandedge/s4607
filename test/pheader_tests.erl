@@ -58,7 +58,10 @@ sec_code_checks() ->
     [?_assertEqual(nocontract, pheader:get_packet_code(Hdr1)),
      ?_assertEqual(orcon, pheader:get_packet_code(Hdr2)),
      ?_assertEqual({ok, propin}, pheader:decode_us_packet_code(4)),
-     ?_assertEqual({ok, wnintel}, pheader:decode_us_packet_code(8))].
+     ?_assertEqual({ok, wnintel}, pheader:decode_us_packet_code(8)),
+     ?_assertEqual({ok, national_only}, pheader:decode_us_packet_code(16#10)),
+     ?_assertEqual({ok, rel_4_eyes}, pheader:decode_us_packet_code(16#4000)),
+     ?_assertEqual({error, unknown_packet_code}, pheader:decode_us_packet_code(3))].
 
 exercise_ind_checks() ->
     {ok, Hdr1} = pheader:decode(sample_header1()),
