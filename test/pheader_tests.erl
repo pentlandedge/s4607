@@ -56,7 +56,9 @@ sec_code_checks() ->
     {ok, Hdr1} = pheader:decode(sample_header1()),
     {ok, Hdr2} = pheader:decode(sample_header2()),
     [?_assertEqual(nocontract, pheader:get_packet_code(Hdr1)),
-     ?_assertEqual(orcon, pheader:get_packet_code(Hdr2))].
+     ?_assertEqual(orcon, pheader:get_packet_code(Hdr2)),
+     ?_assertEqual({ok, propin}, pheader:decode_us_packet_code(4)),
+     ?_assertEqual({ok, wnintel}, pheader:decode_us_packet_code(8))].
 
 exercise_ind_checks() ->
     {ok, Hdr1} = pheader:decode(sample_header1()),
