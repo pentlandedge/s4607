@@ -39,7 +39,8 @@
 -ifdef(TEST).
 -export([
     enc_class/1, 
-    encode_us_packet_code/1]).
+    encode_us_packet_code/1,
+    encode_exercise_indicator/1]).
 -endif.
 
 -record(pheader, {

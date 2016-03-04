@@ -22,9 +22,9 @@
 pheader_test_() ->
     [version_checks(), size_checks(), nationality_checks(), class_checks(), 
      class_sys_checks(), sec_code_checks(), enc_sec_code_checks(),  
-     exercise_ind_checks(), platform_id_checks(), mission_id_checks(), 
-     job_id_checks(), encode_decode_check1(), default_new_checks(), 
-     enc_class_checks()].
+     exercise_ind_checks(), encode_exercise_ind_checks(), 
+     platform_id_checks(), mission_id_checks(), job_id_checks(), 
+     encode_decode_check1(), default_new_checks(), enc_class_checks()].
 
 version_checks() ->
     {ok, Hdr1} = pheader:decode(sample_header1()),
@@ -104,6 +104,14 @@ exercise_ind_checks() ->
      ?_assertEqual({ok, operation_synthesized}, pheader:decode_exercise_indicator(2)),
      ?_assertEqual({ok, exercise_synthesized}, pheader:decode_exercise_indicator(130)),
      ?_assertEqual({error, reserved}, pheader:decode_exercise_indicator(3))].
+
+encode_exercise_ind_checks() ->
+    [?_assertEqual(<<0>>, pheader:encode_exercise_indicator(operation_real)),
+     ?_assertEqual(<<1>>, pheader:encode_exercise_indicator(operation_simulated)),
+     ?_assertEqual(<<2>>, pheader:encode_exercise_indicator(operation_synthesized)),
+     ?_assertEqual(<<128>>, pheader:encode_exercise_indicator(exercise_real)),
+     ?_assertEqual(<<129>>, pheader:encode_exercise_indicator(exercise_simulated)),
+     ?_assertEqual(<<130>>, pheader:encode_exercise_indicator(exercise_synthesized))].
 
 platform_id_checks() ->
     {ok, Hdr1} = pheader:decode(sample_header1()),
