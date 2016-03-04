@@ -21,9 +21,10 @@
 %% Define a test generator for the decoding of the packet header fields. 
 pheader_test_() ->
     [version_checks(), size_checks(), nationality_checks(), class_checks(), 
-     class_sys_checks(), sec_code_checks(), exercise_ind_checks(), 
-     platform_id_checks(), mission_id_checks(), job_id_checks(), 
-     encode_decode_check1(), default_new_checks()].
+     class_sys_checks(), sec_code_checks(), enc_sec_code_checks(),  
+     exercise_ind_checks(), platform_id_checks(), mission_id_checks(), 
+     job_id_checks(), encode_decode_check1(), default_new_checks(), 
+     enc_class_checks()].
 
 version_checks() ->
     {ok, Hdr1} = pheader:decode(sample_header1()),
@@ -57,11 +58,26 @@ sec_code_checks() ->
     {ok, Hdr2} = pheader:decode(sample_header2()),
     [?_assertEqual(nocontract, pheader:get_packet_code(Hdr1)),
      ?_assertEqual(orcon, pheader:get_packet_code(Hdr2)),
+     ?_assertEqual({ok, none}, pheader:decode_us_packet_code(0)),
      ?_assertEqual({ok, propin}, pheader:decode_us_packet_code(4)),
      ?_assertEqual({ok, wnintel}, pheader:decode_us_packet_code(8)),
      ?_assertEqual({ok, national_only}, pheader:decode_us_packet_code(16#10)),
+     ?_assertEqual({ok, limdis}, pheader:decode_us_packet_code(16#20)),
+     ?_assertEqual({ok, fouo}, pheader:decode_us_packet_code(16#40)),
+     ?_assertEqual({ok, efto}, pheader:decode_us_packet_code(16#80)),
+     ?_assertEqual({ok, lim_off_use}, pheader:decode_us_packet_code(16#100)),
+     ?_assertEqual({ok, noncompartment}, pheader:decode_us_packet_code(16#200)),
+     ?_assertEqual({ok, special_control}, pheader:decode_us_packet_code(16#400)),
+     ?_assertEqual({ok, special_intel}, pheader:decode_us_packet_code(16#800)),
+     ?_assertEqual({ok, warning_notice}, pheader:decode_us_packet_code(16#1000)),
+     ?_assertEqual({ok, rel_nato}, pheader:decode_us_packet_code(16#2000)),
      ?_assertEqual({ok, rel_4_eyes}, pheader:decode_us_packet_code(16#4000)),
+     ?_assertEqual({ok, rel_9_eyes}, pheader:decode_us_packet_code(16#8000)),
      ?_assertEqual({error, unknown_packet_code}, pheader:decode_us_packet_code(3))].
+
+enc_sec_code_checks() -> 
+    [?_assertEqual(<<16#0000:16>>, pheader:encode_us_packet_code(none)),
+     ?_assertEqual(<<16#8000:16>>, pheader:encode_us_packet_code(rel_9_eyes))].
 
 exercise_ind_checks() ->
     {ok, Hdr1} = pheader:decode(sample_header1()),
@@ -133,7 +149,15 @@ default_new_checks() ->
      ?_assertEqual("", pheader:get_platform_id(PH)),
      ?_assertEqual(0, pheader:get_mission_id(PH)),
      ?_assertEqual(0, pheader:get_job_id(PH))].
- 
+
+enc_class_checks() ->
+    [?_assertEqual(1, pheader:enc_class(top_secret)),
+     ?_assertEqual(2, pheader:enc_class(secret)),
+     ?_assertEqual(3, pheader:enc_class(confidential)),
+     ?_assertEqual(4, pheader:enc_class(restricted)),
+     ?_assertEqual(5, pheader:enc_class(unclassified)),
+     ?_assertEqual(6, pheader:enc_class(no_classification))].
+
 %% Sample packet header for test data.
 sample_header1() ->
     <<"12",0,0,0,32, "UK", 1, "XN", 0, 1, 128, "ABCDEFGHIJ", 0, 0, 0, 5, 0, 0, 0, 6>>.

@@ -35,6 +35,11 @@
     get_mission_id/1,
     get_job_id/1]).
 
+%% Export of functions for unit testing.
+-ifdef(TEST).
+-export([enc_class/1, encode_us_packet_code/1]).
+-endif.
+
 -record(pheader, {
     version, 
     packet_size,
@@ -160,7 +165,9 @@ enc_class(top_secret) -> 1;
 enc_class(secret) -> 2;
 enc_class(confidential) -> 3;
 enc_class(restricted) -> 4;
-enc_class(unclassified) -> 5.
+enc_class(unclassified) -> 5;
+% This version is not in edition 3, but often seen in older files.
+enc_class(no_classification) -> 6.
 
 decode_class_system(<<"  ">>) ->
     {ok, none};
