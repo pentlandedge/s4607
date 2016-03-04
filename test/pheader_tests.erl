@@ -77,6 +77,21 @@ sec_code_checks() ->
 
 enc_sec_code_checks() -> 
     [?_assertEqual(<<16#0000:16>>, pheader:encode_us_packet_code(none)),
+     ?_assertEqual(<<16#0001:16>>, pheader:encode_us_packet_code(nocontract)),
+     ?_assertEqual(<<16#0002:16>>, pheader:encode_us_packet_code(orcon)),
+     ?_assertEqual(<<16#0004:16>>, pheader:encode_us_packet_code(propin)),
+     ?_assertEqual(<<16#0008:16>>, pheader:encode_us_packet_code(wnintel)),
+     ?_assertEqual(<<16#0010:16>>, pheader:encode_us_packet_code(national_only)),
+     ?_assertEqual(<<16#0020:16>>, pheader:encode_us_packet_code(limdis)),
+     ?_assertEqual(<<16#0040:16>>, pheader:encode_us_packet_code(fouo)),
+     ?_assertEqual(<<16#0080:16>>, pheader:encode_us_packet_code(efto)),
+     ?_assertEqual(<<16#0100:16>>, pheader:encode_us_packet_code(lim_off_use)),
+     ?_assertEqual(<<16#0200:16>>, pheader:encode_us_packet_code(noncompartment)),
+     ?_assertEqual(<<16#0400:16>>, pheader:encode_us_packet_code(special_control)),
+     ?_assertEqual(<<16#0800:16>>, pheader:encode_us_packet_code(special_intel)),
+     ?_assertEqual(<<16#1000:16>>, pheader:encode_us_packet_code(warning_notice)),
+     ?_assertEqual(<<16#2000:16>>, pheader:encode_us_packet_code(rel_nato)),
+     ?_assertEqual(<<16#4000:16>>, pheader:encode_us_packet_code(rel_4_eyes)),
      ?_assertEqual(<<16#8000:16>>, pheader:encode_us_packet_code(rel_9_eyes))].
 
 exercise_ind_checks() ->
