@@ -22,7 +22,7 @@
 mission_test_() ->
     [mission_plan_checks(), flight_plan_checks(), platform_type_checks(),
      platform_config_checks(), reference_time_checks(), 
-     encode_decode_checks1()].
+     encode_decode_checks1(), decode_platform_type_checks()].
 
 mission_plan_checks() ->
     {ok, MS1} = mission:decode(sample_mission_seg1()),
@@ -84,6 +84,25 @@ encode_decode_checks1() ->
      ?_assertEqual(2016, mission:get_year(DEMS)),
      ?_assertEqual(2, mission:get_month(DEMS)),
      ?_assertEqual(5, mission:get_day(DEMS))].
+
+decode_platform_type_checks() ->
+    [?_assertEqual(unidentified, mission:decode_platform_type(0)),
+     ?_assertEqual(paul_revere, mission:decode_platform_type(23)),
+     ?_assertEqual(mariner_uav, mission:decode_platform_type(24)),
+     ?_assertEqual(bac_111, mission:decode_platform_type(25)),
+     ?_assertEqual(coyote, mission:decode_platform_type(26)),
+     ?_assertEqual(king_air, mission:decode_platform_type(27)),
+     ?_assertEqual(limit, mission:decode_platform_type(28)),
+     ?_assertEqual(nrl_np_3b, mission:decode_platform_type(29)),
+     ?_assertEqual(sostar_x, mission:decode_platform_type(30)),
+     ?_assertEqual(watchkeeper, mission:decode_platform_type(31)),
+     ?_assertEqual(alliance_ground_surveillance, mission:decode_platform_type(32)),
+     ?_assertEqual(stryker, mission:decode_platform_type(33)),
+     ?_assertEqual(ags_hale_uav, mission:decode_platform_type(34)),
+     ?_assertEqual(sidm, mission:decode_platform_type(35)),
+     ?_assertEqual(reaper, mission:decode_platform_type(36)),
+     ?_assertEqual(warrior_a, mission:decode_platform_type(37)),
+     ?_assertEqual(warrior, mission:decode_platform_type(38))].
 
 sample_mission_seg1() ->
     <<"Global Domin","Fly By      ",36,"Skynet v12",16#07, 16#DF, 12, 31>>.

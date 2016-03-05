@@ -114,7 +114,7 @@ decode_platform_type(26) -> coyote;
 decode_platform_type(27) -> king_air;
 decode_platform_type(28) -> limit;
 decode_platform_type(29) -> nrl_np_3b;
-decode_platform_type(30) -> solstar_x;
+decode_platform_type(30) -> sostar_x;
 decode_platform_type(31) -> watchkeeper;
 decode_platform_type(32) -> alliance_ground_surveillance;
 decode_platform_type(33) -> stryker;
