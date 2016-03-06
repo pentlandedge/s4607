@@ -163,7 +163,7 @@ ept(coyote) -> 26;
 ept(king_air) -> 27;
 ept(limit) -> 28;
 ept(nrl_np_3b) -> 29;
-ept(solstar_x) -> 30;
+ept(sostar_x) -> 30;
 ept(watchkeeper) -> 31;
 ept(alliance_ground_surveillance) -> 32;
 ept(stryker) -> 33;

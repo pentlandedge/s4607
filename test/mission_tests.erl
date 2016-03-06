@@ -22,7 +22,8 @@
 mission_test_() ->
     [mission_plan_checks(), flight_plan_checks(), platform_type_checks(),
      platform_config_checks(), reference_time_checks(), 
-     encode_decode_checks1(), decode_platform_type_checks()].
+     encode_decode_checks1(), decode_platform_type_checks(),
+     encode_platform_type_checks()].
 
 mission_plan_checks() ->
     {ok, MS1} = mission:decode(sample_mission_seg1()),
@@ -126,6 +127,48 @@ decode_platform_type_checks() ->
      ?_assertEqual(reaper, mission:decode_platform_type(36)),
      ?_assertEqual(warrior_a, mission:decode_platform_type(37)),
      ?_assertEqual(warrior, mission:decode_platform_type(38))].
+
+encode_platform_type_checks() ->
+    [?_assertEqual(<<0>>, mission:encode_platform_type(unidentified)),
+     ?_assertEqual(<<1>>, mission:encode_platform_type(acs)),
+     ?_assertEqual(<<2>>, mission:encode_platform_type(arl_m)),
+     ?_assertEqual(<<3>>, mission:encode_platform_type(sentinel)),
+     ?_assertEqual(<<4>>, mission:encode_platform_type(rotary_wing_radar)),
+     ?_assertEqual(<<5>>, mission:encode_platform_type(global_hawk_navy)),
+     ?_assertEqual(<<6>>, mission:encode_platform_type(horizon)),
+     ?_assertEqual(<<7>>, mission:encode_platform_type(e_8)),
+     ?_assertEqual(<<8>>, mission:encode_platform_type(p_3c)),
+     ?_assertEqual(<<9>>, mission:encode_platform_type(predator)),
+     ?_assertEqual(<<10>>, mission:encode_platform_type(radarsat2)),
+     ?_assertEqual(<<11>>, mission:encode_platform_type(u_2)),
+     ?_assertEqual(<<12>>, mission:encode_platform_type(e_10)),
+     ?_assertEqual(<<13>>, mission:encode_platform_type(ugs_single)),
+     ?_assertEqual(<<14>>, mission:encode_platform_type(ugs_cluster)),
+     ?_assertEqual(<<15>>, mission:encode_platform_type(ground_based)),
+     ?_assertEqual(<<16>>, mission:encode_platform_type(uav_army)),
+     ?_assertEqual(<<17>>, mission:encode_platform_type(uav_marines)),
+     ?_assertEqual(<<18>>, mission:encode_platform_type(uav_navy)),
+     ?_assertEqual(<<19>>, mission:encode_platform_type(uav_air_force)),
+     ?_assertEqual(<<20>>, mission:encode_platform_type(global_hawk_air_force)),
+     ?_assertEqual(<<21>>, mission:encode_platform_type(global_hawk_australia)),
+     ?_assertEqual(<<22>>, mission:encode_platform_type(global_hawk_germany)),
+     ?_assertEqual(<<23>>, mission:encode_platform_type(paul_revere)),
+     ?_assertEqual(<<24>>, mission:encode_platform_type(mariner_uav)),
+     ?_assertEqual(<<25>>, mission:encode_platform_type(bac_111)),
+     ?_assertEqual(<<26>>, mission:encode_platform_type(coyote)),
+     ?_assertEqual(<<27>>, mission:encode_platform_type(king_air)),
+     ?_assertEqual(<<28>>, mission:encode_platform_type(limit)),
+     ?_assertEqual(<<29>>, mission:encode_platform_type(nrl_np_3b)),
+     ?_assertEqual(<<30>>, mission:encode_platform_type(sostar_x)),
+     ?_assertEqual(<<31>>, mission:encode_platform_type(watchkeeper)),
+     ?_assertEqual(<<32>>, mission:encode_platform_type(alliance_ground_surveillance)),
+     ?_assertEqual(<<33>>, mission:encode_platform_type(stryker)),
+     ?_assertEqual(<<34>>, mission:encode_platform_type(ags_hale_uav)),
+     ?_assertEqual(<<35>>, mission:encode_platform_type(sidm)),
+     ?_assertEqual(<<36>>, mission:encode_platform_type(reaper)),
+     ?_assertEqual(<<37>>, mission:encode_platform_type(warrior_a)),
+     ?_assertEqual(<<38>>, mission:encode_platform_type(warrior))].
+
 
 sample_mission_seg1() ->
     <<"Global Domin","Fly By      ",36,"Skynet v12",16#07, 16#DF, 12, 31>>.
