@@ -173,8 +173,7 @@ ept(reaper) -> 36;
 ept(warrior_a) -> 37;
 ept(warrior) -> 38;
 ept(twin_otter) -> 39;
-ept(other) -> 255;
-ept(future_use) -> 254.
+ept(other) -> 255.
 
 display(MSeg) ->
     io:format("****************************************~n"),
