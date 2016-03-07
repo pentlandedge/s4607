@@ -24,7 +24,8 @@ pheader_test_() ->
      class_sys_checks(), sec_code_checks(), enc_sec_code_checks(),  
      exercise_ind_checks(), encode_exercise_ind_checks(), 
      platform_id_checks(), mission_id_checks(), job_id_checks(), 
-     encode_decode_check1(), default_new_checks(), enc_class_checks()].
+     encode_decode_check1(), default_new_checks(), enc_class_checks(), 
+     class_sys_checks()].
 
 version_checks() ->
     {ok, Hdr1} = pheader:decode(sample_header1()),
@@ -51,7 +52,9 @@ class_checks() ->
 
 class_sys_checks() -> 
     {ok, Hdr1} = pheader:decode(sample_header1()),
-    [?_assertEqual("XN", pheader:get_class_system(Hdr1))].
+    [?_assertEqual("XN", pheader:get_class_system(Hdr1)),
+     ?_assertEqual(<<"  ">>, pheader:encode_class_system(none)),
+     ?_assertEqual({ok, none}, pheader:decode_class_system(<<"  ">>))].
 
 sec_code_checks() -> 
     {ok, Hdr1} = pheader:decode(sample_header1()),
