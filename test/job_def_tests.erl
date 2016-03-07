@@ -22,7 +22,7 @@
 
 %% Define a test generator for the decoding of the mission segment. 
 job_def_test_() ->
-    [job1_checks(), job_def_encode_decode()].
+    [job1_checks(), job_def_encode_decode(), sensor_id_checks()].
 
 job1_checks() ->
     {ok, JD1} = job_def:decode(job_def1()),
@@ -35,6 +35,7 @@ job1_checks() ->
 
 job_def_encode_decode() ->
     JD = sample_job_def(),
+    job_def:display(JD),
     EJD = job_def:encode(JD),
     {ok, DEJD} = job_def:decode(EJD),
     Delta = 0.00001,
@@ -67,6 +68,12 @@ job_def_encode_decode() ->
      ?_assertEqual(dgm50, job_def:get_terr_elev_model(DEJD)),
      ?_assertEqual(geo96, job_def:get_geoid_model(DEJD))].
 
+sensor_id_checks() ->
+    IdList = sensor_id_table(),
+    F = fun({K, V}) ->
+            ?_assertEqual(V, job_def:decode_sensor_id_type(K))
+        end,
+    lists:map(F, IdList).
 
 job_def1() ->
     <<1,2,3,4, 5, "Model1", 0, 23, 
@@ -92,6 +99,18 @@ sample_job_def() ->
          {terr_elev_model, dgm50}, {geoid_model, geo96}],
 
     job_def:new(P).
+
+%% Function to return a proplist with the mapping from sensor ID to the 
+%% sensor type.
+sensor_id_table() ->
+    [{0, unidentified}, 
+     {1, other},
+     {2, hisar},
+     {3, astor},
+     {4, rotary_wing_radar},
+     {5, global_hawk_sensor},
+     {6, horizon},
+     {7, apy_3}].
 
 %% Utility function to compare whether floating point values are within a 
 %% specified range.

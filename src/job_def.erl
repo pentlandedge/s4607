@@ -50,6 +50,12 @@
     get_terr_elev_model/1,
     get_geoid_model/1]).
 
+%% Export of functions for unit testing.
+-ifdef(TEST).
+-export([
+    decode_sensor_id_type/1]).
+-endif.
+
 -record(job_def, {
     job_id,
     sensor_id_type,
