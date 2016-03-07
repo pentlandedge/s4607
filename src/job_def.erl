@@ -53,7 +53,8 @@
 %% Export of functions for unit testing.
 -ifdef(TEST).
 -export([
-    decode_sensor_id_type/1]).
+    decode_sensor_id_type/1,
+    encode_sensor_id_type/1]).
 -endif.
 
 -record(job_def, {
@@ -258,8 +259,7 @@ decode_sensor_id_type(24) -> ugs_cluster_sensor;
 decode_sensor_id_type(25) -> imaster_gmti;
 decode_sensor_id_type(26) -> anzpy_1;
 decode_sensor_id_type(27) -> vader;
-decode_sensor_id_type(255) -> no_statement;
-decode_sensor_id_type(_) -> available_future_use.
+decode_sensor_id_type(255) -> no_statement.
 
 %% Function to encode the sensor ID type as a binary.
 encode_sensor_id_type(Type) ->
@@ -294,7 +294,6 @@ esid(ugs_cluster_sensor) -> 24;
 esid(imaster_gmti) -> 25;
 esid(anzpy_1) -> 26;
 esid(vader) -> 27;
-esid(available_future_use) -> 254;
 esid(no_statement) -> 255.
 
 decode_sensor_id_model(Bin) ->

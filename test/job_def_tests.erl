@@ -22,7 +22,8 @@
 
 %% Define a test generator for the decoding of the mission segment. 
 job_def_test_() ->
-    [job1_checks(), job_def_encode_decode(), sensor_id_checks()].
+    [job1_checks(), job_def_encode_decode(), sensor_id_decode_checks(),
+     sensor_id_encode_checks()].
 
 job1_checks() ->
     {ok, JD1} = job_def:decode(job_def1()),
@@ -68,10 +69,17 @@ job_def_encode_decode() ->
      ?_assertEqual(dgm50, job_def:get_terr_elev_model(DEJD)),
      ?_assertEqual(geo96, job_def:get_geoid_model(DEJD))].
 
-sensor_id_checks() ->
+sensor_id_decode_checks() ->
     IdList = sensor_id_table(),
     F = fun({K, V}) ->
             ?_assertEqual(V, job_def:decode_sensor_id_type(K))
+        end,
+    lists:map(F, IdList).
+
+sensor_id_encode_checks() ->
+    IdList = sensor_id_table(),
+    F = fun({K, V}) ->
+            ?_assertEqual(<<K>>, job_def:encode_sensor_id_type(V))
         end,
     lists:map(F, IdList).
 
@@ -110,7 +118,28 @@ sensor_id_table() ->
      {4, rotary_wing_radar},
      {5, global_hawk_sensor},
      {6, horizon},
-     {7, apy_3}].
+     {7, apy_3},
+     {8, apy_6},
+     {9, apy_8},
+     {10, radarsat2},
+     {11, asars_2a},
+     {12, tesar},
+     {13, mp_rtip},
+     {14, apg_77},
+     {15, apg_79},
+     {16, apg_81},
+     {17, apg_6v1},
+     {18, dpy_1},
+     {19, sidm},
+     {20, limit},
+     {21, tcar},
+     {22, lsrs},
+     {23, ugs_single_sensor},
+     {24, ugs_cluster_sensor},
+     {25, imaster_gmti},
+     {26, anzpy_1},
+     {27, vader},
+     {255, no_statement}].
 
 %% Utility function to compare whether floating point values are within a 
 %% specified range.
