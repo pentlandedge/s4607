@@ -23,7 +23,8 @@
 %% Define a test generator for the decoding of the mission segment. 
 job_def_test_() ->
     [job1_checks(), job_def_encode_decode(), sensor_id_decode_checks(),
-     sensor_id_encode_checks()].
+     sensor_id_encode_checks(), radar_mode_decode_checks(), 
+     radar_mode_encode_checks()].
 
 job1_checks() ->
     {ok, JD1} = job_def:decode(job_def1()),
@@ -83,6 +84,20 @@ sensor_id_encode_checks() ->
         end,
     lists:map(F, IdList).
 
+radar_mode_decode_checks() ->
+    ModeList = radar_mode_table(),
+    F = fun({K, V}) ->
+            ?_assertEqual(V, job_def:decode_radar_mode(K))
+        end,
+    lists:map(F, ModeList).
+
+radar_mode_encode_checks() ->
+    ModeList = radar_mode_table(),
+    F = fun({K, V}) ->
+            ?_assertEqual(<<K>>, job_def:encode_radar_mode(V))
+        end,
+    lists:map(F, ModeList).
+
 job_def1() ->
     <<1,2,3,4, 5, "Model1", 0, 23, 
       64,0,0,0, "õUUU", 64,0,0,0, "õUUU", 64,0,0,0, "õUUU", 64,0,0,0, "õUUU",
@@ -140,6 +155,22 @@ sensor_id_table() ->
      {26, anzpy_1},
      {27, vader},
      {255, no_statement}].
+
+%% Function to return a proplist with the radar mode mapping.
+radar_mode_table() ->
+    [{0, {unspecified_mode, generic}},
+     {1, {mti, generic}},
+     {2, {hrr, generic}},
+     {3, {uhrr, generic}},
+     {4, {hur, generic}},
+     {5, {fti, generic}},
+     {11, {attack_control_satc, joint_stars}},
+     {12, {attack_control, joint_stars}},
+     {13, {satc, joint_stars}},
+     {14, {attack_planning_satc, joint_stars}}
+     
+     
+     ].
 
 %% Utility function to compare whether floating point values are within a 
 %% specified range.

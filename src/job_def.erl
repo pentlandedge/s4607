@@ -54,7 +54,9 @@
 -ifdef(TEST).
 -export([
     decode_sensor_id_type/1,
-    encode_sensor_id_type/1]).
+    encode_sensor_id_type/1,
+    decode_radar_mode/1,
+    encode_radar_mode/1]).
 -endif.
 
 -record(job_def, {
