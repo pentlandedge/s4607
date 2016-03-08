@@ -167,7 +167,23 @@ radar_mode_table() ->
      {11, {attack_control_satc, joint_stars}},
      {12, {attack_control, joint_stars}},
      {13, {satc, joint_stars}},
-     {14, {attack_planning_satc, joint_stars}}
+     {14, {attack_planning_satc, joint_stars}},
+     {15, {attack_planning, joint_stars}},
+     {16, {med_res_sector_search, joint_stars}},
+     {17, {low_res_sector_search, joint_stars}},
+     {18, {wide_area_search_grca, joint_stars}},
+     {19, {wide_area_search_rrca, joint_stars}},
+     {20, {attack_plannning_with_tracking, joint_stars}},
+     {21, {attack_control_with_tracking, joint_stars}},
+     {31, {wide_area_mti, asars_aip}},
+     {32, {coarse_res_search, asars_aip}},
+     {33, {med_res_search, asars_aip}},
+     {34, {high_res_search, asars_aip}},
+     {35, {point_imaging, asars_aip}},
+     {36, {swath_mti, asars_aip}},
+     {37, {repetititve_point_imaging, asars_aip}},
+     {38, {monopulse_calibration, asars_aip}},
+     {36, {swath_mti, asars_aip}}
      
      
      ].
