@@ -183,7 +183,19 @@ radar_mode_table() ->
      {36, {swath_mti, asars_aip}},
      {37, {repetititve_point_imaging, asars_aip}},
      {38, {monopulse_calibration, asars_aip}},
-     {36, {swath_mti, asars_aip}}
+     {51, {search, asars_2}},
+     {52, {emti_wide_frame_search, asars_2}},
+     {53, {emti_narrow_frame_search, asars_2}},
+     {54, {emti_augmented_spot, asars_2}},
+     {55, {emti_wide_area_mti, asars_2}},
+     {61, {gmti_ppi_mode, tuav}},
+     {62, {gmti_expanded_mode, tuav}},
+     {63, {narrow_sector_search, arl_m}},
+     {64, {single_beam_scan, arl_m}},
+     {65, {wide_area, arl_m}},
+     {81, {grca, reserved}},
+     {82, {rrca, reserved}},
+     {83, {sector_search, reserved}}
      
      
      ].
