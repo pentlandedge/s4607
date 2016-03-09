@@ -195,7 +195,17 @@ radar_mode_table() ->
      {65, {wide_area, arl_m}},
      {81, {grca, reserved}},
      {82, {rrca, reserved}},
-     {83, {sector_search, reserved}}
+     {83, {sector_search, reserved}},
+     {84, {horizon_basic, horizon}},
+     {85, {horizon_high_sensitivity, horizon}},
+     {86, {horizon_burn_through, horizon}},
+     {87, {creso_acquisition, creso}},
+     {88, {creso_count, creso}},
+     {94, {was_mti_exo, astor}},
+     {95, {was_mti_endo_exo, astor}},
+     {96, {ss_mti_exo, astor}},
+     {97, {ss_mti_endo_exo, astor}},
+     {100, {test_status_mode, reserved}}
      
      
      ].
