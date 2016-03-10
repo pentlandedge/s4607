@@ -476,8 +476,7 @@ erm({gmti_hrr, global_hawk}) -> 113;
 erm({small_area_gmti, vader}) -> 120;
 erm({wide_area_gmti, vader}) -> 121;
 erm({dismount_gmti, vader}) -> 122;
-erm({hrr_gmti, vader}) -> 123;
-erm({available_for_future_use, reserved}) -> 255.
+erm({hrr_gmti, vader}) -> 123.
 
 %% Function to decode the cross-range standard deviation parameter.
 decode_cross_range_std_dev(X) ->

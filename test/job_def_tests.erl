@@ -205,10 +205,18 @@ radar_mode_table() ->
      {95, {was_mti_endo_exo, astor}},
      {96, {ss_mti_exo, astor}},
      {97, {ss_mti_endo_exo, astor}},
-     {100, {test_status_mode, reserved}}
-     
-     
-     ].
+     {100, {test_status_mode, reserved}},
+     {101, {mti_spot_scan, lynx_i_ii}},
+     {102, {mti_arc_scan, lynx_i_ii}},
+     {103, {hrr_mti_spot_scan, lynx_i_ii}},
+     {104, {hrr_mti_arc_scan, lynx_i_ii}},
+     {111, {grca, global_hawk}},
+     {112, {rrca, global_hawk}},
+     {113, {gmti_hrr, global_hawk}},
+     {120, {small_area_gmti, vader}},
+     {121, {wide_area_gmti, vader}},
+     {122, {dismount_gmti, vader}},
+     {123, {hrr_gmti, vader}}].
 
 %% Utility function to compare whether floating point values are within a 
 %% specified range.
