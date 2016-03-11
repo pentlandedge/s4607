@@ -24,7 +24,8 @@
 job_def_test_() ->
     [job1_checks(), job_def_encode_decode(), sensor_id_decode_checks(),
      sensor_id_encode_checks(), radar_mode_decode_checks(), 
-     radar_mode_encode_checks()].
+     radar_mode_encode_checks(), terr_elev_decode_checks(), 
+     terr_elev_encode_checks()].
 
 job1_checks() ->
     {ok, JD1} = job_def:decode(job_def1()),
@@ -97,6 +98,18 @@ radar_mode_encode_checks() ->
             ?_assertEqual(<<K>>, job_def:encode_radar_mode(V))
         end,
     lists:map(F, ModeList).
+
+terr_elev_decode_checks() ->
+    F = fun job_def:decode_terrain_elev_model/1,
+    [?_assertEqual(none_specified, F(0)),
+     ?_assertEqual(dted0, F(1)),
+     ?_assertEqual(dted1, F(2))].
+
+terr_elev_encode_checks() ->
+    F = fun job_def:encode_terrain_elev_model/1,
+    [?_assertEqual(<<0>>, F(none_specified)),
+     ?_assertEqual(<<1>>, F(dted0)),
+     ?_assertEqual(<<2>>, F(dted1))].
 
 job_def1() ->
     <<1,2,3,4, 5, "Model1", 0, 23, 

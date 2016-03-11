@@ -56,7 +56,9 @@
     decode_sensor_id_type/1,
     encode_sensor_id_type/1,
     decode_radar_mode/1,
-    encode_radar_mode/1]).
+    encode_radar_mode/1,
+    decode_terrain_elev_model/1,
+    encode_terrain_elev_model/1]).
 -endif.
 
 -record(job_def, {
