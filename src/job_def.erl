@@ -58,7 +58,9 @@
     decode_radar_mode/1,
     encode_radar_mode/1,
     decode_terrain_elev_model/1,
-    encode_terrain_elev_model/1]).
+    encode_terrain_elev_model/1,
+    encode_geoid_model/1,
+    decode_geoid_model/1]).
 -endif.
 
 -record(job_def, {
@@ -564,8 +566,7 @@ encode_geoid_model(X) ->
 egm(none_specified) -> 0;
 egm(egm96) -> 1;
 egm(geo96) -> 2;
-egm(flat_earth) -> 3;
-egm(reserved) -> 255.
+egm(flat_earth) -> 3.
 
 display(JDS) ->
     io:format("****************************************~n"),

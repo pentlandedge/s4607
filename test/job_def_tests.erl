@@ -25,7 +25,7 @@ job_def_test_() ->
     [job1_checks(), job_def_encode_decode(), sensor_id_decode_checks(),
      sensor_id_encode_checks(), radar_mode_decode_checks(), 
      radar_mode_encode_checks(), terr_elev_decode_checks(), 
-     terr_elev_encode_checks()].
+     terr_elev_encode_checks(), geoid_decode_checks(), geoid_encode_checks()].
 
 job1_checks() ->
     {ok, JD1} = job_def:decode(job_def1()),
@@ -133,6 +133,21 @@ terr_elev_encode_checks() ->
      ?_assertEqual(<<11>>, F(ithd)),
      ?_assertEqual(<<12>>, F(sthd)),
      ?_assertEqual(<<13>>, F(sedris))].
+
+geoid_decode_checks() ->
+    F = fun job_def:decode_geoid_model/1,
+    [?_assertEqual(none_specified, F(0)),
+     ?_assertEqual(egm96, F(1)),
+     ?_assertEqual(geo96, F(2)),
+     ?_assertEqual(flat_earth, F(3)),
+     ?_assertEqual(reserved, F(4))].
+
+geoid_encode_checks() ->
+    F = fun job_def:encode_geoid_model/1,
+    [?_assertEqual(<<0>>, F(none_specified)),
+     ?_assertEqual(<<1>>, F(egm96)),
+     ?_assertEqual(<<2>>, F(geo96)),
+     ?_assertEqual(<<3>>, F(flat_earth))].
 
 job_def1() ->
     <<1,2,3,4, 5, "Model1", 0, 23, 
