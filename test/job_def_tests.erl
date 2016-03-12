@@ -103,13 +103,36 @@ terr_elev_decode_checks() ->
     F = fun job_def:decode_terrain_elev_model/1,
     [?_assertEqual(none_specified, F(0)),
      ?_assertEqual(dted0, F(1)),
-     ?_assertEqual(dted1, F(2))].
+     ?_assertEqual(dted1, F(2)),
+     ?_assertEqual(dted2, F(3)),
+     ?_assertEqual(dted3, F(4)),
+     ?_assertEqual(dted4, F(5)),
+     ?_assertEqual(dted5, F(6)),
+     ?_assertEqual(srtm1, F(7)),
+     ?_assertEqual(srtm2, F(8)),
+     ?_assertEqual(dgm50, F(9)),
+     ?_assertEqual(dgm250, F(10)),
+     ?_assertEqual(ithd, F(11)),
+     ?_assertEqual(sthd, F(12)),
+     ?_assertEqual(sedris, F(13)),
+     ?_assertEqual(reserved, F(14))].
 
 terr_elev_encode_checks() ->
     F = fun job_def:encode_terrain_elev_model/1,
     [?_assertEqual(<<0>>, F(none_specified)),
      ?_assertEqual(<<1>>, F(dted0)),
-     ?_assertEqual(<<2>>, F(dted1))].
+     ?_assertEqual(<<2>>, F(dted1)),
+     ?_assertEqual(<<3>>, F(dted2)),
+     ?_assertEqual(<<4>>, F(dted3)),
+     ?_assertEqual(<<5>>, F(dted4)),
+     ?_assertEqual(<<6>>, F(dted5)),
+     ?_assertEqual(<<7>>, F(srtm1)),
+     ?_assertEqual(<<8>>, F(srtm2)),
+     ?_assertEqual(<<9>>, F(dgm50)),
+     ?_assertEqual(<<10>>, F(dgm250)),
+     ?_assertEqual(<<11>>, F(ithd)),
+     ?_assertEqual(<<12>>, F(sthd)),
+     ?_assertEqual(<<13>>, F(sedris))].
 
 job_def1() ->
     <<1,2,3,4, 5, "Model1", 0, 23, 

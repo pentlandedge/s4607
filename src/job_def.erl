@@ -546,8 +546,7 @@ etev(dgm50) -> 9;
 etev(dgm250) -> 10;
 etev(ithd) -> 11;
 etev(sthd) -> 12;
-etev(sedris) -> 13;
-etev(reserved) -> 255.
+etev(sedris) -> 13.
 
 %% Decode the Geoid model parameter.
 decode_geoid_model(0) -> none_specified;
