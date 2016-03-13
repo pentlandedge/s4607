@@ -131,6 +131,8 @@ encode_decode_check2() ->
 %% the dwell segment.
 encode_decode_check3() ->
     TD = three_targets_dwell(),
+    % Call the display function.
+    dwell:display(TD),
     Bin = dwell:encode(TD),
     {ok, DS} = dwell:decode(Bin),
     [T1,T2,T3] = dwell:get_targets(DS),

@@ -24,6 +24,8 @@ exist_mask_test_() ->
 
 exist_mask_check1() ->
     EM = exist_mask:new([spu_cross_track]), 
+    % Call the display function to avoid it dragging down code coverage.
+    exist_mask:display(EM),
     [?_assertEqual(1, exist_mask:get_spu_cross_track(EM)),
      ?_assertEqual(0, exist_mask:get_spu_along_track(EM)),
      ?_assertEqual(0, exist_mask:get_target_rcs(EM))].
