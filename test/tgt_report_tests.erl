@@ -103,14 +103,14 @@ payload_size_check2() ->
 decode_classification_checks() ->
     ClassList = target_classification_table(),
     F = fun({K, V}) ->
-            ?_assertEqual(V, job_def:decode_target_classification(K))
+            ?_assertEqual(V, tgt_report:decode_target_classification(K))
         end,
     lists:map(F, ClassList).
 
 encode_classification_checks() -> 
     ClassList = target_classification_table(),
     F = fun({K, V}) ->
-            ?_assertEqual(K, job_def:encode_target_classification(V))
+            ?_assertEqual(<<K>>, tgt_report:encode_target_classification(V))
         end,
     lists:map(F, ClassList).
 
@@ -132,7 +132,8 @@ sample_report() ->
     {EM, tgt_report:new(Params)}.
 
 target_classification_table() ->
-    [].
+    [{0, no_information_live_target}, {1, tracked_vehicle_live_target},
+     {2, wheeled_vehicle_live_target}].
 
 %% Utility function to compare whether floating point values are within a 
 %% specified range.
