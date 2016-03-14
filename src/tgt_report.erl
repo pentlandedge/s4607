@@ -41,6 +41,14 @@
     get_truth_tag_entity/1,
     get_target_rcs/1]).
 
+%% Export of functions for unit testing.
+-ifdef(TEST).
+-export([
+    decode_target_classification/1,
+    encode_target_classification/1]).
+-endif.
+
+
 -record(tgt_report, {
     mti_report_index,
     target_hr_lat,

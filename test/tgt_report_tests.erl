@@ -21,7 +21,8 @@
 %% Define a test generator for target reports. 
 tgt_report_test_() ->
     [creation_checks1(), encode_decode_checks(), payload_size_check1(),
-     payload_size_check2()].
+     payload_size_check2(), decode_classification_checks(), 
+     encode_classification_checks()].
 
 creation_checks1() ->
     % Create a target report and check all the fields.
@@ -99,6 +100,20 @@ payload_size_check2() ->
     PaySize = tgt_report:payload_size(EM),
     [?_assertEqual(PaySize, 18)].
 
+decode_classification_checks() ->
+    ClassList = target_classification_table(),
+    F = fun({K, V}) ->
+            ?_assertEqual(V, job_def:decode_target_classification(K))
+        end,
+    lists:map(F, ClassList).
+
+encode_classification_checks() -> 
+    ClassList = target_classification_table(),
+    F = fun({K, V}) ->
+            ?_assertEqual(K, job_def:encode_target_classification(V))
+        end,
+    lists:map(F, ClassList).
+
 %% Function to create a sample target report. Sets all fields to a value.
 sample_report() ->
     Params = [{mti_report_index, 34}, {target_hr_lat, -33.3}, 
@@ -115,6 +130,9 @@ sample_report() ->
     FieldList = [K || {K, _V} <- Params],
     EM = exist_mask:new(FieldList), 
     {EM, tgt_report:new(Params)}.
+
+target_classification_table() ->
+    [].
 
 %% Utility function to compare whether floating point values are within a 
 %% specified range.
