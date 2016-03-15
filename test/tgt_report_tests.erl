@@ -22,7 +22,7 @@
 tgt_report_test_() ->
     [creation_checks1(), encode_decode_checks(), payload_size_check1(),
      payload_size_check2(), decode_classification_checks(), 
-     encode_classification_checks()].
+     encode_classification_checks(), dict_conversion_checks()].
 
 creation_checks1() ->
     % Create a target report and check all the fields.
@@ -102,10 +102,13 @@ payload_size_check2() ->
 
 decode_classification_checks() ->
     ClassList = target_classification_table(),
+    % Add a value in the reserved range.
+    ClassList2 = [{200, reserved}|ClassList],
+
     F = fun({K, V}) ->
             ?_assertEqual(V, tgt_report:decode_target_classification(K))
         end,
-    lists:map(F, ClassList).
+    lists:map(F, ClassList2).
 
 encode_classification_checks() -> 
     ClassList = target_classification_table(),
@@ -114,7 +117,19 @@ encode_classification_checks() ->
         end,
     lists:map(F, ClassList).
 
+dict_conversion_checks() ->
+    % Create a sample report (all parameters). 
+    {EM, R1} = sample_report(),
+   
+    % Convert to a dictionary.
+    D1 = tgt_report:to_dict(R1, EM),
+
+    % Check a couple of parameters
+    [?_assertEqual(5000, dict:fetch(geodetic_height, D1)),
+     ?_assertEqual(-128, dict:fetch(target_snr, D1))].
+    
 %% Function to create a sample target report. Sets all fields to a value.
+
 sample_report() ->
     Params = [{mti_report_index, 34}, {target_hr_lat, -33.3}, 
               {target_hr_lon, 357.57}, {target_delta_lat, -45},
@@ -155,6 +170,15 @@ target_classification_table() ->
      {132, fixed_wing_aircraft_simulated_target},
      {133, stationary_rotator_simulated_target},
      {134, maritime_simulated_target},
+     {135, beacon_simulated_target},
+     {136, amphibious_simulated_target},
+     {137, person_simulated_target},
+     {138, vehicle_simulated_target},
+     {139, animal_simulated_target},
+     {140, large_multiple_return_simulated_land_target},
+     {141, large_multiple_return_simulated_maritime_target},
+     {142, tagging_device},
+     {254, other_simulated_target},
      {255, unknown_simulated_target}].
 
 %% Utility function to compare whether floating point values are within a 

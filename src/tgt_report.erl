@@ -432,7 +432,7 @@ decode_target_classification(138) -> vehicle_simulated_target;
 decode_target_classification(139) -> animal_simulated_target;
 decode_target_classification(140) -> large_multiple_return_simulated_land_target;
 decode_target_classification(141) -> large_multiple_return_simulated_maritime_target;
-decode_target_classification(143) -> tagging_device;
+decode_target_classification(142) -> tagging_device;
 decode_target_classification(254) -> other_simulated_target;
 decode_target_classification(255) -> unknown_simulated_target;
 decode_target_classification(_) -> reserved.
@@ -473,10 +473,9 @@ etc(vehicle_simulated_target) -> 138;
 etc(animal_simulated_target) -> 139;
 etc(large_multiple_return_simulated_land_target) -> 140;
 etc(large_multiple_return_simulated_maritime_target) -> 141;
-etc(tagging_device) -> 143;
+etc(tagging_device) -> 142;
 etc(other_simulated_target) -> 254;
-etc(unknown_simulated_target) -> 255;
-etc(reserved) -> 253.
+etc(unknown_simulated_target) -> 255.
  
 display(TR, EM) ->
     io:format("****************************************~n"),
