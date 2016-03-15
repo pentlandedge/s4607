@@ -132,8 +132,30 @@ sample_report() ->
     {EM, tgt_report:new(Params)}.
 
 target_classification_table() ->
-    [{0, no_information_live_target}, {1, tracked_vehicle_live_target},
-     {2, wheeled_vehicle_live_target}].
+    [{0, no_information_live_target}, 
+     {1, tracked_vehicle_live_target},
+     {2, wheeled_vehicle_live_target}, 
+     {3, rotary_wing_aircraft_live_target},
+     {4, fixed_wing_aircraft_live_target},
+     {5, stationary_rotator_live_target},
+     {6, maritime_live_target},
+     {7, beacon_live_target},
+     {8, amphibious_live_target},
+     {9, person_live_target},
+     {10, vehicle_live_target},
+     {11, animal_live_target},
+     {12, large_multiple_return_live_land_target},
+     {13, large_multiple_return_live_maritime_target},
+     {126, other_live_target},
+     {127, unknown_live_target},
+     {128, no_information_simulated_target},
+     {129, tracked_vehicle_simulated_target},
+     {130, wheeled_vehicle_simulated_target},
+     {131, rotary_wing_aircraft_simulated_target},
+     {132, fixed_wing_aircraft_simulated_target},
+     {133, stationary_rotator_simulated_target},
+     {134, maritime_simulated_target},
+     {255, unknown_simulated_target}].
 
 %% Utility function to compare whether floating point values are within a 
 %% specified range.
