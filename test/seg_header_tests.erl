@@ -35,6 +35,7 @@ header_check2() ->
 
 new_checks() ->
     SH = seg_header:new(job_definition, 100),
+    seg_header:display(SH),
     [?_assertEqual(job_definition, seg_header:get_segment_type(SH)),
      ?_assertEqual(100, seg_header:get_segment_size(SH))].
 
@@ -104,6 +105,16 @@ seg_type_encode_checks() ->
     [?_assertEqual(1, F(mission)),
      ?_assertEqual(2, F(dwell)),
      ?_assertEqual(3, F(hrr)),
+     ?_assertEqual(5, F(job_definition)),
+     ?_assertEqual(6, F(free_text)),
+     ?_assertEqual(7, F(low_reflectivity_index)),
+     ?_assertEqual(8, F(group)),
+     ?_assertEqual(9, F(attached_target)),
+     ?_assertEqual(10, F(test_and_status)),
+     ?_assertEqual(11, F(system_specific)),
+     ?_assertEqual(12, F(processing_history)),
+     ?_assertEqual(13, F(platform_location)),
+     ?_assertEqual(101, F(job_request)),
      ?_assertEqual(102, F(job_acknowledge))].
 
 %% Function to check the decoding of the segment header size field.

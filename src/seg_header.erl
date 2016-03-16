@@ -73,7 +73,6 @@ encode_segment_type(T) ->
 encode_type(mission) -> 1;
 encode_type(dwell) -> 2;
 encode_type(hrr) -> 3;
-encode_type(reserved) -> 4;
 encode_type(job_definition) -> 5;
 encode_type(free_text) -> 6;
 encode_type(low_reflectivity_index) -> 7;
