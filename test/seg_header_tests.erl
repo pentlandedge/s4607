@@ -21,7 +21,7 @@
 %% Define a test generator for the decoding of the segment header. 
 seg_header_test_() ->
     [header_check1(), header_check2(), new_checks(), encode_decode_checks(),
-     seg_type_checks(), seg_size_checks()].
+     seg_type_checks(), seg_type_encode_checks(), seg_size_checks()].
 
 header_check1() ->
     {ok, Hdr} = seg_header:decode(sample_seg_header4()),
@@ -87,6 +87,24 @@ seg_type_checks() ->
      ?_assertEqual(reserved, seg_header:get_segment_type(SHRF)),
      ?_assertEqual(reserved, seg_header:get_segment_type(SHRE)),
      ?_assertEqual(reserved, seg_header:get_segment_type(SHRE2))].
+
+% Function to test the encoding of the segment type.
+seg_type_encode_checks() ->
+    % Use the same segment size for all tests.
+    SegSize = 500,
+
+    % Define a function that takes a segment type and returns the first byte 
+    % ofan encoded segment header (which will contain the type).
+    F = fun(Type) ->
+            SH = seg_header:new(Type, SegSize),
+            <<T,_Rest:4/binary>> = seg_header:encode(SH),
+            T
+        end,
+
+    [?_assertEqual(1, F(mission)),
+     ?_assertEqual(2, F(dwell)),
+     ?_assertEqual(3, F(hrr)),
+     ?_assertEqual(102, F(job_acknowledge))].
 
 %% Function to check the decoding of the segment header size field.
 seg_size_checks() ->
