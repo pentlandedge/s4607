@@ -23,7 +23,8 @@
 %% Define a test generator for the dwell segment. 
 dwell_test_() ->
     [creation_checks1(), encode_decode_check1(), encode_decode_check2(), 
-     encode_decode_check3(), payload_size_check1(), dict_conversion_checks()].
+     encode_decode_check3(), payload_size_check1(), 
+     dict_conversion_checks1(), dict_conversion_checks2()].
 
 creation_checks1() ->
     DS = minimal_dwell(),
@@ -154,13 +155,35 @@ payload_size_check1() ->
     [?_assertEqual(PaySize, byte_size(Bin))].
 
 %% Function to test the conversion to a dictionary.
-dict_conversion_checks() ->
+%% Uses a sample dwell segment with no targets.
+dict_conversion_checks1() ->
     MD = minimal_dwell(),
     D1 = dwell:to_dict(MD),
 
     [?_assertEqual(20000, dict:fetch(dwell_index, D1)),
      ?_assertEqual(0, dict:fetch(target_report_count, D1)),
      ?_assertEqual(-10000, dict:fetch(sensor_alt, D1))].
+
+%% Function to test the conversion to a dictionary.
+%% Uses a sample dwell segment with multiple targets.
+dict_conversion_checks2() ->
+    Dwell = three_targets_dwell(),
+    D1 = dwell:to_dict(Dwell),
+
+    % Get the list of target report dicts from the dwell and extract the
+    % first report.
+    TgtList = dict:fetch(targets, D1),
+    [TgtRep1|_Rest] = TgtList,
+
+    % Extract a couple of fields from the target report.
+    Height = dict:fetch(geodetic_height, TgtRep1),
+    Classification = dict:fetch(target_classification, TgtRep1),
+
+    [?_assertEqual(20000, dict:fetch(dwell_index, D1)),
+     ?_assertEqual(3, dict:fetch(target_report_count, D1)),
+     ?_assertEqual(-10000, dict:fetch(sensor_alt, D1)),
+     ?_assertEqual(3000, Height),
+     ?_assertEqual(vehicle_live_target, Classification)].
 
 %% Function to create a sample dwell segment with only the mandatory fields
 % set.
