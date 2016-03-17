@@ -23,7 +23,7 @@
 %% Define a test generator for the dwell segment. 
 dwell_test_() ->
     [creation_checks1(), encode_decode_check1(), encode_decode_check2(), 
-     encode_decode_check3(), payload_size_check1()].
+     encode_decode_check3(), payload_size_check1(), dict_conversion_checks()].
 
 creation_checks1() ->
     DS = minimal_dwell(),
@@ -152,6 +152,15 @@ payload_size_check1() ->
     PaySize = dwell:payload_size(TD),
 
     [?_assertEqual(PaySize, byte_size(Bin))].
+
+%% Function to test the conversion to a dictionary.
+dict_conversion_checks() ->
+    MD = minimal_dwell(),
+    D1 = dwell:to_dict(MD),
+
+    [?_assertEqual(20000, dict:fetch(dwell_index, D1)),
+     ?_assertEqual(0, dict:fetch(target_report_count, D1)),
+     ?_assertEqual(-10000, dict:fetch(sensor_alt, D1))].
 
 %% Function to create a sample dwell segment with only the mandatory fields
 % set.
