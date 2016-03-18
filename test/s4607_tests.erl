@@ -21,7 +21,8 @@
 s4607_test_() ->
     [encode_mission_segment_check(), encode_job_def_segment_check(),
      encode_dwell_segment_check1(), encode_dwell_segment_check2(),
-     mission_packet_encode(), job_def_packet_encode(), dwell_packet_encode()].
+     mission_packet_encode(), job_def_packet_encode(), dwell_packet_encode(),
+     packet_list_encode()].
    
 encode_mission_segment_check() ->
     % Create a mission segment.
@@ -259,6 +260,46 @@ dwell_packet_encode() ->
      ?_assertEqual(-10000, dwell:get_sensor_alt(DEDS)),
      ?_assert(almost_equal(255.0, dwell:get_dwell_range_half_extent(DEDS), 0.0000001)),
      ?_assert(almost_equal(350.0, dwell:get_dwell_angle_half_extent(DEDS), 0.1))].
+
+packet_list_encode() ->
+    % List the parameters for the packet header (no need to set size). 
+    PL = [{version, {3, 1}}, {nationality, "UK"},
+          {classification, top_secret}, {class_system, "UK"}, 
+          {packet_code, rel_9_eyes}, {exercise_ind, operation_real},
+          {platform_id, "Pico1"}, {mission_id, 16#11223344},
+          {job_id, 16#55667788}],
+
+    % Create a generator function
+    Gen = s4607:packet_generator(PL),
+
+    % Create a dwell segment to encode.
+    DS = dwell_tests:one_target_dwell(),
+    
+    % Create a complete segment with the header and payload.
+    Seg = segment:new(dwell, DS),
+
+    % Create a packet with the new segment.
+    Pack = Gen([Seg]), 
+
+    % Create a mission segment.
+    MS = mission:new("Drifter 1", "A1234", other, "Build 1", 2016, 2, 5),
+
+    % Create a complete segment with the header and payload.
+    MissSeg = segment:new(mission, MS),
+
+    % Create a packet containing the mission segment  
+    Pack2 = Gen([MissSeg]), 
+
+    % Create a list containing two packets.
+    PackList = [Pack2, Pack],
+
+    % Display it
+    s4607:display_packets(PackList),
+
+    % Filter the packet list to get the dwell segments.
+    [DwellSeg] = s4607:get_segments_by_type([dwell], PackList),
+    DwellData = segment:get_data(DwellSeg),
+    [?_assertEqual(100, dwell:get_revisit_index(DwellData))].
 
 %% Utility function to compare whether floating point values are within a 
 %% specified range.
