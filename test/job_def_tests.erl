@@ -152,7 +152,12 @@ geoid_encode_checks() ->
 
 target_filtering_checks() ->
     F = fun job_def:decode_target_filtering_flag/1, 
-    [?_assertEqual([area_filtering_intersection_dwell_bounding], F(<<1>>))].
+    [?_assertEqual([area_filtering_intersection_dwell_bounding], F(<<1>>)),
+     ?_assertEqual([area_blanking_unspecified_area], F(<<2>>)),
+     ?_assertEqual([sector_blanking_unspecified_area], F(<<4>>)),
+     ?_assert(lists:member(area_filtering_intersection_dwell_bounding, F(<<7>>))),
+     ?_assert(lists:member(area_blanking_unspecified_area, F(<<7>>))),
+     ?_assert(lists:member(sector_blanking_unspecified_area, F(<<7>>)))].
 
 job_def1() ->
     <<1,2,3,4, 5, "Model1", 0, 23, 
