@@ -25,7 +25,8 @@ job_def_test_() ->
     [job1_checks(), job_def_encode_decode(), sensor_id_decode_checks(),
      sensor_id_encode_checks(), radar_mode_decode_checks(), 
      radar_mode_encode_checks(), terr_elev_decode_checks(), 
-     terr_elev_encode_checks(), geoid_decode_checks(), geoid_encode_checks()].
+     terr_elev_encode_checks(), geoid_decode_checks(), geoid_encode_checks(),
+     target_filtering_checks()].
 
 job1_checks() ->
     {ok, JD1} = job_def:decode(job_def1()),
@@ -148,6 +149,10 @@ geoid_encode_checks() ->
      ?_assertEqual(<<1>>, F(egm96)),
      ?_assertEqual(<<2>>, F(geo96)),
      ?_assertEqual(<<3>>, F(flat_earth))].
+
+target_filtering_checks() ->
+    F = fun job_def:decode_target_filtering_flag/1, 
+    [?_assertEqual([area_filtering_intersection_dwell_bounding], F(<<1>>))].
 
 job_def1() ->
     <<1,2,3,4, 5, "Model1", 0, 23, 

@@ -60,7 +60,9 @@
     decode_terrain_elev_model/1,
     encode_terrain_elev_model/1,
     encode_geoid_model/1,
-    decode_geoid_model/1]).
+    decode_geoid_model/1,
+    decode_target_filtering_flag/1,
+    encode_target_filtering_flag/1]).
 -endif.
 
 -record(job_def, {
