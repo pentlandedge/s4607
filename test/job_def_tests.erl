@@ -26,7 +26,7 @@ job_def_test_() ->
      sensor_id_encode_checks(), radar_mode_decode_checks(), 
      radar_mode_encode_checks(), terr_elev_decode_checks(), 
      terr_elev_encode_checks(), geoid_decode_checks(), geoid_encode_checks(),
-     target_filtering_checks()].
+     target_filtering_decode_checks(), target_filtering_encode_checks()].
 
 job1_checks() ->
     {ok, JD1} = job_def:decode(job_def1()),
@@ -150,7 +150,7 @@ geoid_encode_checks() ->
      ?_assertEqual(<<2>>, F(geo96)),
      ?_assertEqual(<<3>>, F(flat_earth))].
 
-target_filtering_checks() ->
+target_filtering_decode_checks() ->
     F = fun job_def:decode_target_filtering_flag/1, 
     [?_assertEqual([area_filtering_intersection_dwell_bounding], F(<<1>>)),
      ?_assertEqual([area_blanking_unspecified_area], F(<<2>>)),
@@ -158,6 +158,20 @@ target_filtering_checks() ->
      ?_assert(lists:member(area_filtering_intersection_dwell_bounding, F(<<7>>))),
      ?_assert(lists:member(area_blanking_unspecified_area, F(<<7>>))),
      ?_assert(lists:member(sector_blanking_unspecified_area, F(<<7>>)))].
+
+target_filtering_encode_checks() ->
+    F = fun job_def:encode_target_filtering_flag/1, 
+    All = [area_filtering_intersection_dwell_bounding,
+           area_blanking_unspecified_area,
+           sector_blanking_unspecified_area],
+
+    [?_assertEqual(<<0>>, F(no_filtering)),
+     ?_assertEqual(<<1>>, F([area_filtering_intersection_dwell_bounding])),
+     ?_assertEqual(<<2>>, F([area_blanking_unspecified_area])),
+     ?_assertEqual(<<4>>, F([sector_blanking_unspecified_area])),
+     ?_assertEqual(<<5>>, F([sector_blanking_unspecified_area, 
+                             area_filtering_intersection_dwell_bounding])),
+     ?_assertEqual(<<7>>, F(All))].
 
 job_def1() ->
     <<1,2,3,4, 5, "Model1", 0, 23, 
