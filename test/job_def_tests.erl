@@ -22,10 +22,11 @@
 
 %% Define a test generator for the decoding of the mission segment. 
 job_def_test_() ->
-    [job1_checks(), job_def_encode_decode(), sensor_id_decode_checks(),
-     sensor_id_encode_checks(), radar_mode_decode_checks(), 
-     radar_mode_encode_checks(), terr_elev_decode_checks(), 
-     terr_elev_encode_checks(), geoid_decode_checks(), geoid_encode_checks(),
+    [job1_checks(), job_def_encode_decode(),job_def_new_default(), 
+     sensor_id_decode_checks(), sensor_id_encode_checks(), 
+     radar_mode_decode_checks(), radar_mode_encode_checks(), 
+     terr_elev_decode_checks(), terr_elev_encode_checks(), 
+     geoid_decode_checks(), geoid_encode_checks(),
      target_filtering_decode_checks(), target_filtering_encode_checks()].
 
 job1_checks() ->
@@ -71,6 +72,12 @@ job_def_encode_decode() ->
      ?_assertEqual(254, job_def:get_ns_val_false_alarm_density(DEJD)),
      ?_assertEqual(dgm50, job_def:get_terr_elev_model(DEJD)),
      ?_assertEqual(geo96, job_def:get_geoid_model(DEJD))].
+
+job_def_new_default() ->
+    JD = job_def:new([]), 
+    [?_assertEqual(1, job_def:get_job_id(JD)),
+     ?_assertEqual(no_statement, job_def:get_sensor_id_type(JD)),
+     ?_assertEqual("", job_def:get_sensor_id_model(JD))].
 
 sensor_id_decode_checks() ->
     IdList = sensor_id_table(),
