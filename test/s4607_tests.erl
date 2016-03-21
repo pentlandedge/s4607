@@ -285,10 +285,10 @@ packet_list_encode() ->
     MS = mission:new("Drifter 1", "A1234", other, "Build 1", 2016, 2, 5),
 
     % Create a complete segment with the header and payload.
-    MissSeg = segment:new(mission, MS),
+    MissionSeg = segment:new(mission, MS),
 
     % Create a packet containing the mission segment  
-    Pack2 = Gen([MissSeg]), 
+    Pack2 = Gen([MissionSeg]), 
 
     % Create a list containing two packets.
     PackList = [Pack2, Pack],
@@ -296,10 +296,19 @@ packet_list_encode() ->
     % Display it
     s4607:display_packets(PackList),
 
+    % Encode it.
+    [EncodedMissionPacket|_] = s4607:encode_packets(PackList),
+
+    % Decode it again.
+    DecodedMissionPacket = s4607:decode(EncodedMissionPacket),
+
     % Filter the packet list to get the dwell segments.
     [DwellSeg] = s4607:get_segments_by_type([dwell], PackList),
+    [MissSeg] = s4607:get_segments_by_type([mission], DecodedMissionPacket),
     DwellData = segment:get_data(DwellSeg),
-    [?_assertEqual(100, dwell:get_revisit_index(DwellData))].
+    MissData = segment:get_data(MissSeg),
+    [?_assertEqual(100, dwell:get_revisit_index(DwellData)),
+     ?_assertEqual("Drifter 1", mission:get_mission_plan(MissData))].
 
 %% Utility function to compare whether floating point values are within a 
 %% specified range.
