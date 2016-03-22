@@ -95,7 +95,8 @@ binary_decimal_test_() ->
 
 b16_checks() ->
     [?_assert(almost_equal(-256+(1/128.0), 
-        stanag_types:b16_to_float(<<16#FF,16#FF>>), 0.00001))].
+        stanag_types:b16_to_float(<<16#FF,16#FF>>), 0.00001)),
+     ?_assertEqual(<<16#FF,16#FF>>, stanag_types:float_to_b16(-256+(1/128.0)))].
 
 %% Define a binary angle test generator.
 binary_angle_test_() ->
