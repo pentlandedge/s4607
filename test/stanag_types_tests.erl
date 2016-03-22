@@ -88,7 +88,15 @@ s64_checks() ->
         stanag_types:integer_to_s64(-9223372036854775808)),
      ?_assertEqual(<<255,255,255,255,255,255,255,255>>, 
         stanag_types:integer_to_s64(-1))].
-       
+
+%% Define binary decimal tests.
+binary_decimal_test_() ->
+    [b16_checks()].
+
+b16_checks() ->
+    [?_assert(almost_equal(-256+(1/128.0), 
+        stanag_types:b16_to_float(<<16#FF,16#FF>>), 0.00001))].
+
 %% Define a binary angle test generator.
 binary_angle_test_() ->
     [ba16_checks(), ba32_checks()].
