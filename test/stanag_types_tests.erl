@@ -91,12 +91,23 @@ s64_checks() ->
 
 %% Define binary decimal tests.
 binary_decimal_test_() ->
-    [b16_checks()].
+    [b16_checks(), b32_checks()].
 
 b16_checks() ->
     [?_assert(almost_equal(-256+(1/128.0), 
         stanag_types:b16_to_float(<<16#FF,16#FF>>), 0.00001)),
      ?_assertEqual(<<16#FF,16#FF>>, stanag_types:float_to_b16(-256+(1/128.0)))].
+
+b32_checks() ->
+    MaxVal = <<16#7F,16#FF,16#FF,16#FF>>,
+    MaxFloat = 256 - (1/8388608.0),
+    MinVal = <<16#FF,16#FF,16#FF,16#FF>>,
+    MinFloat = -256 + (1/8388608.0),
+    E = 0.00001,
+    [?_assert(almost_equal(MinFloat, stanag_types:b32_to_float(MinVal), E)),
+     ?_assert(almost_equal(MaxFloat, stanag_types:b32_to_float(MaxVal), E)),
+     ?_assertEqual(MinVal, stanag_types:float_to_b32(MinFloat)),
+     ?_assertEqual(MaxVal, stanag_types:float_to_b32(MaxFloat))].
 
 %% Define a binary angle test generator.
 binary_angle_test_() ->
