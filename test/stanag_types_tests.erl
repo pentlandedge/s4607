@@ -116,7 +116,9 @@ h32_checks() ->
     MaxFloat = 32768 - (1/65536.0),
     E = 0.0001,
     [?_assert(almost_equal(MinFloat, stanag_types:h32_to_float(MinVal), E)),
-     ?_assert(almost_equal(MaxFloat, stanag_types:h32_to_float(MaxVal), E))].
+     ?_assert(almost_equal(MaxFloat, stanag_types:h32_to_float(MaxVal), E)),
+     ?_assertEqual(MinVal, stanag_types:float_to_h32(MinFloat)),
+     ?_assertEqual(MaxVal, stanag_types:float_to_h32(MaxFloat))].
 
 %% Define a binary angle test generator.
 binary_angle_test_() ->
