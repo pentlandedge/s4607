@@ -38,6 +38,17 @@ The project uses Erlang's eunit test system, controlled from rebar.
 # rebar compile eunit
 ```
 This will rebuild the project including the eunit tests and then execute all of the tests.
+## Generating a code coverage report
+To generate a code coverage report, first open the rebar.config file and enable code coverage:
+```
+{cover_enabled, true}.
+```
+Then recompile the project and run the unit tests:
+```
+# rebar clean
+# rebar compile eunit
+```
+Once this completes, the code coverage report should be available in at .eunit/index.html
 ## Encoding a segment inside a packet structure.
 As an example, consider creating a mission segment, encapsulating it inside a packet, then encoding into Stanag 4607 binary form. The first step is to create the mission segment payload. 
 ```
