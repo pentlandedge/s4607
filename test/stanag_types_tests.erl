@@ -134,6 +134,18 @@ ba32_checks() ->
         stanag_types:ba32_to_float(<<16#A5,16#A5,16#A5,16#A5>>), 0.0000001)),
      ?_assertEqual(<<16#A5,16#A5,16#A5,16#A5>>, stanag_types:float_to_ba32(232.941176416))].
 
+%% Define a signed binary angle test generator.
+signed_binary_angle_test_() ->
+    [sa16_checks()].
+
+sa16_checks() ->
+    % This is the example from the specfication.
+    SpecExFl = -34.873352,
+    SpecExBin = <<16#CE,16#66>>,
+    E = 0.1,
+    %[?_assertEqual(SpecExBin, stanag_types:float_to_sa16(SpecExFl))].
+    [?_assert(almost_equal(SpecExFl, stanag_types:sa16_to_float(SpecExBin), E))].
+
 %% Utility function to compare whether floating point values are within a 
 %% specified range.
 almost_equal(V1, V2, Delta) ->
