@@ -134,14 +134,6 @@ extract_packet_header(<<Hdr:32/binary,Rest/binary>>) ->
 extract_packet_data(Bin, Len) ->
     sutils:extract_data(Bin, Len).
 
-%% Calculates the size of a segment from the supplied binary, adjusting for
-%% the segment header. The value calculated should be used in the segment
-%% header.
-%calculate_segment_size(SegBin) when is_binary(SegBin) ->
-%    SegHdrSize = 32,
-%    SegBinSize = byte_size(SegBin),
-%    SegHdrSize + SegBinSize.
-
 %% Accessor functions for pulling out the fields of the packet.
 get_packet_header(#packet{header = X}) -> X.
 get_packet_segments(#packet{segments = X}) -> X.
