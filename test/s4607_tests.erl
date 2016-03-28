@@ -290,14 +290,23 @@ packet_list_encode() ->
     % Create a packet containing the mission segment  
     Pack2 = Gen([MissionSeg]), 
 
+    % Create a job definition segment.
+    JD = job_def_tests:sample_job_def(),
+
+    % Create a complete segment with the header and payload.
+    JobDefSeg = segment:new(job_definition, JD),
+
+    % Create a packet with the new segment.
+    Pack3 = Gen([JobDefSeg]), 
+
     % Create a list containing two packets.
-    PackList = [Pack2, Pack],
+    PackList = [Pack3, Pack2, Pack],
 
     % Display it
     s4607:display_packets(PackList),
 
     % Encode it.
-    [EncodedMissionPacket|_] = s4607:encode_packets(PackList),
+    [_,EncodedMissionPacket|_] = s4607:encode_packets(PackList),
 
     % Decode it again.
     DecodedMissionPacket = s4607:decode(EncodedMissionPacket),
