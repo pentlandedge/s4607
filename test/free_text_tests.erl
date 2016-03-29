@@ -20,4 +20,8 @@
 
 %% Define a test generator for the free text segment. 
 free_text_test_() ->
-    [].
+    Bin = sample_free_text(),
+    FT = free_text:decode(Bin),
+    [?_assertEqual("ABCDEFGHIJ", free_text:get_originator(FT))].
+
+sample_free_text() -> <<"ABCDEFGHIJ","1234567890","Some free text">>.

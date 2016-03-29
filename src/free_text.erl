@@ -15,10 +15,16 @@
 %%
 -module(free_text).
 
--export([decode/1]).
+-export([decode/1, get_originator/1]).
 
 -record(free_text, {originator, recipient, text}).
 
 decode(<<Orig:10/binary,Recip:10/binary,Text/binary>>) ->
-    #free_text{originator = Orig, recipient = Recip, text = Text}. 
-    
+    #free_text{
+        originator = binary_to_list(Orig), 
+        recipient = binary_to_list(Recip), 
+        text = binary_to_list(Text)}. 
+   
+% Accessor functions.
+get_originator(#free_text{originator = X}) -> X.
+
