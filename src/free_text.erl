@@ -15,7 +15,7 @@
 %%
 -module(free_text).
 
--export([decode/1, get_originator/1, get_recipient/1]).
+-export([decode/1, get_originator/1, get_recipient/1, get_text/1]).
 
 -record(free_text, {originator, recipient, text}).
 
@@ -28,4 +28,5 @@ decode(<<Orig:10/binary,Recip:10/binary,Text/binary>>) ->
 % Accessor functions.
 get_originator(#free_text{originator = X}) -> X.
 get_recipient(#free_text{recipient = X}) -> X.
+get_text(#free_text{text = X}) -> X.
 
