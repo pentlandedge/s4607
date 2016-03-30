@@ -15,16 +15,28 @@
 %%
 -module(free_text).
 
--export([decode/1, get_originator/1, get_recipient/1, get_text/1]).
+-export([
+    decode/1, 
+    encode/1,
+    get_originator/1, 
+    get_recipient/1, 
+    get_text/1]).
 
 -record(free_text, {originator, recipient, text}).
 
+%% Function to decode a binary free text segment.
 decode(<<Orig:10/binary,Recip:10/binary,Text/binary>>) ->
     #free_text{
         originator = binary_to_list(Orig), 
         recipient = binary_to_list(Recip), 
         text = binary_to_list(Text)}. 
-   
+
+%% Function to encode a free text record as a binary.
+encode(#free_text{originator = Or, recipient = Re, text = Text}) ->
+    PadOr = sutils:add_trailing_spaces(Or, 10),
+    PadRe = sutils:add_trailing_spaces(Re, 10),
+    <<PadOr,PadRe,Text>>.
+
 % Accessor functions.
 get_originator(#free_text{originator = X}) -> X.
 get_recipient(#free_text{recipient = X}) -> X.
