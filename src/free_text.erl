@@ -18,6 +18,7 @@
 -export([
     decode/1, 
     encode/1,
+    new/3,
     get_originator/1, 
     get_recipient/1, 
     get_text/1]).
@@ -36,6 +37,12 @@ encode(#free_text{originator = Or, recipient = Re, text = Text}) ->
     PadOr = sutils:add_trailing_spaces(Or, 10),
     PadRe = sutils:add_trailing_spaces(Re, 10),
     <<PadOr,PadRe,Text>>.
+
+%% Function to create a new free text record.
+new(Orig, Recip, Text) when is_list(Orig), is_list(Recip), is_list(Text),
+    length(Orig) =< 10, length(Recip) =< 10 ->
+    
+    #free_text{originator = Orig, recipient = Recip, text = Text}.
 
 % Accessor functions.
 get_originator(#free_text{originator = X}) -> X.
