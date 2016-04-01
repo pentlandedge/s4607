@@ -20,10 +20,19 @@
 
 %% Define a test generator for the free text segment. 
 free_text_test_() ->
+    [decode_checks(), new_checks()].
+
+decode_checks() ->
     Bin = sample_free_text(),
     FT = free_text:decode(Bin),
     [?_assertEqual("ABCDEFGHIJ", free_text:get_originator(FT)),
      ?_assertEqual("1234567890", free_text:get_recipient(FT)),
      ?_assertEqual("Some free text", free_text:get_text(FT))].
+
+new_checks() ->
+    FT = free_text:new("ABC", "DEF", "Some important message"),
+    [?_assertEqual("ABC", free_text:get_originator(FT)),
+     ?_assertEqual("DEF", free_text:get_recipient(FT)),
+     ?_assertEqual("Some important message", free_text:get_text(FT))].
 
 sample_free_text() -> <<"ABCDEFGHIJ","1234567890","Some free text">>.
