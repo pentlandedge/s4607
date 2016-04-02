@@ -36,7 +36,7 @@ decode(<<Orig:10/binary,Recip:10/binary,Text/binary>>) ->
 encode(#free_text{originator = Or, recipient = Re, text = Text}) ->
     PadOr = sutils:add_trailing_spaces(Or, 10),
     PadRe = sutils:add_trailing_spaces(Re, 10),
-    <<PadOr,PadRe,Text>>.
+    list_to_binary(PadOr ++ PadRe ++ Text).
 
 %% Function to create a new free text record.
 new(Orig, Recip, Text) when is_list(Orig), is_list(Recip), is_list(Text),
