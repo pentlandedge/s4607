@@ -19,7 +19,7 @@
     get_location_time/1,
     get_lat/1,
     get_lon/1,
-    get_altitude/1,
+    get_alt/1,
     get_platform_track/1,
     get_platform_speed/1,
     get_platform_vertical_velocity/1,
@@ -29,7 +29,7 @@
     location_time,
     lat,
     lon,
-    altitude,
+    alt,
     platform_track,
     platform_speed,
     platform_vertical_velocity}).
@@ -37,22 +37,22 @@
 %% Accessor function for the location time field.
 get_location_time(#platform_loc_segment{location_time = Time}) -> Time.
 
-%% Accessor function for the flight plan field.
+%% Accessor function for the latitude field.
 get_lat(#platform_loc_segment{lat = Lat}) -> Lat.
 
-%% Accessor function for the platform type field.
+%% Accessor function for the longitude field.
 get_lon(#platform_loc_segment{lon = Lon}) -> Lon.
 
-%% Accessor function for the platform config field.
-get_altitude(#platform_loc_segment{altitude = Altitude}) -> Altitude.
+%% Accessor function for the altitude field.
+get_alt(#platform_loc_segment{alt = Alt}) -> Alt.
 
-%% Accessor function for the year field.
+%% Accessor function for the platform track field.
 get_platform_track(#platform_loc_segment{platform_track = Track}) -> Track.
 
-%% Accessor function for the month field.
+%% Accessor function for the platform speed field.
 get_platform_speed(#platform_loc_segment{platform_speed = Speed}) -> Speed.
 
-%% Accessor function for the day field.
+%% Accessor function for the platform vertical velocity field.
 get_platform_vertical_velocity(
     #platform_loc_segment{platform_vertical_velocity = VerticalVelocity})
         -> VerticalVelocity.
@@ -60,5 +60,5 @@ get_platform_vertical_velocity(
 %% Convenience function to allow a caller to extract all of the position
 %% fields as a single tuple.
 get_platform_position(#platform_loc_segment{lat = Lat, lon = Lon,
-    altitude = Altitude}) -> {Lat, Lon, Altitude}.
+    alt = Alt}) -> {Lat, Lon, Alt}.
 
