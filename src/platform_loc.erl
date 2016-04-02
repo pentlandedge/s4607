@@ -16,6 +16,11 @@
 -module(platform_loc).
 
 -export([
+    decode/1,
+    encode/1,
+    new/7,
+    payload_size/0,
+    display/1,
     get_location_time/1,
     get_lat/1,
     get_lon/1,
@@ -33,6 +38,59 @@
     platform_track,
     platform_speed,
     platform_vertical_velocity}).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Platform Location segment decoding/encoding functions.
+
+decode(<<L1:32/integer-unsigned-big, L2:32/integer-signed-big,
+    L3:32/integer-unsigned-big, L4:32/integer-signed-big,
+    L5:16/integer-unsigned-big, L6:32/integer-unsigned-big, L7>>) ->
+
+    {ok, #platform_loc_segment{
+        location_time = stanag_types:i32_to_integer(L1),
+        lat = stanag_types:sa32_to_float(L2),
+        lon = stanag_types:ba32_to_float(L3),
+        alt = stanag_types:s32_to_integer(L4),
+        platform_track = stanag_types:ba16_to_float(L5),
+        platform_speed = stanag_types:i32_to_integer(L6),
+        platform_vertical_velocity = stanag_types:s8_to_integer(L7)}}.
+
+%% Function takes a platform location segment and returns an encoded binary form.
+encode(#platform_loc_segment{location_time = LocationTime, lat = Lat,
+    lon = Lon, alt = Alt, platform_track = Track, platform_speed = Speed,
+    platform_vertical_velocity = VerticalVelocity}) ->
+
+    B1 = stanag_types:integer_to_i32(LocationTime),
+    B2 = stanag_types:float_to_sa32(Lat),
+    B3 = stanag_types:float_to_ba32(Lon),
+    B4 = stanag_types:integer_to_s32(Alt),
+    B5 = stanag_types:float_to_ba16(Track),
+    B6 = stanag_types:integer_to_i32(Speed),
+    B7 = stanag_types:integer_to_s8(VerticalVelocity),
+
+    <<B1,B2,B3,B4,B5,B6,B7>>.
+
+
+%% Simple function to create a mission segment from the supplied parameters.
+new(LocationTime, Lat, Lon, Alt, Track, Speed, VerticalVelocity) ->
+    #platform_loc_segment{location_time = LocationTime, lat = Lat,
+        lon = Lon, alt = Alt, platform_track = Track,
+        platform_speed = Speed, platform_vertical_velocity = VerticalVelocity}.
+
+%% Function to return the size of the mission segment payload.
+payload_size() -> 23.
+
+%% Function to display the platform location segment in readable format
+display(PLSeg) ->
+    io:format("****************************************~n"),
+    io:format("** @platform_location~n"),
+    io:format("Location Time: ~p~n", [PLSeg#platform_loc_segment.location_time]),
+    io:format("Plat. Pos. Latitude: ~p~n", [PLSeg#platform_loc_segment.lat]),
+    io:format("Plat. Pos. Longitude: ~p~n", [PLSeg#platform_loc_segment.lon]),
+    io:format("Plat. Pos. Altitude: ~p~n", [PLSeg#platform_loc_segment.lat]),
+    io:format("Plat. Track: ~p~n", [PLSeg#platform_loc_segment.platform_track]),
+    io:format("Plat. Speed: ~p~n", [PLSeg#platform_loc_segment.platform_speed]),
+    io:format("Plat. Vertical Velocity: ~p~n", [PLSeg#platform_loc_segment.platform_vertical_velocity]).
 
 %% Accessor function for the location time field.
 get_location_time(#platform_loc_segment{location_time = Time}) -> Time.
