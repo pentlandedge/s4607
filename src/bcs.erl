@@ -21,4 +21,9 @@
 -export([is_valid/1]).
 
 %% Function to test whether a character belongs to the BCS set.
-is_valid(_Char) -> true.
+%% Allows the caller to provide a character as a single element string or as
+%% an integer
+is_valid([Char]) -> is_valid(Char);
+
+is_valid(X) when is_integer(X), X > 16#7E -> false;
+is_valid(_X) -> true.

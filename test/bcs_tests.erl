@@ -20,4 +20,10 @@
 
 %% Define a test generator for the BCS character set functions.
 bcs_test_() ->
-    [].
+    [valid_checks(), invalid_checks()].
+
+valid_checks() ->
+    [?_assert(bcs:is_valid("A"))].
+
+invalid_checks() ->
+    [?_assert(not bcs:is_valid("£"))].
