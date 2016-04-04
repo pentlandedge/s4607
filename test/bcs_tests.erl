@@ -23,7 +23,15 @@ bcs_test_() ->
     [valid_checks(), invalid_checks()].
 
 valid_checks() ->
-    [?_assert(bcs:is_valid("A"))].
+    [?_assert(bcs:is_valid("A")), 
+     ?_assert(bcs:is_valid("a")), 
+     ?_assert(bcs:is_valid(16#0A)),     % Line feed 
+     ?_assert(bcs:is_valid(16#0C)),     % Form feed 
+     ?_assert(bcs:is_valid(16#0D)),     % Carriage return
+     ?_assert(bcs:is_valid("\r")),      % Carriage return
+     ?_assert(bcs:is_valid("\~"))].     
 
 invalid_checks() ->
-    [?_assert(not bcs:is_valid("£")), ?_assert(not bcs:is_valid("\r"))].
+    [?_assert(not bcs:is_valid("£")), 
+     ?_assert(not bcs:is_valid(16#08))].    % Backspace
+

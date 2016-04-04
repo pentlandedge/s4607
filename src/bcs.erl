@@ -25,5 +25,9 @@
 %% an integer
 is_valid([Char]) -> is_valid(Char);
 
+is_valid(16#0A) -> true;   % Line feed
+is_valid(16#0C) -> true;   % Form feed
+is_valid(16#0D) -> true;   % Carriage return
 is_valid(X) when is_integer(X), X >= 16#20, X =< 16#7E -> true;
 is_valid(_) -> false.
+
