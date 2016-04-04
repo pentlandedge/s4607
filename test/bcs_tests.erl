@@ -26,4 +26,4 @@ valid_checks() ->
     [?_assert(bcs:is_valid("A"))].
 
 invalid_checks() ->
-    [?_assert(not bcs:is_valid("£"))].
+    [?_assert(not bcs:is_valid("£")), ?_assert(not bcs:is_valid("\r"))].
