@@ -25,6 +25,5 @@
 %% an integer
 is_valid([Char]) -> is_valid(Char);
 
-is_valid(X) when is_integer(X), X < 16#20 -> false;
-is_valid(X) when is_integer(X), X > 16#7E -> false;
-is_valid(_X) -> true.
+is_valid(X) when is_integer(X), X >= 16#20, X =< 16#7E -> true;
+is_valid(_) -> false.
