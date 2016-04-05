@@ -42,7 +42,7 @@ encode(#free_text{originator = Or, recipient = Re, text = Text}) ->
 new(Orig, Recip, Text) when is_list(Orig), is_list(Recip), is_list(Text),
     length(Orig) =< 10, length(Recip) =< 10 ->
     
-    #free_text{originator = Orig, recipient = Recip, text = Text}.
+    {ok, #free_text{originator = Orig, recipient = Recip, text = Text}}.
 
 % Accessor functions.
 get_originator(#free_text{originator = X}) -> X.

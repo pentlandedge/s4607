@@ -30,13 +30,13 @@ decode_checks() ->
      ?_assertEqual("Some free text", free_text:get_text(FT))].
 
 new_checks() ->
-    FT = free_text:new("ABC", "DEF", "Some important message"),
+    {ok, FT} = free_text:new("ABC", "DEF", "Some important message"),
     [?_assertEqual("ABC", free_text:get_originator(FT)),
      ?_assertEqual("DEF", free_text:get_recipient(FT)),
      ?_assertEqual("Some important message", free_text:get_text(FT))].
 
 encode_checks() ->
-    FT = free_text:new("ABC", "DEF", "Some important message"),
+    {ok, FT} = free_text:new("ABC", "DEF", "Some important message"),
     Bin = free_text:encode(FT),
     FT2 = free_text:decode(Bin),
     [?_assertEqual("ABC       ", free_text:get_originator(FT2)),
