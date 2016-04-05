@@ -41,8 +41,17 @@ encode(#free_text{originator = Or, recipient = Re, text = Text}) ->
 %% Function to create a new free text record.
 new(Orig, Recip, Text) when is_list(Orig), is_list(Recip), is_list(Text),
     length(Orig) =< 10, length(Recip) =< 10 ->
-    
-    {ok, #free_text{originator = Orig, recipient = Recip, text = Text}}.
+    % Check that the strings contain only valid BCS characters.
+    OrigOk = bcs:is_valid_string(Orig),
+    RecipOk = bcs:is_valid_string(Recip),
+    TextOk = bcs:is_valid_string(Text),
+    case OrigOk and RecipOk and TextOk of 
+        true ->
+            {ok, #free_text{originator = Orig, recipient = Recip, 
+                            text = Text}};
+        false ->
+            {error, invalid_characters}
+    end.
 
 % Accessor functions.
 get_originator(#free_text{originator = X}) -> X.

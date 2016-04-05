@@ -20,7 +20,7 @@
 
 %% Define a test generator for the free text segment. 
 free_text_test_() ->
-    [decode_checks(), new_checks(), encode_checks()].
+    [decode_checks(), new_checks(), new_fail_checks(), encode_checks()].
 
 decode_checks() ->
     Bin = sample_free_text(),
@@ -34,6 +34,14 @@ new_checks() ->
     [?_assertEqual("ABC", free_text:get_originator(FT)),
      ?_assertEqual("DEF", free_text:get_recipient(FT)),
      ?_assertEqual("Some important message", free_text:get_text(FT))].
+
+new_fail_checks() ->
+    {error, Reason1} = free_text:new("ABC", "DEF", "£3.50 please"),
+    {error, Reason2} = free_text:new("ABC", "£DEF", "$3.50 please"),
+    {error, Reason3} = free_text:new("£ABC", "DEF", "$3.50 please"),
+    [?_assertEqual(invalid_characters, Reason1),
+     ?_assertEqual(invalid_characters, Reason2),
+     ?_assertEqual(invalid_characters, Reason3)].
 
 encode_checks() ->
     {ok, FT} = free_text:new("ABC", "DEF", "Some important message"),
