@@ -18,13 +18,13 @@
 
 -module(bcs).
 
--export([is_valid_string/1, is_valid/1]).
+-export([is_valid_string/1, is_valid_char/1]).
 
 %% Function to test whether a string contains only valid BCS characters.
 is_valid_string([]) -> 
     true;
 is_valid_string([H|T]) ->
-    case is_valid(H) of
+    case is_valid_char(H) of
         true -> is_valid_string(T);
         false -> false
     end.
@@ -32,11 +32,9 @@ is_valid_string([H|T]) ->
 %% Function to test whether a character belongs to the BCS set.
 %% Allows the caller to provide a character as a single element string or as
 %% an integer
-is_valid([Char]) -> is_valid(Char);
-
-is_valid(16#0A) -> true;   % Line feed
-is_valid(16#0C) -> true;   % Form feed
-is_valid(16#0D) -> true;   % Carriage return
-is_valid(X) when is_integer(X), X >= 16#20, X =< 16#7E -> true;
-is_valid(_) -> false.
+is_valid_char(16#0A) -> true;   % Line feed
+is_valid_char(16#0C) -> true;   % Form feed
+is_valid_char(16#0D) -> true;   % Carriage return
+is_valid_char(X) when is_integer(X), X >= 16#20, X =< 16#7E -> true;
+is_valid_char(_) -> false.
 

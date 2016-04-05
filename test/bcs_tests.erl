@@ -23,15 +23,17 @@ bcs_test_() ->
     [valid_checks(), invalid_checks()].
 
 valid_checks() ->
-    [?_assert(bcs:is_valid("A")), 
-     ?_assert(bcs:is_valid("a")), 
-     ?_assert(bcs:is_valid(16#0A)),     % Line feed 
-     ?_assert(bcs:is_valid(16#0C)),     % Form feed 
-     ?_assert(bcs:is_valid(16#0D)),     % Carriage return
-     ?_assert(bcs:is_valid("\r")),      % Carriage return
-     ?_assert(bcs:is_valid("\~"))].     
+    [?_assert(bcs:is_valid_string("A")), 
+     ?_assert(bcs:is_valid_string("a")), 
+     ?_assert(bcs:is_valid_char(16#0A)),     % Line feed 
+     ?_assert(bcs:is_valid_char(16#0C)),     % Form feed 
+     ?_assert(bcs:is_valid_char(16#0D)),     % Carriage return
+     ?_assert(bcs:is_valid_string("\r")),      % Carriage return
+     ?_assert(bcs:is_valid_string("That will be $4.50 please.")),
+     ?_assert(bcs:is_valid_string("\~"))].     
 
 invalid_checks() ->
-    [?_assert(not bcs:is_valid("£")), 
-     ?_assert(not bcs:is_valid(16#08))].    % Backspace
+    [?_assert(not bcs:is_valid_string("£")), 
+     ?_assert(not bcs:is_valid_string("That will be £4.50 please.")),
+     ?_assert(not bcs:is_valid_char(16#08))].    % Backspace
 
