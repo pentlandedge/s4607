@@ -38,7 +38,9 @@ encode(#free_text{originator = Or, recipient = Re, text = Text}) ->
     PadRe = sutils:add_trailing_spaces(Re, 10),
     list_to_binary(PadOr ++ PadRe ++ Text).
 
-%% Function to create a new free text record.
+%% Function to create a new free text record. Checks that the supplied 
+%% originator and recipient parameters are within the maximum length and all
+%% strings contain only valid BCS characters.
 new(Orig, Recip, Text) when is_list(Orig), is_list(Recip), is_list(Text),
     length(Orig) =< 10, length(Recip) =< 10 ->
     % Check that the strings contain only valid BCS characters.
@@ -47,12 +49,16 @@ new(Orig, Recip, Text) when is_list(Orig), is_list(Recip), is_list(Text),
     TextOk = bcs:is_valid_string(Text),
     case OrigOk and RecipOk and TextOk of 
         true ->
-            {ok, #free_text{originator = Orig, recipient = Recip, 
-                            text = Text}};
+            {ok, new0(Orig, Recip, Text)};
         false ->
             {error, invalid_characters}
     end.
 
+% Internal function to build the free_text record. Performs no parameter 
+% checking.
+new0(Orig, Recip, Text) ->
+    #free_text{originator = Orig, recipient = Recip, text = Text}.
+                            
 % Accessor functions.
 get_originator(#free_text{originator = X}) -> X.
 get_recipient(#free_text{recipient = X}) -> X.
