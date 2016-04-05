@@ -18,7 +18,16 @@
 
 -module(bcs).
 
--export([is_valid/1]).
+-export([is_valid_string/1, is_valid/1]).
+
+%% Function to test whether a string contains only valid BCS characters.
+is_valid_string([]) -> 
+    true;
+is_valid_string([H|T]) ->
+    case is_valid(H) of
+        true -> is_valid_string(T);
+        false -> false
+    end.
 
 %% Function to test whether a character belongs to the BCS set.
 %% Allows the caller to provide a character as a single element string or as
