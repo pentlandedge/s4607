@@ -31,6 +31,7 @@ decode_checks() ->
 
 new_checks() ->
     {ok, FT} = free_text:new("ABC", "DEF", "Some important message"),
+    free_text:display(FT),
     [?_assertEqual("ABC", free_text:get_originator(FT)),
      ?_assertEqual("DEF", free_text:get_recipient(FT)),
      ?_assertEqual("Some important message", free_text:get_text(FT))].

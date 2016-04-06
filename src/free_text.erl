@@ -19,6 +19,7 @@
     decode/1, 
     encode/1,
     new/3,
+    display/1,
     get_originator/1, 
     get_recipient/1, 
     get_text/1]).
@@ -54,11 +55,19 @@ new(Orig, Recip, Text) when is_list(Orig), is_list(Recip), is_list(Text),
             {error, invalid_characters}
     end.
 
-% Internal function to build the free_text record. Performs no parameter 
-% checking.
+%% Internal function to build the free_text record. Performs no parameter 
+%% checking.
 new0(Orig, Recip, Text) ->
     #free_text{originator = Orig, recipient = Recip, text = Text}.
-                            
+
+%% Function to display the contents of a free text segment.
+display(#free_text{originator = Orig, recipient = Recip, text = Text}) ->
+    io:format("****************************************~n"),
+    io:format("** @free_text~n"),
+    io:format("originator: ~p~n", [Orig]),
+    io:format("recipient: ~p~n", [Recip]),
+    io:format("text: ~p~n", [Text]).
+    
 % Accessor functions.
 get_originator(#free_text{originator = X}) -> X.
 get_recipient(#free_text{recipient = X}) -> X.
