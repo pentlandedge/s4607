@@ -20,7 +20,8 @@
 
 %% Define a test generator for the free text segment. 
 free_text_test_() ->
-    [decode_checks(), new_checks(), new_fail_checks(), encode_checks()].
+    [decode_checks(), new_checks(), new_fail_checks(), encode_checks(),
+     to_dict_checks()].
 
 decode_checks() ->
     Bin = sample_free_text(),
@@ -51,5 +52,13 @@ encode_checks() ->
     [?_assertEqual("ABC       ", free_text:get_originator(FT2)),
      ?_assertEqual("DEF       ", free_text:get_recipient(FT2)),
      ?_assertEqual("Some important message", free_text:get_text(FT2))].
+
+to_dict_checks() ->
+    Text = "The gas was on in the Institute,", 
+    {ok, FT} = free_text:new("A", "B", Text),
+    D1 = free_text:to_dict(FT),
+    [?_assertEqual("A", dict:fetch(originator, D1)),
+     ?_assertEqual("B", dict:fetch(recipient, D1)),
+     ?_assertEqual(Text, dict:fetch(text, D1))].
 
 sample_free_text() -> <<"ABCDEFGHIJ","1234567890","Some free text">>.
