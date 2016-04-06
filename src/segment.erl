@@ -42,15 +42,10 @@ decode_segments(Bin, Acc) ->
     {ok, SegData, SRem2} = extract_segment_data(SRem, PayloadSize),
 
     % Switch on the segment type
-    case seg_header:get_segment_type(SH) of
-        mission -> 
-            {ok, SegRec} = mission:decode(SegData),
-            Seg = #segment{header = SH, data = SegRec};
-        dwell   ->
-            {ok, SegRec} = dwell:decode(SegData),
-            Seg = #segment{header = SH, data = SegRec};
-        job_definition ->
-            {ok, SegRec} = job_def:decode(SegData),
+    SegType = seg_header:get_segment_type(SH), 
+    case seg_type_to_module(SegType) of
+        {ok, ModName} -> 
+            {ok, SegRec} = ModName:decode(SegData),
             Seg = #segment{header = SH, data = SegRec};
         _       ->
             % Leave the data in binary form if we don't know how to decode it.
@@ -144,4 +139,10 @@ extract_segment_data(Bin, Len) ->
 %% Accessor functions.
 get_header(#segment{header = H}) -> H.
 get_data(#segment{data = D}) -> D.
+
+%% Function to map segment types to the module containing the processing functions.
+seg_type_to_module(mission)         -> {ok, mission};
+seg_type_to_module(dwell)           -> {ok, dwell};
+seg_type_to_module(job_definition)  -> {ok, job_def};
+seg_type_to_module(_)               -> {error, unsupported_segment_type}.
 
