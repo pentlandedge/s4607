@@ -41,15 +41,15 @@ decode(<<Orig:?ORIGINATOR_LENGTH/binary,Recip:?RECIPIENT_LENGTH/binary,
 
 %% Function to encode a free text record as a binary.
 encode(#free_text{originator = Or, recipient = Re, text = Text}) ->
-    PadOr = sutils:add_trailing_spaces(Or, 10),
-    PadRe = sutils:add_trailing_spaces(Re, 10),
+    PadOr = sutils:add_trailing_spaces(Or, ?ORIGINATOR_LENGTH),
+    PadRe = sutils:add_trailing_spaces(Re, ?RECIPIENT_LENGTH),
     list_to_binary(PadOr ++ PadRe ++ Text).
 
 %% Function to create a new free text record. Checks that the supplied 
 %% originator and recipient parameters are within the maximum length and all
 %% strings contain only valid BCS characters.
 new(Orig, Recip, Text) when is_list(Orig), is_list(Recip), is_list(Text),
-    length(Orig) =< 10, length(Recip) =< 10 ->
+    length(Orig) =< ?ORIGINATOR_LENGTH, length(Recip) =< ?RECIPIENT_LENGTH ->
     % Check that the strings contain only valid BCS characters.
     OrigOk = bcs:is_valid_string(Orig),
     RecipOk = bcs:is_valid_string(Recip),
