@@ -19,6 +19,7 @@
     decode/1, 
     encode/1,
     new/3,
+    to_dict/1,
     display/1,
     get_originator/1, 
     get_recipient/1, 
@@ -59,6 +60,13 @@ new(Orig, Recip, Text) when is_list(Orig), is_list(Recip), is_list(Text),
 %% checking.
 new0(Orig, Recip, Text) ->
     #free_text{originator = Orig, recipient = Recip, text = Text}.
+
+%% Function to convert a free text record into a dictionary.
+to_dict(#free_text{originator = Orig, recipient = Recip, text = Text}) ->
+    D1 = dict:new(),
+    D2 = dict:store(originator, Orig, D1),
+    D3 = dict:store(recipient, Recip, D2),
+    dict:store(text, Text, D3).
 
 %% Function to display the contents of a free text segment.
 display(#free_text{originator = Orig, recipient = Recip, text = Text}) ->
