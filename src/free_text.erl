@@ -19,6 +19,7 @@
     decode/1, 
     encode/1,
     new/3,
+    payload_size/1,
     to_dict/1,
     display/1,
     get_originator/1, 
@@ -27,8 +28,12 @@
 
 -record(free_text, {originator, recipient, text}).
 
+-define(ORIGINATOR_LENGTH, 10).
+-define(RECIPIENT_LENGTH, 10).
+
 %% Function to decode a binary free text segment.
-decode(<<Orig:10/binary,Recip:10/binary,Text/binary>>) ->
+decode(<<Orig:?ORIGINATOR_LENGTH/binary,Recip:?RECIPIENT_LENGTH/binary,
+         Text/binary>>) ->
     #free_text{
         originator = binary_to_list(Orig), 
         recipient = binary_to_list(Recip), 
@@ -60,6 +65,10 @@ new(Orig, Recip, Text) when is_list(Orig), is_list(Recip), is_list(Text),
 %% checking.
 new0(Orig, Recip, Text) ->
     #free_text{originator = Orig, recipient = Recip, text = Text}.
+
+%% Function to return the expected payload size for the free text segment.
+payload_size(#free_text{text = Text}) ->
+    ?ORIGINATOR_LENGTH + ?RECIPIENT_LENGTH + length(Text).
 
 %% Function to convert a free text record into a dictionary.
 to_dict(#free_text{originator = Orig, recipient = Recip, text = Text}) ->

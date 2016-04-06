@@ -21,7 +21,7 @@
 %% Define a test generator for the free text segment. 
 free_text_test_() ->
     [decode_checks(), new_checks(), new_fail_checks(), encode_checks(),
-     to_dict_checks()].
+     to_dict_checks(), payload_size_checks()].
 
 decode_checks() ->
     Bin = sample_free_text(),
@@ -60,5 +60,9 @@ to_dict_checks() ->
     [?_assertEqual("A", dict:fetch(originator, D1)),
      ?_assertEqual("B", dict:fetch(recipient, D1)),
      ?_assertEqual(Text, dict:fetch(text, D1))].
+
+payload_size_checks() ->
+    {ok, FT} = free_text:new("ABC", "DEF", "words"),
+    [?_assertEqual(25, free_text:payload_size(FT))].
 
 sample_free_text() -> <<"ABCDEFGHIJ","1234567890","Some free text">>.
