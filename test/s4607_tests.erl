@@ -23,7 +23,7 @@ s4607_test_() ->
      encode_dwell_segment_check1(), encode_dwell_segment_check2(),
      encode_free_text_check(),
      mission_packet_encode(), job_def_packet_encode(), dwell_packet_encode(),
-     packet_list_encode()].
+     free_text_packet_encode(), packet_list_encode()].
    
 encode_mission_segment_check() ->
     % Create a mission segment.
@@ -278,6 +278,40 @@ dwell_packet_encode() ->
      ?_assert(almost_equal(255.0, dwell:get_dwell_range_half_extent(DEDS), 0.0000001)),
      ?_assert(almost_equal(350.0, dwell:get_dwell_angle_half_extent(DEDS), 0.1))].
 
+free_text_packet_encode() ->
+
+    % List the parameters for the packet header (no need to set size). 
+    PL = [{version, {3, 1}}, {nationality, "UK"},
+          {classification, top_secret}, {class_system, "UK"}, 
+          {packet_code, rel_9_eyes}, {exercise_ind, operation_real},
+          {platform_id, "Pico1"}, {mission_id, 16#11223344},
+          {job_id, 16#55667788}],
+
+    % Create a generator function
+    Gen = s4607:packet_generator(PL),
+
+    % Create a new segment record.
+    {ok, FT} = free_text:new("Alice", "Bob", "Free text message"),
+    Seg = segment:new(free_text, FT),
+
+    % Create a packet with the new segment.
+    Pack = Gen([Seg]), 
+    
+    % Encode the packet.
+    EP = s4607:encode_packet(Pack),
+
+    % Decode it again.
+    [DP] = s4607:decode(EP),
+
+    % Pull out the individual records.
+    [DPS] = s4607:get_packet_segments(DP),
+    DEFT = segment:get_data(DPS),
+    
+    % Check the fields in the decoded segment match what we expect.
+    [?_assertEqual("Alice     ", free_text:get_originator(DEFT)),
+     ?_assertEqual("Bob       ", free_text:get_recipient(DEFT)),
+     ?_assertEqual("Free text message", free_text:get_text(DEFT))].
+     
 packet_list_encode() ->
     % List the parameters for the packet header (no need to set size). 
     PL = [{version, {3, 1}}, {nationality, "UK"},
