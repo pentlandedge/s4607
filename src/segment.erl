@@ -41,13 +41,13 @@ decode_segments(Bin, Acc) ->
     % Get the packet data payload.
     {ok, SegData, SRem2} = extract_segment_data(SRem, PayloadSize),
 
-    % Switch on the segment type
+    % Extract the type and see if we know how to process it. 
     SegType = seg_header:get_segment_type(SH), 
     case seg_type_to_module(SegType) of
         {ok, ModName} -> 
             {ok, SegRec} = ModName:decode(SegData),
             Seg = #segment{header = SH, data = SegRec};
-        _       ->
+        _  ->
             % Leave the data in binary form if we don't know how to decode it.
             Seg = #segment{header = SH, data = SegData}
 
@@ -58,20 +58,14 @@ decode_segments(Bin, Acc) ->
 
 %% Function to create an encoded segment from a segment record.
 encode(#segment{header = SH, data = SegRec}) ->
-    case seg_header:get_segment_type(SH) of
-        mission -> 
+    % Extract the type and see if we know how to process it. 
+    SegType = seg_header:get_segment_type(SH), 
+    case seg_type_to_module(SegType) of
+        {ok, ModName} -> 
             HdrBin = seg_header:encode(SH),
-            DataBin = mission:encode(SegRec),
+            DataBin = ModName:encode(SegRec),
             {ok, <<HdrBin/binary,DataBin/binary>>};
-        job_definition ->
-            HdrBin = seg_header:encode(SH),
-            DataBin = job_def:encode(SegRec),
-            {ok, <<HdrBin/binary,DataBin/binary>>};
-        dwell ->
-            HdrBin = seg_header:encode(SH),
-            DataBin = dwell:encode(SegRec),
-            {ok, <<HdrBin/binary,DataBin/binary>>};
-        _       ->
+        _  ->
             {error, unsupported_segment_type}
     end.
  
