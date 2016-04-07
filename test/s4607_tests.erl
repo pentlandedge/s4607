@@ -21,6 +21,7 @@
 s4607_test_() ->
     [encode_mission_segment_check(), encode_job_def_segment_check(),
      encode_dwell_segment_check1(), encode_dwell_segment_check2(),
+     encode_free_text_check(),
      mission_packet_encode(), job_def_packet_encode(), dwell_packet_encode(),
      packet_list_encode()].
    
@@ -142,6 +143,22 @@ mission_packet_encode() ->
      ?_assertEqual(44, seg_header:get_segment_size(SegHdr)),
      ?_assertEqual(other, mission:get_platform_type(MissSeg))].
 
+encode_free_text_check() ->
+    % Create a new segment record.
+    {ok, FT} = free_text:new("Alice", "Bob", "Free text message"),
+    Seg = segment:new(free_text, FT),
+
+    % Encode the segment.
+    {ok, ES} = segment:encode(Seg),
+
+    % Decode the segment again.
+    [{_, _, DS}] = segment:decode_segments(ES, []),
+
+    % Check the fields in the decoded segment match what we expect.
+    [?_assertEqual("Alice     ", free_text:get_originator(DS)),
+     ?_assertEqual("Bob       ", free_text:get_recipient(DS)),
+     ?_assertEqual("Free text message", free_text:get_text(DS))].
+    
 job_def_packet_encode() ->
 
     % List the parameters for the packet header (no need to set size). 
