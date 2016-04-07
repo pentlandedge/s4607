@@ -25,7 +25,7 @@ free_text_test_() ->
 
 decode_checks() ->
     Bin = sample_free_text(),
-    FT = free_text:decode(Bin),
+    {ok, FT} = free_text:decode(Bin),
     [?_assertEqual("ABCDEFGHIJ", free_text:get_originator(FT)),
      ?_assertEqual("1234567890", free_text:get_recipient(FT)),
      ?_assertEqual("Some free text", free_text:get_text(FT))].
@@ -48,7 +48,7 @@ new_fail_checks() ->
 encode_checks() ->
     {ok, FT} = free_text:new("ABC", "DEF", "Some important message"),
     Bin = free_text:encode(FT),
-    FT2 = free_text:decode(Bin),
+    {ok, FT2} = free_text:decode(Bin),
     [?_assertEqual("ABC       ", free_text:get_originator(FT2)),
      ?_assertEqual("DEF       ", free_text:get_recipient(FT2)),
      ?_assertEqual("Some important message", free_text:get_text(FT2))].

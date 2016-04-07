@@ -132,5 +132,6 @@ get_data(#segment{data = D}) -> D.
 seg_type_to_module(mission)         -> {ok, mission};
 seg_type_to_module(dwell)           -> {ok, dwell};
 seg_type_to_module(job_definition)  -> {ok, job_def};
+seg_type_to_module(free_text)       -> {ok, free_text};
 seg_type_to_module(_)               -> {error, unsupported_segment_type}.
 

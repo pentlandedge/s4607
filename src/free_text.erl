@@ -34,10 +34,10 @@
 %% Function to decode a binary free text segment.
 decode(<<Orig:?ORIGINATOR_LENGTH/binary,Recip:?RECIPIENT_LENGTH/binary,
          Text/binary>>) ->
-    #free_text{
+    {ok, #free_text{
         originator = binary_to_list(Orig), 
         recipient = binary_to_list(Recip), 
-        text = binary_to_list(Text)}. 
+        text = binary_to_list(Text)}}. 
 
 %% Function to encode a free text record as a binary.
 encode(#free_text{originator = Or, recipient = Re, text = Text}) ->
