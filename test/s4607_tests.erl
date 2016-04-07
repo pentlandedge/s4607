@@ -18,6 +18,8 @@
 
 -include_lib("eunit/include/eunit.hrl").
 
+-export([east_fortune_packet_list/0]).
+
 s4607_test_() ->
     [encode_mission_segment_check(), encode_job_def_segment_check(),
      encode_dwell_segment_check1(), encode_dwell_segment_check2(),
@@ -369,6 +371,77 @@ packet_list_encode() ->
     MissData = segment:get_data(MissSeg),
     [?_assertEqual(100, dwell:get_revisit_index(DwellData)),
      ?_assertEqual("Drifter 1", mission:get_mission_plan(MissData))].
+
+%% Function to create a list of packets containing dwells based on 
+%% East Fortune runway.
+east_fortune_packet_list() ->
+    % List the parameters for the packet header (no need to set size). 
+    PL = [{version, {3, 1}}, {nationality, "UK"},
+          {classification, unclassified}, {class_system, "UK"}, 
+          {packet_code, none}, {exercise_ind, exercise_real},
+          {platform_id, "Pico1"}, {mission_id, 16#11223344},
+          {job_id, 16#55667788}],
+
+    % Create a generator function
+    Gen = s4607:packet_generator(PL),
+
+    % Create a mission segment.
+    MS = mission:new("EastFortune1", "A1234", other, "Build 1", 2016, 4, 7),
+
+    % Create a complete segment with the header and payload.
+    MissionSeg = segment:new(mission, MS),
+    
+    % Create a dwell segment with a target in it.
+
+    % Create a list of fields for the existence mask (excluding the target
+    % report).
+    F = [existence_mask, revisit_index, dwell_index, last_dwell_of_revisit,
+         target_report_count, dwell_time, sensor_lat, sensor_lon, 
+         sensor_alt, dwell_center_lat, dwell_center_lon, 
+         dwell_range_half_extent, dwell_angle_half_extent, targets],
+  
+    TgtParams = east_fortune_target_params(),
+
+    % Extract the list of fields in the target report.
+    FieldList = [K || {K, _V} <- TgtParams],
+
+    % Splice together all the fields that make up the existence mask.
+    Efields = F ++ FieldList,
+
+    % Create the existence mask.
+    EM = exist_mask:new(Efields), 
+   
+    % Create the target report.
+    TgtRep = tgt_report:new(TgtParams),
+
+    Pay = tgt_report:payload_size(EM), 
+
+    % Set the fields of the dwell segment.
+    P = [{existence_mask, EM}, {revisit_index, 0}, {dwell_index, 0}, 
+         {last_dwell_of_revisit, no_additional_dwells}, {target_report_count, 1}, 
+         {dwell_time, 36000000}, {sensor_lat, 55.9975}, {sensor_lon, -2.725},
+         {sensor_alt, 100000}, {dwell_center_lat, 55.9990}, 
+         {dwell_center_lon, -2.713}, {dwell_range_half_extent, 1.0}, 
+         {dwell_angle_half_extent, 10}, {targets, [TgtRep]}],
+
+    % Create the dwell segment.
+    DS = dwell:new(P),
+
+    % Create a complete segment with the header and payload.
+    DwellSeg = segment:new(dwell, DS),
+    
+    % Create a packet with the new segment.
+    Pack1 = Gen([MissionSeg]), 
+    Pack2 = Gen([DwellSeg]), 
+
+    % Create a list containing two packets.
+    [Pack1, Pack2].
+
+%% Helper function to build target reports around East Fortune.
+east_fortune_target_params() ->
+    % The default fields of the target report.
+    [{target_hr_lat, 55.9987}, {target_hr_lon, -2.710}, 
+     {geodetic_height, 54}].
 
 %% Utility function to compare whether floating point values are within a 
 %% specified range.

@@ -17,6 +17,7 @@
 
 -export([
     read_file/1,
+    write_file/2,
     decode/1,
     encode_packets/1,
     encode_packet/1,
@@ -48,6 +49,11 @@
 read_file(File) ->
     {ok, Bin} = file:read_file(File),
     Bin.
+
+%% Function to write a file in Stanag 4607 format. Assumes that the supplied
+%% binary (which may be a list of binaries) is in the correct format.
+write_file(File, BinList) ->
+    file:write_file(File, BinList).
 
 %% Function to decode binary data in Stanag 4607 packet format and return 
 %% a structured representation i.e. a list of packets with nested segments

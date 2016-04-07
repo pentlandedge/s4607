@@ -254,7 +254,7 @@ encode(#tgt_report{
         end,
 
     ParamTable = [
-        {MRI, get_revisit_index, fun stanag_types:integer_to_i16/1},
+        {MRI, get_mti_report_index, fun stanag_types:integer_to_i16/1},
         {TgtHiResLat, get_target_hr_lat, fun stanag_types:float_to_sa32/1},
         {TgtHiResLon, get_target_hr_lon, fun stanag_types:float_to_ba32/1}, 
         {TgtDeltaLat, get_target_delta_lat, fun stanag_types:integer_to_s16/1}, 
