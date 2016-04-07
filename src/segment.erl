@@ -69,34 +69,24 @@ encode(#segment{header = SH, data = SegRec}) ->
             {error, unsupported_segment_type}
     end.
  
-%% Function to create a new segment record. 
-%% Caller can either supply the segment header record or simply pass the 
-%% segment type, and the function will create the segment header.
-new(job_definition = SegType, SegRec) ->
-    % Create a segment header.
-    SH = build_seg_header(SegType, SegRec),
-
-    % Create the complete segment record.
-    new(SH, SegRec);
-
-new(mission = SegType, SegRec) ->
-    % Create a segment header.
-    SH = build_seg_header(SegType, SegRec),
-
-    % Create the complete segment record.
-    new(SH, SegRec);
-
-new(dwell = SegType, SegRec) ->
-    % Create a segment header.
-    SH = build_seg_header(SegType, SegRec),
-
-    % Create the complete segment record.
-    new(SH, SegRec);
+%% Function to create a new segment record for the specified segment type.
+new(SegType, SegRec) ->
+    % Check we support the segment type then build it.
+    {ok, _} = seg_type_to_module(SegType),
+    build_segment(SegType, SegRec).
 
 %% Variant that takes a pre-constructed segment header.
-new(SegHdr, SegRec) ->
+new0(SegHdr, SegRec) ->
     #segment{header = SegHdr, data = SegRec}.
 
+%% Helper function to build the segment.
+build_segment(SegType, SegRec) when is_atom(SegType) ->
+    % Create a segment header.
+    SH = build_seg_header(SegType, SegRec),
+    
+    % Create the complete segment record.
+    new0(SH, SegRec).
+    
 %% Helper function to construct the segment header. Calculates the size of 
 %% the segment from the supplied segment record.
 build_seg_header(SegType, SegRec) ->
@@ -135,7 +125,10 @@ extract_segment_data(Bin, Len) ->
 get_header(#segment{header = H}) -> H.
 get_data(#segment{data = D}) -> D.
 
-%% Function to map segment types to the module containing the processing functions.
+%% Function to map segment types to the module containing the processing 
+%% functions. Before adding a segment to this list, please ensure that it 
+%% supports the functions used above, i.e.
+%% decode/1, encode/1, payload_size/1, display/1.
 seg_type_to_module(mission)         -> {ok, mission};
 seg_type_to_module(dwell)           -> {ok, dwell};
 seg_type_to_module(job_definition)  -> {ok, job_def};
