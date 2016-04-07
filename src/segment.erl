@@ -47,7 +47,7 @@ decode_segments(Bin, Acc) ->
         {ok, ModName} -> 
             {ok, SegRec} = ModName:decode(SegData),
             Seg = #segment{header = SH, data = SegRec};
-        _  ->
+        _ ->
             % Leave the data in binary form if we don't know how to decode it.
             Seg = #segment{header = SH, data = SegData}
 
@@ -65,7 +65,7 @@ encode(#segment{header = SH, data = SegRec}) ->
             HdrBin = seg_header:encode(SH),
             DataBin = ModName:encode(SegRec),
             {ok, <<HdrBin/binary,DataBin/binary>>};
-        _  ->
+        _ ->
             {error, unsupported_segment_type}
     end.
  
@@ -109,15 +109,12 @@ display(#segment{header = H, data = D}) ->
 display(SegHdr, SegRec) ->
     seg_header:display(SegHdr),
     
-    % Switch on the segment type and display the segment data.
-    case seg_header:get_segment_type(SegHdr) of
-        mission -> 
-            mission:display(SegRec);
-        dwell   ->
-            dwell:display(SegRec);
-        job_definition ->
-            job_def:display(SegRec); 
-        _       -> 
+    % Extract the type and see if we know how to process it. 
+    SegType = seg_header:get_segment_type(SegHdr), 
+    case seg_type_to_module(SegType) of
+        {ok, ModName} -> 
+            ModName:display(SegRec);
+        _ -> 
             ok
     end. 
 
