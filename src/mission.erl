@@ -19,7 +19,7 @@
     decode/1, 
     encode/1, 
     new/7,
-    payload_size/0,
+    payload_size/1,
     display/1, 
     decode_platform_type/1,
     encode_platform_type/1,
@@ -82,7 +82,7 @@ new(Mission, Flight, Type, Config, Year, Month, Day) ->
         month = Month, day = Day}.
 
 %% Function to return the size of the mission segment payload.
-payload_size() -> 39.
+payload_size(_) -> 39.
 
 decode_platform_type(0) -> unidentified;
 decode_platform_type(1) -> acs;

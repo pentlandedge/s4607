@@ -19,7 +19,7 @@
     decode/1, 
     encode/1,
     new/1,
-    payload_size/0,
+    payload_size/1,
     display/1,
     get_job_id/1,
     get_sensor_id_type/1,
@@ -237,7 +237,7 @@ new(ParamList) ->
         geoid_model = F(geoid_model, ParamList, none_specified)}.
 
 %% Function to return the size of the job definition segment payload.
-payload_size() -> 68.
+payload_size(_) -> 68.
 
 decode_sensor_id_type(0) -> unidentified;
 decode_sensor_id_type(1) -> other;

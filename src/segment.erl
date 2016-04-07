@@ -72,26 +72,23 @@ encode(#segment{header = SH, data = SegRec}) ->
 %% Function to create a new segment record. 
 %% Caller can either supply the segment header record or simply pass the 
 %% segment type, and the function will create the segment header.
-new(job_definition, SegRec) ->
+new(job_definition = SegType, SegRec) ->
     % Create a segment header.
-    SegSize = seg_header:header_size() + job_def:payload_size(),
-    SH = seg_header:new(job_definition, SegSize),
+    SH = build_seg_header(SegType, SegRec),
 
     % Create the complete segment record.
     new(SH, SegRec);
 
-new(mission, SegRec) ->
+new(mission = SegType, SegRec) ->
     % Create a segment header.
-    SegSize = seg_header:header_size() + mission:payload_size(),
-    SH = seg_header:new(mission, SegSize),
+    SH = build_seg_header(SegType, SegRec),
 
     % Create the complete segment record.
     new(SH, SegRec);
 
-new(dwell, SegRec) ->
+new(dwell = SegType, SegRec) ->
     % Create a segment header.
-    SegSize = seg_header:header_size() + dwell:payload_size(SegRec),
-    SH = seg_header:new(dwell, SegSize),
+    SH = build_seg_header(SegType, SegRec),
 
     % Create the complete segment record.
     new(SH, SegRec);
@@ -99,6 +96,13 @@ new(dwell, SegRec) ->
 %% Variant that takes a pre-constructed segment header.
 new(SegHdr, SegRec) ->
     #segment{header = SegHdr, data = SegRec}.
+
+%% Helper function to construct the segment header. Calculates the size of 
+%% the segment from the supplied segment record.
+build_seg_header(SegType, SegRec) ->
+    {ok, ModName} = seg_type_to_module(SegType),
+    SegSize = seg_header:header_size() + ModName:payload_size(SegRec),
+    seg_header:new(SegType, SegSize).
 
 %% Function to display a segment.
 display(#segment{header = H, data = D}) ->
