@@ -19,7 +19,7 @@
     decode/1,
     encode/1,
     new/7,
-    payload_size/0,
+    payload_size/1,
     display/1,
     get_location_time/1,
     get_lat/1,
@@ -77,8 +77,8 @@ new(LocationTime, Lat, Lon, Alt, Track, Speed, VerticalVelocity) ->
         lon = Lon, alt = Alt, platform_track = Track,
         platform_speed = Speed, platform_vertical_velocity = VerticalVelocity}.
 
-%% Function to return the size of the mission segment payload.
-payload_size() -> 23.
+%% Function to return the size of the platform location segment payload.
+payload_size(_) -> 23.
 
 %% Function to display the platform location segment in readable format
 display(PLSeg) ->
