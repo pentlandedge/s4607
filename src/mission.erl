@@ -178,13 +178,13 @@ ept(other) -> 255.
 display(MSeg) ->
     io:format("****************************************~n"),
     io:format("** @mission~n"),
-    io:format("Mission Plan: ~p~n", [MSeg#mission_segment.mission_plan]),
-    io:format("Flight Plan: ~p~n", [MSeg#mission_segment.flight_plan]),
-    io:format("Plat. Type: ~p~n", [MSeg#mission_segment.platform_type]),
-    io:format("Plat. Config: ~p~n", [MSeg#mission_segment.platform_config]),
-    io:format("Year: ~p~n", [MSeg#mission_segment.year]),
-    io:format("Month: ~p~n", [MSeg#mission_segment.month]),
-    io:format("Day: ~p~n", [MSeg#mission_segment.day]).
+    io:format("Mission Plan: ~p~n", [get_mission_plan(MSeg)]),
+    io:format("Flight Plan: ~p~n", [get_flight_plan(MSeg)]),
+    io:format("Plat. Type: ~p~n", [get_platform_type(MSeg)]),
+    io:format("Plat. Config: ~p~n", [get_platform_config(MSeg)]),
+    io:format("Year: ~p~n", [get_year(MSeg)]),
+    io:format("Month: ~p~n", [get_month(MSeg)]),
+    io:format("Day: ~p~n", [get_day(MSeg)]).
 
 %% Accessor function for the mission plan field.
 get_mission_plan(#mission_segment{mission_plan = M}) -> M.
