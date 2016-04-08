@@ -414,8 +414,6 @@ east_fortune_packet_list() ->
     % Create the target report.
     TgtRep = tgt_report:new(TgtParams),
 
-    Pay = tgt_report:payload_size(EM), 
-
     % Set the fields of the dwell segment.
     P = [{existence_mask, EM}, {revisit_index, 0}, {dwell_index, 0}, 
          {last_dwell_of_revisit, no_additional_dwells}, {target_report_count, 1}, 
