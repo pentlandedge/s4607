@@ -42,18 +42,17 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Platform Location segment decoding/encoding functions.
 
-decode(<<L1:32/integer-unsigned-big, L2:32/integer-signed-big,
-    L3:32/integer-unsigned-big, L4:32/integer-signed-big,
-    L5:16/integer-unsigned-big, L6:32/integer-unsigned-big, L7>>) ->
+decode(<<L1:32/integer-unsigned-big, L2:4/binary, L3:4/binary, L4:4/binary,
+    L5:2/binary, L6:32/integer-unsigned-big, L7:8/integer-signed-big>>) ->
 
     {ok, #platform_loc_segment{
-        location_time = stanag_types:i32_to_integer(L1),
+        location_time = L1,
         lat = stanag_types:sa32_to_float(L2),
         lon = stanag_types:ba32_to_float(L3),
         alt = stanag_types:s32_to_integer(L4),
         platform_track = stanag_types:ba16_to_float(L5),
-        platform_speed = stanag_types:i32_to_integer(L6),
-        platform_vertical_velocity = stanag_types:s8_to_integer(L7)}}.
+        platform_speed = L6,
+        platform_vertical_velocity = L7}}.
 
 %% Function takes a platform location segment and returns an encoded binary form.
 encode(#platform_loc_segment{location_time = LocationTime, lat = Lat,
