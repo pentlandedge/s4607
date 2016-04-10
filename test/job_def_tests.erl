@@ -2,15 +2,15 @@
 %% Copyright 2016 Pentland Edge Ltd.
 %%
 %% Licensed under the Apache License, Version 2.0 (the "License"); you may not
-%% use this file except in compliance with the License. 
+%% use this file except in compliance with the License.
 %% You may obtain a copy of the License at
 %%
 %% http://www.apache.org/licenses/LICENSE-2.0
 %%
-%% Unless required by applicable law or agreed to in writing, software 
-%% distributed under the License is distributed on an "AS IS" BASIS, WITHOUT 
-%% WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
-%% License for the specific language governing permissions and limitations 
+%% Unless required by applicable law or agreed to in writing, software
+%% distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+%% WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+%% License for the specific language governing permissions and limitations
 %% under the License.
 %%
 
@@ -20,12 +20,12 @@
 
 -include_lib("eunit/include/eunit.hrl").
 
-%% Define a test generator for the decoding of the mission segment. 
+%% Define a test generator for the decoding of the mission segment.
 job_def_test_() ->
-    [job1_checks(), job_def_encode_decode(),job_def_new_default(), 
-     sensor_id_decode_checks(), sensor_id_encode_checks(), 
-     radar_mode_decode_checks(), radar_mode_encode_checks(), 
-     terr_elev_decode_checks(), terr_elev_encode_checks(), 
+    [job1_checks(), job_def_encode_decode(),job_def_new_default(),
+     sensor_id_decode_checks(), sensor_id_encode_checks(),
+     radar_mode_decode_checks(), radar_mode_encode_checks(),
+     terr_elev_decode_checks(), terr_elev_encode_checks(),
      geoid_decode_checks(), geoid_encode_checks(),
      target_filtering_decode_checks(), target_filtering_encode_checks()].
 
@@ -74,7 +74,7 @@ job_def_encode_decode() ->
      ?_assertEqual(geo96, job_def:get_geoid_model(DEJD))].
 
 job_def_new_default() ->
-    JD = job_def:new([]), 
+    JD = job_def:new([]),
     [?_assertEqual(1, job_def:get_job_id(JD)),
      ?_assertEqual(no_statement, job_def:get_sensor_id_type(JD)),
      ?_assertEqual("", job_def:get_sensor_id_model(JD))].
@@ -158,7 +158,7 @@ geoid_encode_checks() ->
      ?_assertEqual(<<3>>, F(flat_earth))].
 
 target_filtering_decode_checks() ->
-    F = fun job_def:decode_target_filtering_flag/1, 
+    F = fun job_def:decode_target_filtering_flag/1,
     [?_assertEqual([area_filtering_intersection_dwell_bounding], F(<<1>>)),
      ?_assertEqual([area_blanking_unspecified_area], F(<<2>>)),
      ?_assertEqual([sector_blanking_unspecified_area], F(<<4>>)),
@@ -167,7 +167,7 @@ target_filtering_decode_checks() ->
      ?_assert(lists:member(sector_blanking_unspecified_area, F(<<7>>)))].
 
 target_filtering_encode_checks() ->
-    F = fun job_def:encode_target_filtering_flag/1, 
+    F = fun job_def:encode_target_filtering_flag/1,
     All = [area_filtering_intersection_dwell_bounding,
            area_blanking_unspecified_area,
            sector_blanking_unspecified_area],
@@ -176,15 +176,15 @@ target_filtering_encode_checks() ->
      ?_assertEqual(<<1>>, F([area_filtering_intersection_dwell_bounding])),
      ?_assertEqual(<<2>>, F([area_blanking_unspecified_area])),
      ?_assertEqual(<<4>>, F([sector_blanking_unspecified_area])),
-     ?_assertEqual(<<5>>, F([sector_blanking_unspecified_area, 
+     ?_assertEqual(<<5>>, F([sector_blanking_unspecified_area,
                              area_filtering_intersection_dwell_bounding])),
      ?_assertEqual(<<7>>, F(All))].
 
 job_def1() ->
-    <<1,2,3,4, 5, "Model1", 0, 23, 
-      64,0,0,0, "õUUU", 64,0,0,0, "õUUU", 64,0,0,0, "õUUU", 64,0,0,0, "õUUU",
-      1, 1,0, 255,255, 1,0, 16#27,16#10, 45, 0,128, 
-      255,255, 127,74, 0,100, 5, 90, 3, 1, 3>>.
+    <<1,2,3,4, 5, "Model1", 0, 23,
+      64,0,0,0, 245,85,85,85, 64,0,0,0, 245,85,85,85, 64,0,0,0,
+      245,85,85,85, 64,0,0,0, 245,85,85,85, 1, 1,0, 255,255, 1,0,
+      16#27,16#10, 45, 0,128, 255,255, 127,74, 0,100, 5, 90, 3, 1, 3>>.
 
 sample_job_def() ->
     P = [{job_id, 100}, {sensor_id_type, rotary_wing_radar},
@@ -194,10 +194,10 @@ sample_job_def() ->
          {bounding_c_lat, -45.0}, {bounding_c_lon, 2.45},
          {bounding_d_lat, -60.0}, {bounding_d_lon, 140},
          {radar_mode, {monopulse_calibration, asars_aip}}, {nom_rev_int, 65000},
-         {ns_pos_unc_along_track, no_statement}, 
+         {ns_pos_unc_along_track, no_statement},
          {ns_pos_unc_cross_track, 5000}, {ns_pos_unc_alt, 20000},
          {ns_pos_unc_heading, 45}, {ns_pos_unc_sensor_speed, 65534},
-         {ns_val_slant_range_std_dev, 100}, 
+         {ns_val_slant_range_std_dev, 100},
          {ns_val_cross_range_std_dev, no_statement},
          {ns_val_tgt_vel_los_std_dev, 4000}, {ns_val_mdv, no_statement},
          {ns_val_det_prob, 100}, {ns_val_false_alarm_density, 254},
@@ -205,10 +205,10 @@ sample_job_def() ->
 
     job_def:new(P).
 
-%% Function to return a proplist with the mapping from sensor ID to the 
+%% Function to return a proplist with the mapping from sensor ID to the
 %% sensor type.
 sensor_id_table() ->
-    [{0, unidentified}, 
+    [{0, unidentified},
      {1, other},
      {2, hisar},
      {3, astor},
@@ -300,8 +300,8 @@ radar_mode_table() ->
      {122, {dismount_gmti, vader}},
      {123, {hrr_gmti, vader}}].
 
-%% Utility function to compare whether floating point values are within a 
+%% Utility function to compare whether floating point values are within a
 %% specified range.
 almost_equal(V1, V2, Delta) ->
     abs(V1 - V2) =< Delta.
- 
+
