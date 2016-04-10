@@ -22,7 +22,7 @@
 platform_loc_test_() ->
     [location_time_checks(), lat_checks(), lon_checks(), alt_checks(),
     platform_track_checks(), platform_speed_checks(),
-    platform_vertical_velocity_checks()].
+    platform_vertical_velocity_checks(), encode_decode_checks1()].
 
 location_time_checks() ->
     {ok, PLS1} = platform_loc:decode(sample_platform_location_seg1()),
@@ -65,6 +65,19 @@ platform_vertical_velocity_checks() ->
     {ok, PLS2} = platform_loc:decode(sample_platform_location_seg2()),
     [?_assertEqual(127, platform_loc:get_platform_vertical_velocity(PLS1)),
      ?_assertEqual(-46, platform_loc:get_platform_vertical_velocity(PLS2))].
+
+encode_decode_checks1() ->
+    PLS = platform_loc:new(45743453, 14.8, 347.9, 123346, 48.1, 94321, 20),
+    platform_loc:display(PLS),
+    EPLS = platform_loc:encode(PLS),
+    {ok, DEPLS} = platform_loc:decode(EPLS),
+    [?_assertEqual(45743453, platform_loc:get_location_time(DEPLS)),
+     ?_assert(almost_equal(14.8, platform_loc:get_lat(DEPLS), 0.000001)),
+     ?_assert(almost_equal(347.9, platform_loc:get_lon(DEPLS), 0.000001)),
+     ?_assertEqual(123346, platform_loc:get_alt(DEPLS)),
+     ?_assert(almost_equal(48.1, platform_loc:get_platform_track(DEPLS), 0.01)),
+     ?_assertEqual(94321, platform_loc:get_platform_speed(DEPLS)),
+     ?_assertEqual(20, platform_loc:get_platform_vertical_velocity(DEPLS))].
 
 sample_platform_location_seg1() ->
     %%[123456789, -20.2, 256.7, 120000, 90.5, 52100, 127].

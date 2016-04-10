@@ -59,15 +59,17 @@ encode(#platform_loc_segment{location_time = LocationTime, lat = Lat,
     lon = Lon, alt = Alt, platform_track = Track, platform_speed = Speed,
     platform_vertical_velocity = VerticalVelocity}) ->
 
-    B1 = stanag_types:integer_to_i32(LocationTime),
+    B1 = LocationTime,
     B2 = stanag_types:float_to_sa32(Lat),
     B3 = stanag_types:float_to_ba32(Lon),
     B4 = stanag_types:integer_to_s32(Alt),
     B5 = stanag_types:float_to_ba16(Track),
-    B6 = stanag_types:integer_to_i32(Speed),
-    B7 = stanag_types:integer_to_s8(VerticalVelocity),
+    B6 = Speed,
+    B7 = VerticalVelocity,
 
-    <<B1,B2,B3,B4,B5,B6,B7>>.
+    <<B1:32/integer-unsigned-big,B2:4/binary,B3:4/binary,B4:4/binary,
+        B5:2/binary,B6:32/integer-unsigned-big,B7:8/integer-signed-big>>.
+
 
 
 %% Simple function to create a mission segment from the supplied parameters.
@@ -86,7 +88,7 @@ display(PLSeg) ->
     io:format("Location Time: ~p~n", [PLSeg#platform_loc_segment.location_time]),
     io:format("Plat. Pos. Latitude: ~p~n", [PLSeg#platform_loc_segment.lat]),
     io:format("Plat. Pos. Longitude: ~p~n", [PLSeg#platform_loc_segment.lon]),
-    io:format("Plat. Pos. Altitude: ~p~n", [PLSeg#platform_loc_segment.lat]),
+    io:format("Plat. Pos. Altitude: ~p~n", [PLSeg#platform_loc_segment.alt]),
     io:format("Plat. Track: ~p~n", [PLSeg#platform_loc_segment.platform_track]),
     io:format("Plat. Speed: ~p~n", [PLSeg#platform_loc_segment.platform_speed]),
     io:format("Plat. Vertical Velocity: ~p~n", [PLSeg#platform_loc_segment.platform_vertical_velocity]).
