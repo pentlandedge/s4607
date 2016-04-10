@@ -2,15 +2,15 @@
 %% Copyright 2016 Pentland Edge Ltd.
 %%
 %% Licensed under the Apache License, Version 2.0 (the "License"); you may not
-%% use this file except in compliance with the License. 
+%% use this file except in compliance with the License.
 %% You may obtain a copy of the License at
 %%
 %% http://www.apache.org/licenses/LICENSE-2.0
 %%
-%% Unless required by applicable law or agreed to in writing, software 
-%% distributed under the License is distributed on an "AS IS" BASIS, WITHOUT 
-%% WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
-%% License for the specific language governing permissions and limitations 
+%% Unless required by applicable law or agreed to in writing, software
+%% distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+%% WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+%% License for the specific language governing permissions and limitations
 %% under the License.
 %%
 
@@ -18,7 +18,7 @@
 
 -include_lib("eunit/include/eunit.hrl").
 
-%% Define a test generator for the decoding of the segment header. 
+%% Define a test generator for the decoding of the segment header.
 seg_header_test_() ->
     [header_check1(), header_check2(), new_checks(), encode_decode_checks(),
      seg_type_checks(), seg_type_encode_checks(), seg_size_checks()].
@@ -80,7 +80,7 @@ seg_type_checks() ->
      ?_assertEqual(test_and_status, seg_header:get_segment_type(SHTS)),
      ?_assertEqual(system_specific, seg_header:get_segment_type(SHSS)),
      ?_assertEqual(processing_history, seg_header:get_segment_type(SHPH)),
-     ?_assertEqual(platform_location, seg_header:get_segment_type(SHPL)),
+     ?_assertEqual(platform_loc, seg_header:get_segment_type(SHPL)),
      ?_assertEqual(reserved, seg_header:get_segment_type(SHR14)),
      ?_assertEqual(reserved, seg_header:get_segment_type(SHR100)),
      ?_assertEqual(job_request, seg_header:get_segment_type(SHJR)),
@@ -94,7 +94,7 @@ seg_type_encode_checks() ->
     % Use the same segment size for all tests.
     SegSize = 500,
 
-    % Define a function that takes a segment type and returns the first byte 
+    % Define a function that takes a segment type and returns the first byte
     % ofan encoded segment header (which will contain the type).
     F = fun(Type) ->
             SH = seg_header:new(Type, SegSize),
@@ -113,7 +113,7 @@ seg_type_encode_checks() ->
      ?_assertEqual(10, F(test_and_status)),
      ?_assertEqual(11, F(system_specific)),
      ?_assertEqual(12, F(processing_history)),
-     ?_assertEqual(13, F(platform_location)),
+     ?_assertEqual(13, F(platform_loc)),
      ?_assertEqual(101, F(job_request)),
      ?_assertEqual(102, F(job_acknowledge))].
 
