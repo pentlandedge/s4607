@@ -2,25 +2,25 @@
 %% Copyright 2016 Pentland Edge Ltd.
 %%
 %% Licensed under the Apache License, Version 2.0 (the "License"); you may not
-%% use this file except in compliance with the License. 
+%% use this file except in compliance with the License.
 %% You may obtain a copy of the License at
 %%
 %% http://www.apache.org/licenses/LICENSE-2.0
 %%
-%% Unless required by applicable law or agreed to in writing, software 
-%% distributed under the License is distributed on an "AS IS" BASIS, WITHOUT 
-%% WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
-%% License for the specific language governing permissions and limitations 
+%% Unless required by applicable law or agreed to in writing, software
+%% distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+%% WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+%% License for the specific language governing permissions and limitations
 %% under the License.
 %%
 -module(seg_header).
 
 -export([
-    decode/1, 
+    decode/1,
     encode/1,
     new/2,
     header_size/0,
-    display/1, 
+    display/1,
     decode_segment_type/1,
     get_segment_type/1,
     get_segment_size/1]).
@@ -30,7 +30,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Segment header decoding functions.
 
-%% Decode the segment header binary. 
+%% Decode the segment header binary.
 decode(<<S1, SegSize:32/integer-unsigned-big>>) ->
     SegType = decode_segment_type(S1),
     {ok, #seg_header{type = SegType, size = SegSize}}.
@@ -59,7 +59,7 @@ decode_segment_type(9) -> attached_target;
 decode_segment_type(10) -> test_and_status;
 decode_segment_type(11) -> system_specific;
 decode_segment_type(12) -> processing_history;
-decode_segment_type(13) -> platform_location;
+decode_segment_type(13) -> platform_loc;
 decode_segment_type(101) -> job_request;
 decode_segment_type(102) -> job_acknowledge;
 decode_segment_type(_) -> reserved.
@@ -81,7 +81,7 @@ encode_type(attached_target) -> 9;
 encode_type(test_and_status) -> 10;
 encode_type(system_specific) -> 11;
 encode_type(processing_history) -> 12;
-encode_type(platform_location) -> 13;
+encode_type(platform_loc) -> 13;
 encode_type(job_request) -> 101;
 encode_type(job_acknowledge) -> 102.
 
