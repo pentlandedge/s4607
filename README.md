@@ -1,13 +1,13 @@
 # s4607
-Stanag 4607 library written in Erlang. Stanag 4607 is a NATO standard for sharing radar information. Erlang is a wonderful programming language for developing distributed systems, providing a good platform on which to develop software to connect and control sensors of various kinds. 
+Stanag 4607 library written in Erlang. Stanag 4607 is a NATO standard for sharing radar information. Erlang is a wonderful programming language for developing distributed systems, providing a good platform on which to develop software to connect and control sensors of various kinds.
 
-This software is still under development, but can now decode and encode the packet header, dwell, mission, job definition and free text segments. Further improvements including better test coverage will follow in due course. Work on the platform location segment is now underway.
+This software is still under development, but can now decode and encode the packet header, dwell, mission, job definition, free text and platform location segments. Further improvements including better test coverage will follow in due course. Work on the platform location segment is now underway.
 
 The software has been released under an Apache free software license.
 ## Building
-It is necessary to have Erlang installed, and the compiler erlc available on the path. The rebar tool is used to control the build process, so it is also necessary to have a copy of rebar available on the path. The software can be built (on a Linux platform) using rebar: 
+It is necessary to have Erlang installed, and the compiler erlc available on the path. The rebar tool is used to control the build process, so it is also necessary to have a copy of rebar available on the path. The software can be built (on a Linux platform) using rebar:
 ```
-# rebar compile 
+# rebar compile
 ```
 ## Decoding a Stanag 4607 file
 From the root directory, the Erlang shell can be started as follows:
@@ -33,7 +33,7 @@ The script can then be run, and the results written to a file as follows:
 ```
 
 ## Running the regression tests
-The project uses Erlang's eunit test system, controlled from rebar. 
+The project uses Erlang's eunit test system, controlled from rebar.
 ```
 # rebar compile eunit
 ```
@@ -50,7 +50,7 @@ Then recompile the project and run the unit tests:
 ```
 Once this completes, the code coverage report should be available in at .eunit/index.html
 ## Encoding a segment inside a packet structure.
-As an example, consider creating a mission segment, encapsulating it inside a packet, then encoding into Stanag 4607 binary form. The first step is to create the mission segment payload. 
+As an example, consider creating a mission segment, encapsulating it inside a packet, then encoding into Stanag 4607 binary form. The first step is to create the mission segment payload.
 ```
 5> MS = mission:new("Drifter 1", "A1234", other, "Build 1", 2016, 2, 5).
 ```
@@ -63,7 +63,7 @@ The segment:new() function automatically creates the segment header from the seg
 To create a full Stanag 4607 packet, it is necessary to add a packet header. The header contains a number of fields. Most of these are constant over a job, but the size field may change with each new packet. For ease of use a packet generator function has been provided which returns a function that captures (using a closure) the list of constant header parameters. Each time this returned function is called, the size field is updated with the length of the new list of segments. For example, the variable PL below is a property list containing the header parameters to use, and the variable Gen is bound to a function taking a list of segments as parameters:
 ```
 7> PL = [{version, {3, 1}}, {nationality, "UK"},
-         {classification, unclassified}, {class_system, "UK"}, 
+         {classification, unclassified}, {class_system, "UK"},
          {packet_code, none}, {exercise_ind, exercise_real},
          {platform_id, "Plat1"}, {mission_id, 16#11223344},
          {job_id, 16#55667788}].
@@ -72,7 +72,7 @@ To create a full Stanag 4607 packet, it is necessary to add a packet header. The
 ```
 We can then pass in our list of segments (just one in this case) to create a complete packet structure:
 ```
-9> Packet = Gen([Seg]). 
+9> Packet = Gen([Seg]).
 ```
 The function Gen can be called repeatedly with new lists of segments, and the size field will be recalculated. To convert this packet structure to binary encoded form, do the following:
 ```
