@@ -38,7 +38,7 @@ decode(<<JobID:32,RI:16,DI:16,DT:32,HS:1,MS:1>>) ->
         hardware_status = decode_hardware_status(HS),
         mode_status = MS}}.
 
-%% Function to decode the hardware status
+%% Function to decode the hardware status and return a proplist.
 decode_hardware_status(<<Antenna:1,RF:1,Proc:1,Datalink:1,Cal:1,_:3>>) ->
     F = fun hardware_bit/1,
     {{antenna, F(Antenna)}, {rf_electronics, F(RF)}, {processor, F(Proc)},
