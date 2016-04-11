@@ -18,3 +18,22 @@
 
 -module(test_status).
 
+-export([decode/1]).
+
+-record(test_and_status, {
+    job_id,
+    revisit_index,
+    dwell_index,
+    dwell_time,
+    hardware_status,
+    mode_status}).
+
+%% Function to decode a test and status segment.
+decode(<<JobID:32,RI:16,DI:16,DT:32,HS:1,MS:1>>) ->
+    {ok, #test_and_status{
+        job_id = JobID,
+        revisit_index = RI,
+        dwell_index = DI,
+        dwell_time = DT,
+        hardware_status = HS,
+        mode_status = MS}}.
