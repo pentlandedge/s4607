@@ -238,17 +238,21 @@ decode(<<EM:5/binary, RI:16/integer-unsigned-big,
 decode_last_dwell_of_revisit(0) -> additional_dwells;
 decode_last_dwell_of_revisit(1) -> no_additional_dwells.
 
+decode_compression_flag(<<X>>) -> decode_compression_flag(X);
 decode_compression_flag(0) -> no_compression;
 decode_compression_flag(1) -> threshold_decomposition_x10.
 
+decode_range_weighting_type(<<X>>) -> decode_range_weighting_type(X);
 decode_range_weighting_type(0) -> no_statement;
 decode_range_weighting_type(1) -> taylor_weighting;
 decode_range_weighting_type(2) -> other.
 
+decode_doppler_weighting_type(<<X>>) -> decode_doppler_weighting_type(X);
 decode_doppler_weighting_type(0) -> no_statement;
 decode_doppler_weighting_type(1) -> taylor_weighting;
 decode_doppler_weighting_type(2) -> other.
 
+decode_type_of_hrr(<<X>>) -> decode_type_of_hrr(X);
 decode_type_of_hrr(0) -> other;
 decode_type_of_hrr(1) -> one_d_hrr_chip;
 decode_type_of_hrr(2) -> two_d_hrr_chip;
