@@ -20,7 +20,10 @@
 
 -export([
     decode/1,
-    get_job_id/1]).
+    get_job_id/1,
+    get_revisit_index/1,
+    get_dwell_index/1,
+    get_dwell_time/1]).
 
 -record(test_and_status, {
     job_id,
@@ -62,4 +65,7 @@ mode_status_bit(1) -> outwith_operational_limit.
 
 %% Accessor functions.
 get_job_id(#test_and_status{job_id = X}) -> X.
+get_revisit_index(#test_and_status{revisit_index = X}) -> X.
+get_dwell_index(#test_and_status{dwell_index = X}) -> X.
+get_dwell_time(#test_and_status{dwell_time = X}) -> X.
 

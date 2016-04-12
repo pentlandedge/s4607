@@ -25,7 +25,10 @@ test_status_test_() ->
 decoding_checks() ->
     Bin = sample_test_and_status_seg(),
     {ok, TSS} = test_status:decode(Bin),
-    [?_assertEqual(5, test_status:get_job_id(TSS))]. 
+    [?_assertEqual(5, test_status:get_job_id(TSS)),
+     ?_assertEqual(256, test_status:get_revisit_index(TSS)),
+     ?_assertEqual(261, test_status:get_dwell_index(TSS)),
+     ?_assertEqual(65536, test_status:get_dwell_time(TSS))].
 
 %% Sample test and status segment.
 %% Job ID: 5, revisit index: 256, dwell index: 133, dwell time: 1024,
