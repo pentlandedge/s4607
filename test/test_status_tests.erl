@@ -20,4 +20,15 @@
 
 %% Define a test generator for the test and status segment. 
 test_status_test_() ->
-    []. 
+    [decoding_checks()].
+
+decoding_checks() ->
+    Bin = sample_test_and_status_seg(),
+    {ok, TSS} = test_status:decode(Bin),
+    [?_assertEqual(5, test_status:get_job_id(TSS))]. 
+
+%% Sample test and status segment.
+%% Job ID: 5, revisit index: 256, dwell index: 133, dwell time: 1024,
+%% all hardware and mode flags set.
+sample_test_and_status_seg() ->
+    <<0,0,0,5, 1,0, 1,5, 0,1,0,0, 16#F8, 16#F0>>.

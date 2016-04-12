@@ -18,7 +18,9 @@
 
 -module(test_status).
 
--export([decode/1]).
+-export([
+    decode/1,
+    get_job_id/1]).
 
 -record(test_and_status, {
     job_id,
@@ -29,7 +31,7 @@
     mode_status}).
 
 %% Function to decode a test and status segment.
-decode(<<JobID:32,RI:16,DI:16,DT:32,HS:1,MS:1>>) ->
+decode(<<JobID:32,RI:16,DI:16,DT:32,HS:1/binary,MS:1/binary>>) ->
     {ok, #test_and_status{
         job_id = JobID,
         revisit_index = RI,
@@ -57,4 +59,7 @@ decode_mode_list(<<Range:1,Azimuth:1,Elev:1,Temp:1,_:4>>) ->
 %% Function to decode the bit meaning in the in the mode status byte.
 mode_status_bit(0) -> within_operational_limit;
 mode_status_bit(1) -> outwith_operational_limit.
+
+%% Accessor functions.
+get_job_id(#test_and_status{job_id = X}) -> X.
 
