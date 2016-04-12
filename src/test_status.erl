@@ -36,7 +36,7 @@ decode(<<JobID:32,RI:16,DI:16,DT:32,HS:1,MS:1>>) ->
         dwell_index = DI,
         dwell_time = DT,
         hardware_status = decode_hardware_status(HS),
-        mode_status = MS}}.
+        mode_status = decode_mode_list(MS)}}.
 
 %% Function to decode the hardware status and return a proplist.
 decode_hardware_status(<<Antenna:1,RF:1,Proc:1,Datalink:1,Cal:1,_:3>>) ->
@@ -47,4 +47,14 @@ decode_hardware_status(<<Antenna:1,RF:1,Proc:1,Datalink:1,Cal:1,_:3>>) ->
 %% Function to decode the bit meaning in the harware status byte.
 hardware_bit(0) -> pass;
 hardware_bit(1) -> fail.
+
+%% Function to decode the mode status bits and return a proplist.
+decode_mode_list(<<Range:1,Azimuth:1,Elev:1,Temp:1,_:4>>) ->
+    F = fun mode_status_bit/1,
+    [{range_limit, F(Range)}, {azimuth_limit, F(Azimuth)}, 
+     {elevation_limit, F(Elev)}, {temperature_limit, F(Temp)}].
+
+%% Function to decode the bit meaning in the in the mode status byte.
+mode_status_bit(0) -> within_operational_limit;
+mode_status_bit(1) -> outwith_operational_limit.
 
