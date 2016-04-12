@@ -18,6 +18,8 @@
 
 -include_lib("eunit/include/eunit.hrl").
 
+-export([sample_test_and_status_seg/0]).
+
 %% Define a test generator for the test and status segment. 
 test_status_test_() ->
     [decoding_checks()].
