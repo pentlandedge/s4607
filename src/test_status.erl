@@ -23,7 +23,12 @@
     get_job_id/1,
     get_revisit_index/1,
     get_dwell_index/1,
-    get_dwell_time/1]).
+    get_dwell_time/1,
+    get_antenna_status/1,
+    get_rf_electronics_status/1,
+    get_processor_status/1,
+    get_datalink_status/1,
+    get_calibration_mode_status/1]).
 
 -record(test_and_status, {
     job_id,
@@ -46,8 +51,8 @@ decode(<<JobID:32,RI:16,DI:16,DT:32,HS:1/binary,MS:1/binary>>) ->
 %% Function to decode the hardware status and return a proplist.
 decode_hardware_status(<<Antenna:1,RF:1,Proc:1,Datalink:1,Cal:1,_:3>>) ->
     F = fun hardware_bit/1,
-    {{antenna, F(Antenna)}, {rf_electronics, F(RF)}, {processor, F(Proc)},
-     {datalink, F(Datalink)}, {calibration_mode, F(Cal)}}. 
+    [{antenna, F(Antenna)}, {rf_electronics, F(RF)}, {processor, F(Proc)},
+     {datalink, F(Datalink)}, {calibration_mode, F(Cal)}]. 
 
 %% Function to decode the bit meaning in the harware status byte.
 hardware_bit(0) -> pass;
@@ -68,4 +73,24 @@ get_job_id(#test_and_status{job_id = X}) -> X.
 get_revisit_index(#test_and_status{revisit_index = X}) -> X.
 get_dwell_index(#test_and_status{dwell_index = X}) -> X.
 get_dwell_time(#test_and_status{dwell_time = X}) -> X.
+
+get_antenna_status(#test_and_status{hardware_status = HS}) -> 
+    {antenna, Val} = proplists:lookup(antenna, HS),
+    Val.
+
+get_rf_electronics_status(#test_and_status{hardware_status = HS}) -> 
+    {rf_electronics, Val} = proplists:lookup(rf_electronics, HS),
+    Val.
+
+get_processor_status(#test_and_status{hardware_status = HS}) -> 
+    {processor, Val} = proplists:lookup(processor, HS),
+    Val.
+
+get_datalink_status(#test_and_status{hardware_status = HS}) -> 
+    {datalink, Val} = proplists:lookup(datalink, HS),
+    Val.
+
+get_calibration_mode_status(#test_and_status{hardware_status = HS}) -> 
+    {calibration_mode, Val} = proplists:lookup(calibration_mode, HS),
+    Val.
 
