@@ -35,7 +35,11 @@ decoding_checks() ->
      ?_assertEqual(fail, test_status:get_rf_electronics_status(TSS)),
      ?_assertEqual(fail, test_status:get_processor_status(TSS)),
      ?_assertEqual(fail, test_status:get_datalink_status(TSS)),
-     ?_assertEqual(fail, test_status:get_calibration_mode_status(TSS))].
+     ?_assertEqual(fail, test_status:get_calibration_mode_status(TSS)),
+     ?_assertEqual(outwith_operational_limit, test_status:get_range_limit_status(TSS)),
+     ?_assertEqual(outwith_operational_limit, test_status:get_azimuth_limit_status(TSS)),
+     ?_assertEqual(outwith_operational_limit, test_status:get_elevation_limit_status(TSS)),
+     ?_assertEqual(outwith_operational_limit, test_status:get_temperature_limit_status(TSS))].
 
 %% Sample test and status segment.
 %% Job ID: 5, revisit index: 256, dwell index: 133, dwell time: 1024,
