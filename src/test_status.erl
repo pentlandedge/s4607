@@ -81,39 +81,37 @@ get_dwell_time(#test_and_status{dwell_time = X}) -> X.
 %% Functions to extract the hardware status flags.
 
 get_antenna_status(#test_and_status{hardware_status = HS}) -> 
-    get_hardware_status_flag(antenna, HS).
+    get_status_flag_from_proplist(antenna, HS).
 
 get_rf_electronics_status(#test_and_status{hardware_status = HS}) -> 
-    get_hardware_status_flag(rf_electronics, HS).
+    get_status_flag_from_proplist(rf_electronics, HS).
 
 get_processor_status(#test_and_status{hardware_status = HS}) -> 
-    get_hardware_status_flag(processor, HS).
+    get_status_flag_from_proplist(processor, HS).
 
 get_datalink_status(#test_and_status{hardware_status = HS}) -> 
-    get_hardware_status_flag(datalink, HS).
+    get_status_flag_from_proplist(datalink, HS).
 
 get_calibration_mode_status(#test_and_status{hardware_status = HS}) -> 
-    get_hardware_status_flag(calibration_mode, HS).
-
-get_hardware_status_flag(Flag, HS) when is_list(HS) -> 
-    {Flag, Val} = proplists:lookup(Flag, HS),
-    Val.
+    get_status_flag_from_proplist(calibration_mode, HS).
 
 %% Functions to extract the mode status flags.
 
 get_range_limit_status(#test_and_status{mode_status = MS}) -> 
-    get_mode_status_flag(range_limit, MS).
+    get_status_flag_from_proplist(range_limit, MS).
 
 get_azimuth_limit_status(#test_and_status{mode_status = MS}) -> 
-    get_mode_status_flag(azimuth_limit, MS).
+    get_status_flag_from_proplist(azimuth_limit, MS).
 
 get_elevation_limit_status(#test_and_status{mode_status = MS}) -> 
-    get_mode_status_flag(elevation_limit, MS).
+    get_status_flag_from_proplist(elevation_limit, MS).
 
 get_temperature_limit_status(#test_and_status{mode_status = MS}) -> 
-    get_mode_status_flag(temperature_limit, MS).
+    get_status_flag_from_proplist(temperature_limit, MS).
 
-get_mode_status_flag(Flag, ModeStatus) when is_list(ModeStatus) ->  
-    {Flag, Val} = proplists:lookup(Flag, ModeStatus),
+%% Funcition to extract a status flag from the proplist. The key supplied
+%% must exist in the list.
+get_status_flag_from_proplist(Key, PropList) when is_list(PropList) ->  
+    {Key, Val} = proplists:lookup(Key, PropList),
     Val.
 
