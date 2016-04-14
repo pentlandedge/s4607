@@ -75,22 +75,20 @@ get_dwell_index(#test_and_status{dwell_index = X}) -> X.
 get_dwell_time(#test_and_status{dwell_time = X}) -> X.
 
 get_antenna_status(#test_and_status{hardware_status = HS}) -> 
-    {antenna, Val} = proplists:lookup(antenna, HS),
-    Val.
+    get_hardware_status_flag(antenna, HS).
 
 get_rf_electronics_status(#test_and_status{hardware_status = HS}) -> 
-    {rf_electronics, Val} = proplists:lookup(rf_electronics, HS),
-    Val.
+    get_hardware_status_flag(rf_electronics, HS).
 
 get_processor_status(#test_and_status{hardware_status = HS}) -> 
-    {processor, Val} = proplists:lookup(processor, HS),
-    Val.
+    get_hardware_status_flag(processor, HS).
 
 get_datalink_status(#test_and_status{hardware_status = HS}) -> 
-    {datalink, Val} = proplists:lookup(datalink, HS),
-    Val.
+    get_hardware_status_flag(datalink, HS).
 
 get_calibration_mode_status(#test_and_status{hardware_status = HS}) -> 
-    {calibration_mode, Val} = proplists:lookup(calibration_mode, HS),
-    Val.
+    get_hardware_status_flag(calibration_mode, HS).
 
+get_hardware_status_flag(Flag, HS) -> 
+    {Flag, Val} = proplists:lookup(Flag, HS),
+    Val.
