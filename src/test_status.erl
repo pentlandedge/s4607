@@ -28,8 +28,12 @@
     get_rf_electronics_status/1,
     get_processor_status/1,
     get_datalink_status/1,
-    get_calibration_mode_status/1]).
-
+    get_calibration_mode_status/1,
+    get_range_limit_status/1,
+    get_azimuth_limit_status/1,
+    get_elevation_limit_status/1,
+    get_temperature_limit_status/1]).
+ 
 -record(test_and_status, {
     job_id,
     revisit_index,
@@ -74,6 +78,8 @@ get_revisit_index(#test_and_status{revisit_index = X}) -> X.
 get_dwell_index(#test_and_status{dwell_index = X}) -> X.
 get_dwell_time(#test_and_status{dwell_time = X}) -> X.
 
+%% Functions to extract the hardware status flags.
+
 get_antenna_status(#test_and_status{hardware_status = HS}) -> 
     get_hardware_status_flag(antenna, HS).
 
@@ -89,6 +95,25 @@ get_datalink_status(#test_and_status{hardware_status = HS}) ->
 get_calibration_mode_status(#test_and_status{hardware_status = HS}) -> 
     get_hardware_status_flag(calibration_mode, HS).
 
-get_hardware_status_flag(Flag, HS) -> 
+get_hardware_status_flag(Flag, HS) when is_list(HS) -> 
     {Flag, Val} = proplists:lookup(Flag, HS),
     Val.
+
+%% Functions to extract the mode status flags.
+
+get_range_limit_status(#test_and_status{mode_status = MS}) -> 
+    get_mode_status_flag(range_limit, MS).
+
+get_azimuth_limit_status(#test_and_status{mode_status = MS}) -> 
+    get_mode_status_flag(azimuth_limit, MS).
+
+get_elevation_limit_status(#test_and_status{mode_status = MS}) -> 
+    get_mode_status_flag(elevation_limit, MS).
+
+get_temperature_limit_status(#test_and_status{mode_status = MS}) -> 
+    get_mode_status_flag(temperature_limit, MS).
+
+get_mode_status_flag(Flag, ModeStatus) when is_list(ModeStatus) ->  
+    {Flag, Val} = proplists:lookup(Flag, ModeStatus),
+    Val.
+
