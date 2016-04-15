@@ -63,7 +63,7 @@ decode(<<EM:5/binary, RI:16/integer-unsigned-big,
     <<16#7:3,
     H5:1,H6:1,H7:1,1:1,H9:1,16#1F:5,H15:1,16#F:4,
     H20:1,H21:1,H22:1,16#F:4,H27:1,H28:1,H29:1,H30:1,
-    H31:1,1:1,H32_2:1,H32_3:1,H32_4:1,
+    H31:1,1:1,_H32_2:1,_H32_3:1,_H32_4:1,
     _Spare:6>> = EM,
 
     {MtiReportIndex, Bin1} = sutils:conditional_extract(
@@ -283,17 +283,21 @@ new(Fields) ->
 decode_last_dwell_of_revisit(0) -> additional_dwells;
 decode_last_dwell_of_revisit(1) -> no_additional_dwells.
 
+decode_compression_flag(<<X>>) -> decode_compression_flag(X);
 decode_compression_flag(0) -> no_compression;
 decode_compression_flag(1) -> threshold_decomposition_x10.
 
+decode_range_weighting_type(<<X>>) -> decode_range_weighting_type(X);
 decode_range_weighting_type(0) -> no_statement;
 decode_range_weighting_type(1) -> taylor_weighting;
 decode_range_weighting_type(2) -> other.
 
+decode_doppler_weighting_type(<<X>>) -> decode_doppler_weighting_type(X);
 decode_doppler_weighting_type(0) -> no_statement;
 decode_doppler_weighting_type(1) -> taylor_weighting;
 decode_doppler_weighting_type(2) -> other.
 
+decode_type_of_hrr(<<X>>) -> decode_type_of_hrr(X);
 decode_type_of_hrr(0) -> other;
 decode_type_of_hrr(1) -> one_d_hrr_chip;
 decode_type_of_hrr(2) -> two_d_hrr_chip;
