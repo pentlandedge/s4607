@@ -235,6 +235,51 @@ decode(<<EM:5/binary, RI:16/integer-unsigned-big,
         electrical_length_uncertainty = ElectricalLengthUncertainty,
         hrr_scatter_records = HrrScatterRecords}}.
 
+%% Function to create a new HRR segment structure from the specified fields.
+new(Fields) ->
+    % Local function to pull the parameter from the list or supply a default
+    % value.
+    F = fun(P, L, Default) ->
+            case lists:keyfind(P, 1, L) of
+                {P, V} -> V;
+                false  -> Default
+            end
+        end,
+
+    #hrr_segment{
+        existence_mask = F(existence_mask, Fields, 0),
+        revisit_index = F(revisit_index, Fields, 0),
+        dwell_index = F(dwell_index, Fields, 0),
+        last_dwell_of_revisit = F(last_dwell_of_revisit, Fields, 0),
+        mti_report_index = F(mti_report_index, Fields, 0),
+        num_of_target_scatterers = F(num_of_target_scatterers, Fields, 0),
+        num_of_range_samples = F(num_of_range_samples, Fields, 0),
+        num_of_doppler_samples = F(num_of_doppler_samples, Fields, 0),
+        mean_clutter_power = F(mean_clutter_power, Fields, 0),
+        detection_threshold = F(detection_threshold, Fields, 0),
+        range_resolution = F(range_resolution, Fields, 0),
+        range_bin_spacing = F(range_bin_spacing, Fields, 0),
+        doppler_resolution = F(doppler_resolution, Fields, 0),
+        doppler_bin_spacing = F(doppler_bin_spacing, Fields, 0),
+        center_frequency = F(center_frequency, Fields, 0),
+        compression_flag = F(compression_flag, Fields, 0),
+        range_weighting_type = F(range_weighting_type, Fields, 0),
+        doppler_weighting_type = F(doppler_weighting_type, Fields, 0),
+        maximum_pixel_power = F(maximum_pixel_power, Fields, 0),
+        maximum_rcs = F(maximum_rcs, Fields, 0),
+        range_of_origin = F(range_of_origin, Fields, 0),
+        doppler_of_origin = F(doppler_of_origin, Fields, 0),
+        type_of_hrr = F(type_of_hrr, Fields, 0),
+        processing_mask = F(processing_mask, Fields, 0),
+        num_bytes_magnitude = F(num_bytes_magnitude, Fields, 0),
+        num_bytes_phase = F(num_bytes_phase, Fields, 0),
+        range_extent_pixels = F(range_extent_pixels, Fields, 0),
+        range_to_nearest_edge = F(range_to_nearest_edge, Fields, 0),
+        index_of_zero_velocity = F(index_of_zero_velocity, Fields, 0),
+        target_radial_electrical_length = F(target_radial_electrical_length, Fields, 0),
+        electrical_length_uncertainty = F(electrical_length_uncertainty, Fields, 0),
+        hrr_scatter_records = F(hrr_scatter_records, Fields, [])}.
+
 decode_last_dwell_of_revisit(0) -> additional_dwells;
 decode_last_dwell_of_revisit(1) -> no_additional_dwells.
 
