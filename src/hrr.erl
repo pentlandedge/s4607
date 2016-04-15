@@ -16,7 +16,8 @@
 -module(hrr).
 
 -export([
-    decode/1]).
+    decode/1,
+    new/1]).
 
 -record(hrr_segment, {
     existence_mask,
