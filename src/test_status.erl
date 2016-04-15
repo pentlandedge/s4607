@@ -20,6 +20,7 @@
 
 -export([
     decode/1,
+    encode/1,
     get_job_id/1,
     get_revisit_index/1,
     get_dwell_index/1,
@@ -51,6 +52,11 @@ decode(<<JobID:32,RI:16,DI:16,DT:32,HS:1/binary,MS:1/binary>>) ->
         dwell_time = DT,
         hardware_status = decode_hardware_status(HS),
         mode_status = decode_mode_list(MS)}}.
+
+%% Function to encode a test and status segment
+encode(#test_and_status{job_id = JobID, revisit_index = RI, dwell_index = DI,
+    dwell_time = DT}) -> 
+    <<JobID:32,RI:16,DI:16,DT:32,0,0>>.
 
 %% Function to decode the hardware status and return a proplist.
 decode_hardware_status(<<Antenna:1,RF:1,Proc:1,Datalink:1,Cal:1,_:3>>) ->
