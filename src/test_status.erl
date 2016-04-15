@@ -59,6 +59,7 @@ encode(#test_and_status{job_id = JobID, revisit_index = RI, dwell_index = DI,
     dwell_time = DT}) -> 
     <<JobID:32,RI:16,DI:16,DT:32,0,0>>.
 
+%% Function to build a new test and status record.
 new(JobID, RevisitIndex, DwellIndex, DwellTime, HardwareFaults, 
     ModeStatusFaults) 
     when is_integer(JobID), JobID >= 0,
@@ -67,8 +68,7 @@ new(JobID, RevisitIndex, DwellIndex, DwellTime, HardwareFaults,
         is_integer(DwellTime), DwellTime >= 1,
         is_list(HardwareFaults), is_list(ModeStatusFaults) ->
 
-    HS = [{antenna, pass}, {rf_electronics, pass}, {processor, pass},
-          {datalink, pass}, {calibration_mode, pass}],
+    HS = hardware_proplist(HardwareFaults),
 
     MS = [{range_limit, within_operational_limit}, 
           {azimuth_limit, within_operational_limit}, 
@@ -89,6 +89,20 @@ decode_hardware_status(<<Antenna:1,RF:1,Proc:1,Datalink:1,Cal:1,_:3>>) ->
 %% Function to decode the bit meaning in the harware status byte.
 hardware_bit(0) -> pass;
 hardware_bit(1) -> fail.
+
+%% Function to create a proplist for the hardware status flags from the list
+%% of supplied faults.
+hardware_proplist(Faults) when is_list(Faults) ->
+    FlagSet = [antenna, rf_electronics, processor, datalink, calibration_mode],
+    F = fun(Flag, Acc) ->
+            case lists:member(Flag, Faults) of
+                true -> 
+                    [{Flag, fail}|Acc];
+                false -> 
+                    [{Flag, pass}|Acc]
+            end
+        end,
+    lists:foldl(F, [], FlagSet).
 
 %% Function to decode the mode status bits and return a proplist.
 decode_mode_list(<<Range:1,Azimuth:1,Elev:1,Temp:1,_:4>>) ->
