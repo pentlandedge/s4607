@@ -22,7 +22,7 @@
 
 %% Define a test generator for the test and status segment. 
 test_status_test_() ->
-    [decoding_checks1(), decoding_checks2()].
+    [decoding_checks1(), decoding_checks2(), encoding_checks()].
 
 decoding_checks1() ->
     Bin = sample_test_and_status_seg(),
@@ -54,6 +54,8 @@ decoding_checks2() ->
      ?_assertEqual(within_operational_limit, test_status:get_elevation_limit_status(TSS)),
      ?_assertEqual(outwith_operational_limit, test_status:get_temperature_limit_status(TSS))].
 
+encoding_checks() ->
+    [].
 
 %% Sample test and status segment.
 %% Job ID: 5, revisit index: 256, dwell index: 133, dwell time: 1024,

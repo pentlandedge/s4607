@@ -21,6 +21,7 @@
 -export([
     decode/1,
     encode/1,
+    new/6,
     get_job_id/1,
     get_revisit_index/1,
     get_dwell_index/1,
@@ -57,6 +58,27 @@ decode(<<JobID:32,RI:16,DI:16,DT:32,HS:1/binary,MS:1/binary>>) ->
 encode(#test_and_status{job_id = JobID, revisit_index = RI, dwell_index = DI,
     dwell_time = DT}) -> 
     <<JobID:32,RI:16,DI:16,DT:32,0,0>>.
+
+new(JobID, RevisitIndex, DwellIndex, DwellTime, HardwareFaults, 
+    ModeStatusFaults) 
+    when is_integer(JobID), JobID >= 0,
+        is_integer(RevisitIndex), RevisitIndex >= 1, 
+        is_integer(DwellIndex), DwellIndex >= 1,
+        is_integer(DwellTime), DwellTime >= 1,
+        is_list(HardwareFaults), is_list(ModeStatusFaults) ->
+
+    HS = [{antenna, pass}, {rf_electronics, pass}, {processor, pass},
+          {datalink, pass}, {calibration_mode, pass}],
+
+    MS = [{range_limit, within_operational_limit}, 
+          {azimuth_limit, within_operational_limit}, 
+          {elevation_limit, within_operational_limit}, 
+          {temperature_limit, within_operational_limit}],
+
+    #test_and_status{job_id = JobID, revisit_index = RevisitIndex, 
+        dwell_index = DwellIndex, dwell_time = DwellTime,
+        hardware_status = HS,
+        mode_status = MS}.
 
 %% Function to decode the hardware status and return a proplist.
 decode_hardware_status(<<Antenna:1,RF:1,Proc:1,Datalink:1,Cal:1,_:3>>) ->
