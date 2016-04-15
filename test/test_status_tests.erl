@@ -55,7 +55,11 @@ decoding_checks2() ->
      ?_assertEqual(outwith_operational_limit, test_status:get_temperature_limit_status(TSS))].
 
 encoding_checks() ->
-    [].
+    % Create a sample segment record and encode it.
+    TS = test_status:new(4000000, 65000, 40000, 100000, [], []),
+    ETS = test_status:encode(TS),
+    Bin = <<4000000:32,65000:16,40000:16,100000:32,0,0>>,
+    [?_assertEqual(Bin, ETS)].
 
 %% Sample test and status segment.
 %% Job ID: 5, revisit index: 256, dwell index: 133, dwell time: 1024,
