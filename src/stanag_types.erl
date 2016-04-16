@@ -46,27 +46,42 @@
     sa32_to_float/1,
     float_to_sa32/1]).
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Type specifications.
+
+-type i8()  :: 0..255.
+-type i16() :: 0..65535.
+-type i32() :: 0..4294967296.
+
+-export_type([i8/0, i16/0, i32/0]).
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Unsigned integer type conversion functions. 
 
-%% Function to convert unsigned I8 binary to an integer.
+%% @doc Function to convert unsigned I8 binary to an integer.
+-spec i8_to_integer(binary()) -> i8().
 i8_to_integer(<<X>>) -> X.
 
-%% Function to convert an unsigned integer to fixed width I8 binary.
+%% @doc Function to convert an unsigned integer to fixed width I8 binary.
+-spec integer_to_i8(i8()) -> binary().
 integer_to_i8(I) when I >= 0, I =< 255 ->
     <<I:8/integer-unsigned-big>>.
 
-%% Function to convert unsigned I16 binary to an integer.
+%% @doc Function to convert unsigned I16 binary to an integer.
+-spec i16_to_integer(binary()) -> i16().
 i16_to_integer(<<X:16/integer-unsigned-big>>) -> X.
 
-%% Function to convert an unsigned integer to fixed width I16 binary.
+%% @doc Function to convert an unsigned integer to fixed width I16 binary.
+-spec integer_to_i16(i16()) -> binary().
 integer_to_i16(I) when I >= 0, I =< 65535 ->
     <<I:16/integer-unsigned-big>>.
 
-%% Function to convert unsigned I32 binary to an integer.
+%% @doc Function to convert unsigned I32 binary to an integer.
+-spec i32_to_integer(binary()) -> i32().
 i32_to_integer(<<X:32/integer-unsigned-big>>) -> X.
 
-%% Function to convert an unsigned integer to fixed width I32 binary.
+%% @doc Function to convert an unsigned integer to fixed width I32 binary.
+-spec integer_to_i32(i32()) -> binary().
 integer_to_i32(I) when I >= 0, I =< 4294967296 ->
     <<I:32/integer-unsigned-big>>.
 
