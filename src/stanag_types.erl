@@ -88,23 +88,31 @@ integer_to_i32(I) when I >= 0, I =< 4294967296 ->
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Signed integer type conversion functions. 
 
+%% @doc Function to convert a signed S8 binary to an integer.
 s8_to_integer(<<X:8/integer-signed-big>>) -> X.
 
+%% @doc Function to convert a signed integer to fixed width S8 binary.
 integer_to_s8(I) when I >= -128, I =< 127 ->
     <<I:8/integer-signed-big>>.
 
+%% @doc Function to convert a signed S16 binary to an integer.
 s16_to_integer(<<X:16/integer-signed-big>>) -> X.
 
+%% @doc Function to convert a signed integer to fixed width S16 binary.
 integer_to_s16(I) when I >= -32768, I =< 32767 ->
     <<I:16/integer-signed-big>>.
 
+%% @doc Function to convert a signed S32 binary to an integer.
 s32_to_integer(<<X:32/integer-signed-big>>) -> X.
 
+%% @doc Function to convert a signed integer to fixed width S32 binary.
 integer_to_s32(I) when I >= -2147483648, I =< 2147483647 ->
     <<I:32/integer-signed-big>>.
 
+%% @doc Function to convert a signed S64 binary to an integer.
 s64_to_integer(<<X:64/integer-signed-big>>) -> X.
 
+%% @doc Function to convert a signed integer to fixed width S64 binary.
 integer_to_s64(I) when I >= -9223372036854775808, I =< 9223372036854775807 ->
     <<I:64/integer-signed-big>>.
 
