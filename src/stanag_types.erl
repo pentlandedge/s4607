@@ -60,10 +60,18 @@
 -export_type([i8/0, i16/0, i32/0]).
 -export_type([i8_int/0, i16_int/0, i32_int/0]).
 
--type s8()  :: -128..127.
--type s16() :: -32768..32767.
--type s32() :: -2147483648..2147483647.
--type s64() :: -9223372036854775808..9223372036854775807.
+-type s8()  :: <<_:8>>.
+-type s16() :: <<_:16>>.
+-type s32() :: <<_:32>>.
+-type s64() :: <<_:64>>.
+
+-type s8_int()  :: -128..127.
+-type s16_int() :: -32768..32767.
+-type s32_int() :: -2147483648..2147483647.
+-type s64_int() :: -9223372036854775808..9223372036854775807.
+
+-export_type([s8/0, s16/0, s32/0, s64/0]).
+-export_type([s8_int/0, s16_int/0, s32_int/0, s64_int/0]).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Unsigned integer type conversion functions. 
@@ -99,38 +107,38 @@ integer_to_i32(I) when I >= 0, I =< 4294967296 ->
 %% Signed integer type conversion functions. 
 
 %% @doc Function to convert a signed S8 binary to an integer.
--spec s8_to_integer(binary()) -> s8().
+-spec s8_to_integer(s8()) -> s8_int().
 s8_to_integer(<<X:8/integer-signed-big>>) -> X.
 
 %% @doc Function to convert a signed integer to fixed width S8 binary.
--spec integer_to_s8(s8()) -> binary().
+-spec integer_to_s8(s8_int()) -> s8().
 integer_to_s8(I) when I >= -128, I =< 127 ->
     <<I:8/integer-signed-big>>.
 
 %% @doc Function to convert a signed S16 binary to an integer.
--spec s16_to_integer(binary()) -> s16().
+-spec s16_to_integer(s16()) -> s16_int().
 s16_to_integer(<<X:16/integer-signed-big>>) -> X.
 
 %% @doc Function to convert a signed integer to fixed width S16 binary.
--spec integer_to_s16(s16()) -> binary().
+-spec integer_to_s16(s16_int()) -> s16().
 integer_to_s16(I) when I >= -32768, I =< 32767 ->
     <<I:16/integer-signed-big>>.
 
 %% @doc Function to convert a signed S32 binary to an integer.
--spec s32_to_integer(binary()) -> s32().
+-spec s32_to_integer(s32()) -> s32_int().
 s32_to_integer(<<X:32/integer-signed-big>>) -> X.
 
 %% @doc Function to convert a signed integer to fixed width S32 binary.
--spec integer_to_s32(s32()) -> binary().
+-spec integer_to_s32(s32_int()) -> s32().
 integer_to_s32(I) when I >= -2147483648, I =< 2147483647 ->
     <<I:32/integer-signed-big>>.
 
 %% @doc Function to convert a signed S64 binary to an integer.
--spec s64_to_integer(binary()) -> s64().
+-spec s64_to_integer(s64()) -> s64_int().
 s64_to_integer(<<X:64/integer-signed-big>>) -> X.
 
 %% @doc Function to convert a signed integer to fixed width S64 binary.
--spec integer_to_s64(s64()) -> binary().
+-spec integer_to_s64(s64_int()) -> s64().
 integer_to_s64(I) when I >= -9223372036854775808, I =< 9223372036854775807 ->
     <<I:64/integer-signed-big>>.
 
