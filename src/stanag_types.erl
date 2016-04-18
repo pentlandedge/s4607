@@ -75,8 +75,9 @@
 
 -type b16() :: <<_:16>>.
 -type b32() :: <<_:32>>.
+-type h32() :: <<_:32>>.
 
--export_type([b16/0, b32/0]).
+-export_type([b16/0, b32/0, h32/0]).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Unsigned integer type conversion functions. 
@@ -186,6 +187,8 @@ float_to_b32(X) ->
     Scaled = round(abs(X) * 8388608),
     <<1:1,Scaled:31/integer-unsigned-big>>.
 
+%% @doc Convert a high range 32-bit signed binary decimal to a float.
+-spec h32_to_float(h32()) -> float().
 h32_to_float(<<S:1,I:15/integer-unsigned,F:16/integer-unsigned>>) ->
     Val = I + F / 65536.0,
     case S of 
@@ -193,13 +196,14 @@ h32_to_float(<<S:1,I:15/integer-unsigned,F:16/integer-unsigned>>) ->
         0 -> Val
     end.
 
+%% @doc Convert a float to a high range 32-bit signed binary decimal.
+-spec float_to_h32(float()) -> h32().
 float_to_h32(X) when X >= 0 ->
     Scaled = round(X * 65536),
     <<Scaled:32/integer-unsigned-big>>;
 float_to_h32(X) ->
     Scaled = round(abs(X) * 65536),
     <<1:1,Scaled:31/integer-unsigned-big>>.
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Binary angle conversion functions.
