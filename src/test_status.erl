@@ -20,6 +20,8 @@
 
 -export([
     decode/1,
+    encode/1,
+    new/6,
     get_job_id/1,
     get_revisit_index/1,
     get_dwell_index/1,
@@ -52,6 +54,32 @@ decode(<<JobID:32,RI:16,DI:16,DT:32,HS:1/binary,MS:1/binary>>) ->
         hardware_status = decode_hardware_status(HS),
         mode_status = decode_mode_list(MS)}}.
 
+%% Function to encode a test and status segment
+encode(#test_and_status{job_id = JobID, revisit_index = RI, dwell_index = DI,
+    dwell_time = DT}) -> 
+    <<JobID:32,RI:16,DI:16,DT:32,0,0>>.
+
+%% Function to build a new test and status record.
+new(JobID, RevisitIndex, DwellIndex, DwellTime, HardwareFaults, 
+    ModeStatusFaults) 
+    when is_integer(JobID), JobID >= 0,
+        is_integer(RevisitIndex), RevisitIndex >= 1, 
+        is_integer(DwellIndex), DwellIndex >= 1,
+        is_integer(DwellTime), DwellTime >= 1,
+        is_list(HardwareFaults), is_list(ModeStatusFaults) ->
+
+    HS = hardware_proplist(HardwareFaults),
+
+    MS = [{range_limit, within_operational_limit}, 
+          {azimuth_limit, within_operational_limit}, 
+          {elevation_limit, within_operational_limit}, 
+          {temperature_limit, within_operational_limit}],
+
+    #test_and_status{job_id = JobID, revisit_index = RevisitIndex, 
+        dwell_index = DwellIndex, dwell_time = DwellTime,
+        hardware_status = HS,
+        mode_status = MS}.
+
 %% Function to decode the hardware status and return a proplist.
 decode_hardware_status(<<Antenna:1,RF:1,Proc:1,Datalink:1,Cal:1,_:3>>) ->
     F = fun hardware_bit/1,
@@ -61,6 +89,20 @@ decode_hardware_status(<<Antenna:1,RF:1,Proc:1,Datalink:1,Cal:1,_:3>>) ->
 %% Function to decode the bit meaning in the harware status byte.
 hardware_bit(0) -> pass;
 hardware_bit(1) -> fail.
+
+%% Function to create a proplist for the hardware status flags from the list
+%% of supplied faults.
+hardware_proplist(Faults) when is_list(Faults) ->
+    FlagSet = [antenna, rf_electronics, processor, datalink, calibration_mode],
+    F = fun(Flag, Acc) ->
+            case lists:member(Flag, Faults) of
+                true -> 
+                    [{Flag, fail}|Acc];
+                false -> 
+                    [{Flag, pass}|Acc]
+            end
+        end,
+    lists:foldl(F, [], FlagSet).
 
 %% Function to decode the mode status bits and return a proplist.
 decode_mode_list(<<Range:1,Azimuth:1,Elev:1,Temp:1,_:4>>) ->
