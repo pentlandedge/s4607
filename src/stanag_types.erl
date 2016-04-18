@@ -73,6 +73,11 @@
 -export_type([s8/0, s16/0, s32/0, s64/0]).
 -export_type([s8_int/0, s16_int/0, s32_int/0, s64_int/0]).
 
+-type b16() :: <<_:16>>.
+-type b32() :: <<_:32>>.
+
+-export_type([b16/0, b32/0]).
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Unsigned integer type conversion functions. 
 
@@ -145,6 +150,8 @@ integer_to_s64(I) when I >= -9223372036854775808, I =< 9223372036854775807 ->
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Signed binary decimal conversion functions.
 
+%% @doc Convert a 16-bit signed binary decimal to a float.
+-spec b16_to_float(b16()) -> float().
 b16_to_float(<<S:1,I:8/integer-unsigned,F:7/integer-unsigned>>) ->
     Val = I + F / 128.0,
     case S of 
@@ -152,6 +159,8 @@ b16_to_float(<<S:1,I:8/integer-unsigned,F:7/integer-unsigned>>) ->
         0 -> Val
     end.
 
+%% @doc Convert a float to a 16-bit signed binary decimal.
+-spec float_to_b16(float()) -> b16().
 float_to_b16(X) when X >= 0 ->
     Scaled = round(X * 128),
     <<Scaled:16/integer-unsigned-big>>;
@@ -159,6 +168,8 @@ float_to_b16(X) ->
     Scaled = round(abs(X) * 128),
     <<1:1,Scaled:15/integer-unsigned-big>>.
 
+%% @doc Convert a 32-bit signed binary decimal to a float.
+-spec b32_to_float(b32()) -> float().
 b32_to_float(<<S:1,I:8/integer-unsigned,F:23/integer-unsigned>>) ->
     Val = I + F / 8388608.0,
     case S of 
@@ -166,6 +177,8 @@ b32_to_float(<<S:1,I:8/integer-unsigned,F:23/integer-unsigned>>) ->
         0 -> Val
     end.
 
+%% @doc Convert a float to a 32-bit signed binary decimal.
+-spec float_to_b32(float()) -> b32().
 float_to_b32(X) when X >= 0 ->
     Scaled = round(X * 8388608),
     <<Scaled:32/integer-unsigned-big>>;
