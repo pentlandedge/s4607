@@ -208,16 +208,20 @@ float_to_h32(X) ->
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Binary angle conversion functions.
 
+%% @doc Convert a 16-bit binary angle to a float.
 ba16_to_float(<<X:16/integer-unsigned-big>>) ->
     X * 1.40625 / 256.0.
 
+%% @doc Convert a float to a 16-bit binary angle.
 float_to_ba16(X) ->
     Val = round(X * (64.0 / 45.0) * 128),
     <<Val:16/integer-unsigned-big>>.
 
+%% @doc Convert a 32-bit binary angle to a float.
 ba32_to_float(<<X:32/integer-unsigned-big>>) ->
     X * 1.40625 / 16777216.0.
 
+%% @doc Convert a float to a 32-bit binary angle.
 float_to_ba32(X) ->
     Val = round(X * (64.0 / 45.0) * 8388608),
     <<Val:32/integer-unsigned-big>>.
@@ -225,16 +229,20 @@ float_to_ba32(X) ->
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Signed binary angle conversion functions.
     
+%% @doc Convert a 16-bit signed binary angle to a float.
 sa16_to_float(<<X:16/integer-signed-big>>) ->
     X * 1.40625 / 512.
 
+%% @doc Convert a float to a 16-bit signed binary angle.
 float_to_sa16(X) ->
     Val = round(X * (64.0 / 45.0) * 256),
     <<Val:16/integer-signed-big>>.
     
+%% @doc Convert a 32-bit signed binary angle to a float.
 sa32_to_float(<<X:32/integer-signed-big>>) ->
     X * 1.40625 / 33554432.
 
+%% @doc Convert a float to a 32-bit signed binary angle.
 float_to_sa32(X) ->
     Val = round(X * (64.0 / 45.0) * 16777216),
     <<Val:32/integer-signed-big>>.
