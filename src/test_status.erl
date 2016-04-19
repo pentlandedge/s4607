@@ -123,7 +123,7 @@ hardware_proplist(Faults) when is_list(Faults) ->
 
 %% Function to decode the mode status bits and return a proplist.
 decode_mode_list(<<Range:1,Azimuth:1,Elev:1,Temp:1,_:4>>) ->
-    F = fun mode_status_bit/1,
+    F = fun decode_mode_status_bit/1,
     [{range_limit, F(Range)}, {azimuth_limit, F(Azimuth)}, 
      {elevation_limit, F(Elev)}, {temperature_limit, F(Temp)}].
 
@@ -131,10 +131,8 @@ decode_mode_list(<<Range:1,Azimuth:1,Elev:1,Temp:1,_:4>>) ->
 encode_mode_status(ModeStatusList) when is_list(ModeStatusList) ->
     %% Fun to convert the mode status to a bit value.
     F = fun(Field, List) ->
-            case proplists:get_value(Field, List, within_operational_limit) of
-                within_operational_limit -> 0;
-                outwith_operational_limit -> 1
-            end
+            ModeStatus = proplists:get_value(Field, List, within_operational_limit), 
+            encode_mode_status_bit(ModeStatus)
         end,
 
     Range = F(range_limit, ModeStatusList),
@@ -145,9 +143,13 @@ encode_mode_status(ModeStatusList) when is_list(ModeStatusList) ->
     <<Range:1,Az:1,El:1,Temp:1,0:4>>.
  
 %% Function to decode the bit meaning in the in the mode status byte.
-mode_status_bit(0) -> within_operational_limit;
-mode_status_bit(1) -> outwith_operational_limit.
+decode_mode_status_bit(0) -> within_operational_limit;
+decode_mode_status_bit(1) -> outwith_operational_limit.
 
+%% Encode the mode status as a bit.
+encode_mode_status_bit(within_operational_limit) -> 0;
+encode_mode_status_bit(outwith_operational_limit) -> 1.
+    
 %% Create a proplist for the mode status flags from the list of supplied 
 %% faults.
 mode_proplist(Faults) when is_list(Faults) ->
