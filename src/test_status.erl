@@ -81,7 +81,7 @@ new(JobID, RevisitIndex, DwellIndex, DwellTime, HardwareFaults,
 
 %% Function to decode the hardware status and return a proplist.
 decode_hardware_status(<<Antenna:1,RF:1,Proc:1,Datalink:1,Cal:1,_:3>>) ->
-    F = fun hardware_bit/1,
+    F = fun decode_hardware_status_bit/1,
     [{antenna, F(Antenna)}, {rf_electronics, F(RF)}, {processor, F(Proc)},
      {datalink, F(Datalink)}, {calibration_mode, F(Cal)}]. 
 
@@ -89,10 +89,8 @@ decode_hardware_status(<<Antenna:1,RF:1,Proc:1,Datalink:1,Cal:1,_:3>>) ->
 encode_hardware_status(HwProplist) when is_list(HwProplist) ->
     %% Fun to convert the hardware status to a bit value.
     F = fun(Field, List) ->
-            case proplists:get_value(Field, List, pass) of
-                pass -> 0;
-                fail -> 1
-            end
+            HardwareStatus = proplists:get_value(Field, List, pass),
+            encode_hardware_status_bit(HardwareStatus)
         end,
 
     Ant = F(antenna, HwProplist),
@@ -103,9 +101,13 @@ encode_hardware_status(HwProplist) when is_list(HwProplist) ->
     
     <<Ant:1,RfE:1,Proc:1,Data:1,Cal:1,0:3>>.
         
-%% Function to decode the bit meaning in the harware status byte.
-hardware_bit(0) -> pass;
-hardware_bit(1) -> fail.
+%% Decode the bit meaning in the harware status byte.
+decode_hardware_status_bit(0) -> pass;
+decode_hardware_status_bit(1) -> fail.
+
+%% Encode the hardware status as a bit value.
+encode_hardware_status_bit(pass) -> 0;
+encode_hardware_status_bit(fail) -> 1.
 
 %% Function to create a proplist for the hardware status flags from the list
 %% of supplied faults.
