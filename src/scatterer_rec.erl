@@ -1,9 +1,15 @@
 -module(scatterer_rec).
 
 -export([
-    decode/4]).
+    decode/4,
+    new/1,
+    get_scatterer_magnitude/1,
+    get_scatterer_phase/1,
+    get_range_index/1,
+    get_doppler_index/1
+    ]).
 
--record(hrr_scatter_record, {
+-record(hrr_scatterer_record, {
     scatterer_magnitude,
     scatterer_phase,
     range_index,
@@ -40,7 +46,7 @@ decode(<<Record/binary>>, EM, MagnitudeByteSize, PhaseByteSize) ->
         fun stanag_types:i16_to_integer/1,
         0),
 
-    {ok, #hrr_scatter_record{
+    {ok, #hrr_scatterer_record{
         scatterer_magnitude = ScattererMagnitude,
         scatterer_phase = ScattererPhase,
         range_index = RangeIndex,
@@ -76,3 +82,28 @@ decode_scatterer_phase(<<Record/binary>>, H32_2, PhaseByteSize) ->
                 fun stanag_types:i16_to_integer/1,
                 0)
     end.
+
+%% Function to allow the creation of a new scatterer record with a set of
+%% parameters provided as a list of [{param_name, value}] tuples.
+new(RepParams) ->
+    % Local function to pull the parameter from the list or supply a default
+    % value.
+    F = fun(P, L) ->
+            case lists:keyfind(P, 1, L) of
+                {P, V} -> V;
+                false  -> 0
+            end
+        end,
+
+    #hrr_scatterer_record{
+        %% The scatterer_magnitude is mandatory
+        scatterer_magnitude = F(scatterer_magnitude, RepParams),
+        scatterer_phase = F(scatterer_phase, RepParams),
+        range_index = F(range_index, RepParams),
+        doppler_index = F(doppler_index, RepParams)}.
+
+%% Accessor functions to allow clients to read the individual record fields.
+get_scatterer_magnitude(#hrr_scatterer_record{scatterer_magnitude = X}) -> X.
+get_scatterer_phase(#hrr_scatterer_record{scatterer_phase = X}) -> X.
+get_range_index(#hrr_scatterer_record{range_index = X}) -> X.
+get_doppler_index(#hrr_scatterer_record{doppler_index = X}) -> X.
