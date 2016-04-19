@@ -56,8 +56,10 @@ decode(<<JobID:32,RI:16,DI:16,DT:32,HS:1/binary,MS:1/binary>>) ->
 
 %% Function to encode a test and status segment
 encode(#test_and_status{job_id = JobID, revisit_index = RI, dwell_index = DI,
-    dwell_time = DT}) -> 
-    <<JobID:32,RI:16,DI:16,DT:32,0,0>>.
+    dwell_time = DT, hardware_status = HS, mode_status = MS}) -> 
+    EncHS = encode_hardware_status(HS),
+    EncMS = encode_mode_status(MS),
+    <<JobID:32,RI:16,DI:16,DT:32,EncHS:1/binary,EncMS:1/binary>>.
 
 %% Function to build a new test and status record.
 new(JobID, RevisitIndex, DwellIndex, DwellTime, HardwareFaults, 
@@ -68,12 +70,9 @@ new(JobID, RevisitIndex, DwellIndex, DwellTime, HardwareFaults,
         is_integer(DwellTime), DwellTime >= 1,
         is_list(HardwareFaults), is_list(ModeStatusFaults) ->
 
+    % Process the list of supplied faults into proplists.
     HS = hardware_proplist(HardwareFaults),
-
-    MS = [{range_limit, within_operational_limit}, 
-          {azimuth_limit, within_operational_limit}, 
-          {elevation_limit, within_operational_limit}, 
-          {temperature_limit, within_operational_limit}],
+    MS = mode_proplist(ModeStatusFaults),
 
     #test_and_status{job_id = JobID, revisit_index = RevisitIndex, 
         dwell_index = DwellIndex, dwell_time = DwellTime,
@@ -86,6 +85,24 @@ decode_hardware_status(<<Antenna:1,RF:1,Proc:1,Datalink:1,Cal:1,_:3>>) ->
     [{antenna, F(Antenna)}, {rf_electronics, F(RF)}, {processor, F(Proc)},
      {datalink, F(Datalink)}, {calibration_mode, F(Cal)}]. 
 
+%% Encode a proplist with the hardware status fields to its binary form.
+encode_hardware_status(HwProplist) when is_list(HwProplist) ->
+    %% Fun to convert the hardware status to a bit value.
+    F = fun(Field, List) ->
+            case proplists:get_value(Field, List, pass) of
+                pass -> 0;
+                fail -> 1
+            end
+        end,
+
+    Ant = F(antenna, HwProplist),
+    RfE = F(rf_electronics, HwProplist),
+    Proc = F(processor, HwProplist),
+    Data = F(datalink, HwProplist),
+    Cal = F(calibration_mode, HwProplist),
+    
+    <<Ant:1,RfE:1,Proc:1,Data:1,Cal:1,0:3>>.
+        
 %% Function to decode the bit meaning in the harware status byte.
 hardware_bit(0) -> pass;
 hardware_bit(1) -> fail.
@@ -110,9 +127,40 @@ decode_mode_list(<<Range:1,Azimuth:1,Elev:1,Temp:1,_:4>>) ->
     [{range_limit, F(Range)}, {azimuth_limit, F(Azimuth)}, 
      {elevation_limit, F(Elev)}, {temperature_limit, F(Temp)}].
 
+%% Encode a proplist with the mode status fields to its binary form.
+encode_mode_status(ModeStatusList) when is_list(ModeStatusList) ->
+    %% Fun to convert the mode status to a bit value.
+    F = fun(Field, List) ->
+            case proplists:get_value(Field, List, within_operational_limit) of
+                within_operational_limit -> 0;
+                outwith_operational_limit -> 1
+            end
+        end,
+
+    Range = F(range_limit, ModeStatusList),
+    Az = F(azimuth_limit, ModeStatusList),
+    El = F(elevation_limit, ModeStatusList),
+    Temp = F(temperature_limit, ModeStatusList),
+    
+    <<Range:1,Az:1,El:1,Temp:1,0:4>>.
+ 
 %% Function to decode the bit meaning in the in the mode status byte.
 mode_status_bit(0) -> within_operational_limit;
 mode_status_bit(1) -> outwith_operational_limit.
+
+%% Create a proplist for the mode status flags from the list of supplied 
+%% faults.
+mode_proplist(Faults) when is_list(Faults) ->
+    FlagSet = [range_limit, azimuth_limit, elevation_limit, temperature_limit],
+    F = fun(Flag, Acc) ->
+            case lists:member(Flag, Faults) of
+                true -> 
+                    [{Flag, outwith_operational_limit}|Acc];
+                false -> 
+                    [{Flag, within_operational_limit}|Acc]
+            end
+        end,
+    lists:foldl(F, [], FlagSet).
 
 %% Accessor functions.
 get_job_id(#test_and_status{job_id = X}) -> X.

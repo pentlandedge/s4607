@@ -22,7 +22,8 @@
 
 %% Define a test generator for the test and status segment. 
 test_status_test_() ->
-    [decoding_checks1(), decoding_checks2(), encoding_checks()].
+    [decoding_checks1(), decoding_checks2(), encoding_checks1(), 
+     encoding_checks2()].
 
 decoding_checks1() ->
     Bin = sample_test_and_status_seg(),
@@ -54,12 +55,32 @@ decoding_checks2() ->
      ?_assertEqual(within_operational_limit, test_status:get_elevation_limit_status(TSS)),
      ?_assertEqual(outwith_operational_limit, test_status:get_temperature_limit_status(TSS))].
 
-encoding_checks() ->
+encoding_checks1() ->
     % Create a sample segment record and encode it.
     TS = test_status:new(4000000, 65000, 40000, 100000, [], []),
     ETS = test_status:encode(TS),
     Bin = <<4000000:32,65000:16,40000:16,100000:32,0,0>>,
     [?_assertEqual(Bin, ETS)].
+
+encoding_checks2() ->
+    % Create lists of hardware and mode faults.
+    HwFaults = [rf_electronics, datalink, calibration_mode],
+    ModeFaults = [azimuth_limit, temperature_limit],
+    % Create a sample segment record and encode it.
+    TS = test_status:new(4000000, 65000, 40000, 100000, HwFaults, ModeFaults), 
+    ETS = test_status:encode(TS),
+    Bin = <<4000000:32,65000:16,40000:16,100000:32,16#58,16#50>>,
+    {ok, TSS} = test_status:decode(Bin),
+    [?_assertEqual(pass, test_status:get_antenna_status(TSS)),
+     ?_assertEqual(fail, test_status:get_rf_electronics_status(TSS)),
+     ?_assertEqual(pass, test_status:get_processor_status(TSS)),
+     ?_assertEqual(fail, test_status:get_datalink_status(TSS)),
+     ?_assertEqual(fail, test_status:get_calibration_mode_status(TSS)),
+     ?_assertEqual(within_operational_limit, test_status:get_range_limit_status(TSS)),
+     ?_assertEqual(outwith_operational_limit, test_status:get_azimuth_limit_status(TSS)),
+     ?_assertEqual(within_operational_limit, test_status:get_elevation_limit_status(TSS)),
+     ?_assertEqual(outwith_operational_limit, test_status:get_temperature_limit_status(TSS)),
+     ?_assertEqual(Bin, ETS)].
 
 %% Sample test and status segment.
 %% Job ID: 5, revisit index: 256, dwell index: 133, dwell time: 1024,
