@@ -83,8 +83,8 @@ decode_scatterer_phase(<<Record/binary>>, H32_2, PhaseByteSize) ->
                 0)
     end.
 
-%% Function to allow the creation of a new scatterer record with a set of
-%% parameters provided as a list of [{param_name, value}] tuples.
+%% Create a new HRR Scatterer Record with a set of parameters
+%% provided as a list of [{param_name, value}] tuples.
 new(RepParams) ->
     % Local function to pull the parameter from the list or supply a default
     % value.
