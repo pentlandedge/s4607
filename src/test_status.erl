@@ -44,7 +44,10 @@
     hardware_status,
     mode_status}).
 
-%% Function to decode a test and status segment.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Type specifications.
+
+%% @doc Decode a test and status segment.
 decode(<<JobID:32,RI:16,DI:16,DT:32,HS:1/binary,MS:1/binary>>) ->
     {ok, #test_and_status{
         job_id = JobID,
@@ -54,14 +57,14 @@ decode(<<JobID:32,RI:16,DI:16,DT:32,HS:1/binary,MS:1/binary>>) ->
         hardware_status = decode_hardware_status(HS),
         mode_status = decode_mode_list(MS)}}.
 
-%% Function to encode a test and status segment
+%% @doc Encode a test and status segment
 encode(#test_and_status{job_id = JobID, revisit_index = RI, dwell_index = DI,
     dwell_time = DT, hardware_status = HS, mode_status = MS}) -> 
     EncHS = encode_hardware_status(HS),
     EncMS = encode_mode_status(MS),
     <<JobID:32,RI:16,DI:16,DT:32,EncHS:1/binary,EncMS:1/binary>>.
 
-%% Function to build a new test and status record.
+%% @doc Build a new test and status record.
 new(JobID, RevisitIndex, DwellIndex, DwellTime, HardwareFaults, 
     ModeStatusFaults) 
     when is_integer(JobID), JobID >= 0,
