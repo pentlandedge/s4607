@@ -47,7 +47,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Type specifications.
 
+-type test_and_status() :: #test_and_status{}.
+
 %% @doc Decode a test and status segment.
+-spec decode(Bin::binary()) -> {ok, test_and_status()}.
 decode(<<JobID:32,RI:16,DI:16,DT:32,HS:1/binary,MS:1/binary>>) ->
     {ok, #test_and_status{
         job_id = JobID,
@@ -58,6 +61,7 @@ decode(<<JobID:32,RI:16,DI:16,DT:32,HS:1/binary,MS:1/binary>>) ->
         mode_status = decode_mode_list(MS)}}.
 
 %% @doc Encode a test and status segment
+-spec encode(test_and_status()) -> binary().
 encode(#test_and_status{job_id = JobID, revisit_index = RI, dwell_index = DI,
     dwell_time = DT, hardware_status = HS, mode_status = MS}) -> 
     EncHS = encode_hardware_status(HS),
