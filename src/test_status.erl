@@ -62,6 +62,9 @@
 
 -type hw_status_flag() :: pass | fail.
 
+-type mode_status_flag() :: within_operational_limit | 
+    outwith_operational_limit.
+    
 %% @doc Decode a test and status segment.
 -spec decode(Bin::binary()) -> {ok, test_and_status()}.
 decode(<<JobID:32,RI:16,DI:16,DT:32,HS:1/binary,MS:1/binary>>) ->
@@ -238,15 +241,25 @@ get_calibration_mode_status(#test_and_status{hardware_status = HS}) ->
 
 %% Functions to extract the mode status flags.
 
+%% @doc Extract the range limit status
+-spec get_range_limit_status(TS :: test_and_status()) -> mode_status_flag().
 get_range_limit_status(#test_and_status{mode_status = MS}) -> 
     get_status_flag_from_proplist(range_limit, MS).
 
+%% @doc Extract the azimuth limit status
+-spec get_azimuth_limit_status(TS :: test_and_status()) -> mode_status_flag().
 get_azimuth_limit_status(#test_and_status{mode_status = MS}) -> 
     get_status_flag_from_proplist(azimuth_limit, MS).
 
+%% @doc Extract the elevation limit status
+-spec get_elevation_limit_status(TS :: test_and_status()) -> 
+    mode_status_flag().
 get_elevation_limit_status(#test_and_status{mode_status = MS}) -> 
     get_status_flag_from_proplist(elevation_limit, MS).
 
+%% @doc Extract the temperature limit status
+-spec get_temperature_limit_status(TS :: test_and_status()) -> 
+    mode_status_flag().
 get_temperature_limit_status(#test_and_status{mode_status = MS}) -> 
     get_status_flag_from_proplist(temperature_limit, MS).
 
