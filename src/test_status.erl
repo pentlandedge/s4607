@@ -49,6 +49,12 @@
 
 -type test_and_status() :: #test_and_status{}.
 
+-type hw_status_key() :: antenna | rf_electronics | processor |datalink | 
+    calibration_mode.
+
+-type mode_status_key() :: range_limit | azimuth_limit | elevation_limit | 
+    temperature_limit.
+
 %% @doc Decode a test and status segment.
 -spec decode(Bin::binary()) -> {ok, test_and_status()}.
 decode(<<JobID:32,RI:16,DI:16,DT:32,HS:1/binary,MS:1/binary>>) ->
@@ -69,6 +75,13 @@ encode(#test_and_status{job_id = JobID, revisit_index = RI, dwell_index = DI,
     <<JobID:32,RI:16,DI:16,DT:32,EncHS:1/binary,EncMS:1/binary>>.
 
 %% @doc Build a new test and status record.
+-spec new(JobID, RevisitIndex, DwellIndex, DwellTime, HardwareFaults, 
+    ModeStatusFaults) -> test_and_status()
+    when JobID :: non_neg_integer(), RevisitIndex :: pos_integer(),
+        DwellIndex :: pos_integer(), DwellTime :: non_neg_integer(),
+        HardwareFaults :: list(hw_status_key()), 
+        ModeStatusFaults :: list(mode_status_key()).
+
 new(JobID, RevisitIndex, DwellIndex, DwellTime, HardwareFaults, 
     ModeStatusFaults) 
     when is_integer(JobID), JobID >= 0,
