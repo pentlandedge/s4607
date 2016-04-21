@@ -49,6 +49,11 @@
 
 -type test_and_status() :: #test_and_status{}.
 
+-type job_id() :: non_neg_integer().
+-type revisit_index() :: pos_integer().
+-type dwell_index() :: pos_integer().
+-type dwell_time() :: non_neg_integer().
+
 -type hw_status_key() :: antenna | rf_electronics | processor |datalink | 
     calibration_mode.
 
@@ -77,8 +82,8 @@ encode(#test_and_status{job_id = JobID, revisit_index = RI, dwell_index = DI,
 %% @doc Build a new test and status record.
 -spec new(JobID, RevisitIndex, DwellIndex, DwellTime, HardwareFaults, 
     ModeStatusFaults) -> test_and_status()
-    when JobID :: non_neg_integer(), RevisitIndex :: pos_integer(),
-        DwellIndex :: pos_integer(), DwellTime :: non_neg_integer(),
+    when JobID :: job_id(), RevisitIndex :: revisit_index(),
+        DwellIndex :: dwell_index(), DwellTime :: dwell_time(),
         HardwareFaults :: list(hw_status_key()), 
         ModeStatusFaults :: list(mode_status_key()).
 
@@ -186,10 +191,20 @@ mode_proplist(Faults) when is_list(Faults) ->
         end,
     lists:foldl(F, [], FlagSet).
 
-%% Accessor functions.
+%% @doc Accessor for the job ID field.
+-spec get_job_id(TS :: test_and_status()) -> job_id().
 get_job_id(#test_and_status{job_id = X}) -> X.
+
+%% @doc Accessor for the revisit index.
+-spec get_revisit_index(TS :: test_and_status()) -> revisit_index().
 get_revisit_index(#test_and_status{revisit_index = X}) -> X.
+
+%% @doc Accessor for the dwell index.
+-spec get_dwell_index(TS :: test_and_status()) -> dwell_index().
 get_dwell_index(#test_and_status{dwell_index = X}) -> X.
+
+%% @doc Accessor for the dwell time.
+-spec get_dwell_time(TS :: test_and_status()) -> dwell_time().
 get_dwell_time(#test_and_status{dwell_time = X}) -> X.
 
 %% Functions to extract the hardware status flags.
