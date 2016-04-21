@@ -60,6 +60,8 @@
 -type mode_status_key() :: range_limit | azimuth_limit | elevation_limit | 
     temperature_limit.
 
+-type hw_status_flag() :: pass | fail.
+
 %% @doc Decode a test and status segment.
 -spec decode(Bin::binary()) -> {ok, test_and_status()}.
 decode(<<JobID:32,RI:16,DI:16,DT:32,HS:1/binary,MS:1/binary>>) ->
@@ -209,18 +211,28 @@ get_dwell_time(#test_and_status{dwell_time = X}) -> X.
 
 %% Functions to extract the hardware status flags.
 
+%% @doc Extract the antenna status.
+-spec get_antenna_status(TS :: test_and_status()) -> hw_status_flag(). 
 get_antenna_status(#test_and_status{hardware_status = HS}) -> 
     get_status_flag_from_proplist(antenna, HS).
 
+%% @doc Extract the status of the RF electronics.
+-spec get_rf_electronics_status(TS :: test_and_status()) -> hw_status_flag().
 get_rf_electronics_status(#test_and_status{hardware_status = HS}) -> 
     get_status_flag_from_proplist(rf_electronics, HS).
 
+%% @doc Extract the processor status.
+-spec get_processor_status(TS :: test_and_status()) -> hw_status_flag().
 get_processor_status(#test_and_status{hardware_status = HS}) -> 
     get_status_flag_from_proplist(processor, HS).
 
+%% @doc Extract the datalink status.
+-spec get_datalink_status(TS :: test_and_status()) -> hw_status_flag().
 get_datalink_status(#test_and_status{hardware_status = HS}) -> 
     get_status_flag_from_proplist(datalink, HS).
 
+%% @doc Extract the calibration mode status.
+-spec get_calibration_mode_status(TS :: test_and_status()) -> hw_status_flag().
 get_calibration_mode_status(#test_and_status{hardware_status = HS}) -> 
     get_status_flag_from_proplist(calibration_mode, HS).
 
