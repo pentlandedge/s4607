@@ -3,6 +3,7 @@
 -export([
     decode/4,
     new/1,
+    payload_size/3,
     get_scatterer_magnitude/1,
     get_scatterer_phase/1,
     get_range_index/1,
@@ -101,6 +102,29 @@ new(RepParams) ->
         scatterer_phase = F(scatterer_phase, RepParams),
         range_index = F(range_index, RepParams),
         doppler_index = F(doppler_index, RepParams)}.
+
+%% Calculate the size in bytes of a scatterer record, depending upon
+%% which fields have been set in the existence mask and the size of
+%% scatterer_magnitude and scatterer_phase.
+payload_size(EM, MagnitudeByteSize, PhaseByteSize) ->
+
+    {H32_1, H32_2, H32_3, H32_4} = EM,
+
+    SizeList = [
+        {H32_1, MagnitudeByteSize},
+        {H32_2, PhaseByteSize},
+        {H32_3, 2},
+        {H32_4, 2}],
+
+    F = fun({M, Size}, Acc) ->
+            case M of
+                1 -> Acc + Size;
+                0 -> Acc
+            end
+        end,
+
+    % Accumulate the total size for all the included parameters.
+    lists:foldl(F, 0, SizeList).
 
 %% Accessor functions to allow clients to read the individual record fields.
 get_scatterer_magnitude(#hrr_scatterer_record{scatterer_magnitude = X}) -> X.
