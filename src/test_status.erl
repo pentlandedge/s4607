@@ -87,7 +87,7 @@ new(JobID, RevisitIndex, DwellIndex, DwellTime, HardwareFaults,
     when is_integer(JobID), JobID >= 0,
         is_integer(RevisitIndex), RevisitIndex >= 1, 
         is_integer(DwellIndex), DwellIndex >= 1,
-        is_integer(DwellTime), DwellTime >= 1,
+        is_integer(DwellTime), DwellTime >= 0,
         is_list(HardwareFaults), is_list(ModeStatusFaults) ->
 
     % Process the list of supplied faults into proplists.
