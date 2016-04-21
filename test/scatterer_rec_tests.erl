@@ -22,7 +22,7 @@
 
 %% Define a test generator for scatterer records.
 scatterer_rec_test_() ->
-    [creation_checks()].
+    [creation_checks(), payloadsize_checks()].
 
 
 %% Create a HRR Scatterer Record and check all the fields in the record
@@ -33,7 +33,7 @@ creation_checks() ->
     creation_checks4().
 
 creation_checks1() ->
-    {_, R1} = sample_record1(),
+    {_,_,_, R1} = sample_record1(),
 
     [?_assertEqual(34, scatterer_rec:get_scatterer_magnitude(R1)),
      ?_assertEqual(0, scatterer_rec:get_scatterer_phase(R1)),
@@ -41,15 +41,15 @@ creation_checks1() ->
      ?_assertEqual(0, scatterer_rec:get_doppler_index(R1))].
 
 creation_checks2() ->
-    {_, R2} = sample_record2(),
+    {_,_,_, R2} = sample_record2(),
 
     [?_assertEqual(834, scatterer_rec:get_scatterer_magnitude(R2)),
-     ?_assertEqual(1133, scatterer_rec:get_scatterer_phase(R2)),
+     ?_assertEqual(133, scatterer_rec:get_scatterer_phase(R2)),
      ?_assertEqual(0, scatterer_rec:get_range_index(R2)),
      ?_assertEqual(0, scatterer_rec:get_doppler_index(R2))].
 
 creation_checks3() ->
-    {_, R3} = sample_record3(),
+    {_,_,_, R3} = sample_record3(),
 
     [?_assertEqual(834, scatterer_rec:get_scatterer_magnitude(R3)),
      ?_assertEqual(1133, scatterer_rec:get_scatterer_phase(R3)),
@@ -57,28 +57,59 @@ creation_checks3() ->
      ?_assertEqual(0, scatterer_rec:get_doppler_index(R3))].
 
 creation_checks4() ->
-    {_, R4} = sample_record4(),
+    {_,_,_, R4} = sample_record4(),
 
     [?_assertEqual(34, scatterer_rec:get_scatterer_magnitude(R4)),
      ?_assertEqual(133, scatterer_rec:get_scatterer_phase(R4)),
      ?_assertEqual(10320, scatterer_rec:get_range_index(R4)),
      ?_assertEqual(10432, scatterer_rec:get_doppler_index(R4))].
 
+%% Create a HRR Scatterer Record and check the payload size of the record
+payloadsize_checks() ->
+    payloadsize_checks1(),
+    payloadsize_checks2(),
+    payloadsize_checks3(),
+    payloadsize_checks4().
+
+payloadsize_checks1() ->
+    {EM,SM,SP,_} = sample_record1(),
+
+    [?_assertEqual(1, scatterer_rec:payload_size(EM, SM, SP))].
+
+payloadsize_checks2() ->
+    {EM,SM,SP,_} = sample_record2(),
+
+    [?_assertEqual(3, scatterer_rec:payload_size(EM, SM, SP))].
+
+payloadsize_checks3() ->
+    {EM,SM,SP,_} = sample_record3(),
+
+    [?_assertEqual(6, scatterer_rec:payload_size(EM, SM, SP))].
+
+payloadsize_checks4() ->
+    {EM,SM,SP,_} = sample_record4(),
+
+    [?_assertEqual(7, scatterer_rec:payload_size(EM, SM, SP))].
+
 %% Create a sample scatterer record. Sets mandatory field to a value.
 sample_record1() ->
     Params = [{scatterer_magnitude, 34}],
 
     % Return a suitable existence mask as well as the actual record.
-    EM = <<1,1,1,1>>,
-    {EM, scatterer_rec:new(Params)}.
+    EM = {1,0,0,0},
+    SM = 1,
+    SP = 0,
+    {EM, SM, SP, scatterer_rec:new(Params)}.
 
 %% Create a sample target report. Sets first two fields to a value.
 sample_record2() ->
-    Params = [{scatterer_magnitude, 834}, {scatterer_phase, 1133}],
+    Params = [{scatterer_magnitude, 834}, {scatterer_phase, 113}],
 
     % Return a suitable existence mask as well as the actual record.
-    EM = <<1,1,0,0>>,
-    {EM, scatterer_rec:new(Params)}.
+    EM = {1,1,0,0},
+    SM = 2,
+    SP = 1,
+    {EM, SM, SP, scatterer_rec:new(Params)}.
 
 %% Create a sample target report. Sets first three fields to a value.
 sample_record3() ->
@@ -86,8 +117,10 @@ sample_record3() ->
               {range_index, 2341}],
 
     % Return a suitable existence mask as well as the actual record.
-    EM = <<1,1,1,0>>,
-    {EM, scatterer_rec:new(Params)}.
+    EM = {1,1,1,0},
+    SM = 2,
+    SP = 2,
+    {EM, SM, SP, scatterer_rec:new(Params)}.
 
 %% Create a sample target report. Sets all fields to a value.
 sample_record4() ->
@@ -95,6 +128,8 @@ sample_record4() ->
               {range_index, 10320}, {doppler_index, 10432}],
 
     % Return a suitable existence mask as well as the actual record.
-    EM = <<1,1,1,1>>,
-    {EM, scatterer_rec:new(Params)}.
+    EM = {1,1,1,1},
+    SM = 1,
+    SP = 2,
+    {EM, SM, SP, scatterer_rec:new(Params)}.
 
