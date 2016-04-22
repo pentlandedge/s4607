@@ -50,6 +50,18 @@
     float_to_sa32/1]).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Integer range limits.
+
+-define(MIN_I8, 0).
+-define(MAX_I8, 255).
+
+-define(MIN_I16, 0).
+-define(MAX_I16, 65535).
+
+-define(MIN_I32, 0).
+-define(MAX_I32, 4294967295).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Type specifications.
 
 %% Unsigned integer types.
@@ -59,7 +71,7 @@
 
 -type i8_int()  :: 0..255.
 -type i16_int() :: 0..65535.
--type i32_int() :: 0..4294967296.
+-type i32_int() :: 0..4294967295.
 
 -export_type([i8/0, i16/0, i32/0]).
 -export_type([i8_int/0, i16_int/0, i32_int/0]).
@@ -103,7 +115,7 @@ i8_to_integer(<<X>>) -> X.
 
 %% @doc Convert an unsigned integer to fixed width I8 binary.
 -spec integer_to_i8(i8_int()) -> i8().
-integer_to_i8(I) when I >= 0, I =< 255 ->
+integer_to_i8(I) when I >= ?MIN_I8, I =< ?MAX_I8 ->
     <<I:8/integer-unsigned-big>>.
 
 %% @doc Convert an unsigned I16 binary to an integer.
@@ -112,7 +124,7 @@ i16_to_integer(<<X:16/integer-unsigned-big>>) -> X.
 
 %% @doc Convert an unsigned integer to fixed width I16 binary.
 -spec integer_to_i16(i16_int()) -> i16().
-integer_to_i16(I) when I >= 0, I =< 65535 ->
+integer_to_i16(I) when I >= ?MIN_I16, I =< ?MAX_I16 ->
     <<I:16/integer-unsigned-big>>.
 
 %% @doc Convert an unsigned I32 binary to an integer.
@@ -121,7 +133,7 @@ i32_to_integer(<<X:32/integer-unsigned-big>>) -> X.
 
 %% @doc Convert an unsigned integer to fixed width I32 binary.
 -spec integer_to_i32(i32_int()) -> i32().
-integer_to_i32(I) when I >= 0, I =< 4294967296 ->
+integer_to_i32(I) when I >= ?MIN_I32, I =< ?MAX_I32 ->
     <<I:32/integer-unsigned-big>>.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
