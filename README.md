@@ -49,6 +49,14 @@ Then recompile the project and run the unit tests:
 # rebar compile eunit
 ```
 Once this completes, the code coverage report should be available in at .eunit/index.html
+
+## Generating the module documentation.
+Erlang supplies the EDoc tool which can automatically generate cross-referenced documentation from a combination of the code itself and any annotations added by the programmer. We are in the process of adding more tags and type specifications to improve the generated output. So far, the modules stanag_types.erl and test_status.erl have been annotated and provide the most useful information. More modules will be documented soon. Rebar can be used to call EDoc to generate the HTML formatted documents. From the root directory type:
+```
+rebar doc
+```
+Once complete a doc directory will be created with the generated HTML files for each module.
+
 ## Encoding a segment inside a packet structure.
 As an example, consider creating a mission segment, encapsulating it inside a packet, then encoding into Stanag 4607 binary form. The first step is to create the mission segment payload.
 ```
