@@ -61,6 +61,18 @@
 -define(MIN_I32, 0).
 -define(MAX_I32, 4294967295).
 
+-define(MIN_S8, -128).
+-define(MAX_S8, 127).
+
+-define(MIN_S16, -32768).
+-define(MAX_S16, 32767).
+
+-define(MIN_S32, -2147483648).
+-define(MAX_S32, 2147483647).
+
+-define(MIN_S64, -9223372036854775808).
+-define(MAX_S64, 9223372036854775807).
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Type specifications.
 
@@ -145,7 +157,7 @@ s8_to_integer(<<X:8/integer-signed-big>>) -> X.
 
 %% @doc Convert a signed integer to fixed width S8 binary.
 -spec integer_to_s8(s8_int()) -> s8().
-integer_to_s8(I) when I >= -128, I =< 127 ->
+integer_to_s8(I) when I >= ?MIN_S8, I =< ?MAX_S8 ->
     <<I:8/integer-signed-big>>.
 
 %% @doc Convert a signed S16 binary to an integer.
@@ -154,7 +166,7 @@ s16_to_integer(<<X:16/integer-signed-big>>) -> X.
 
 %% @doc Convert a signed integer to fixed width S16 binary.
 -spec integer_to_s16(s16_int()) -> s16().
-integer_to_s16(I) when I >= -32768, I =< 32767 ->
+integer_to_s16(I) when I >= ?MIN_S16, I =< ?MAX_S16 ->
     <<I:16/integer-signed-big>>.
 
 %% @doc Convert a signed S32 binary to an integer.
@@ -163,7 +175,7 @@ s32_to_integer(<<X:32/integer-signed-big>>) -> X.
 
 %% @doc Convert a signed integer to fixed width S32 binary.
 -spec integer_to_s32(s32_int()) -> s32().
-integer_to_s32(I) when I >= -2147483648, I =< 2147483647 ->
+integer_to_s32(I) when I >= ?MIN_S32, I =< ?MAX_S32 ->
     <<I:32/integer-signed-big>>.
 
 %% @doc Convert a signed S64 binary to an integer.
@@ -172,7 +184,7 @@ s64_to_integer(<<X:64/integer-signed-big>>) -> X.
 
 %% @doc Convert a signed integer to fixed width S64 binary.
 -spec integer_to_s64(s64_int()) -> s64().
-integer_to_s64(I) when I >= -9223372036854775808, I =< 9223372036854775807 ->
+integer_to_s64(I) when I >= ?MIN_S64, I =< ?MAX_S64 ->
     <<I:64/integer-signed-big>>.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
