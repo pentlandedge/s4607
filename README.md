@@ -52,7 +52,7 @@ Once this completes, the code coverage report should be available in at .eunit/i
 
 ## Running the static analysis tool.
 
-Erlang provides the Dialyzer, which performs static type checking of the code. Rebar can be used to run the dialyzer on all of the source files in the repository. This should always be clean (no errors or warnings) for code in the repository. To run it, from the source directory type:
+Erlang provides the Dialyzer, which performs static type checking of the code. Rebar can be used to run the dialyzer on all of the source files in the repository. This should always be clean (no errors or warnings) for code in the repository. To run it, from the root directory type:
 ```
 rebar dialyze
 ```
