@@ -5,6 +5,7 @@
     encode/4,
     new/1,
     payload_size/3,
+    display/2,
     get_scatterer_magnitude/1,
     get_scatterer_phase/1,
     get_range_index/1,
@@ -168,6 +169,24 @@ payload_size(EM, MagnitudeByteSize, PhaseByteSize) ->
 
     % Accumulate the total size for all the included parameters.
     lists:foldl(F, 0, SizeList).
+
+display(SR, EM) ->
+    {H32_1, H32_2, H32_3, H32_4} = EM,
+    io:format("****************************************~n"),
+    io:format("** @scatterer_rec~n"),
+    sutils:conditional_display("Scatterer Magnitude: ~p~n",
+        [get_scatterer_magnitude(SR)],
+        H32_1),
+    sutils:conditional_display("Scatterer Phase: ~p~n",
+        [get_scatterer_phase(SR)],
+        H32_2),
+    sutils:conditional_display("Range Index: ~p~n",
+        [get_range_index(SR)],
+        H32_3),
+    sutils:conditional_display("Doppler Index: ~p~n",
+        [get_doppler_index(SR)],
+        H32_4).
+
 
 %% Accessor functions to allow clients to read the individual record fields.
 get_scatterer_magnitude(#hrr_scatterer_record{scatterer_magnitude = X}) -> X.
