@@ -50,6 +50,13 @@ Then recompile the project and run the unit tests:
 ```
 Once this completes, the code coverage report should be available in at .eunit/index.html
 
+## Running the static analysis tool.
+
+Erlang provides the Dialyzer, which performs static type checking of the code. Rebar can be used to run the dialyzer on all of the source files in the repository. This should always be clean (no errors or warnings) for code in the repository. To run it, from the source directory type:
+```
+rebar dialyze
+```
+
 ## Generating the module documentation.
 Erlang supplies the EDoc tool which can automatically generate cross-referenced documentation from a combination of the code itself and any annotations added by the programmer. We are in the process of adding more tags and type specifications to improve the generated output. So far, the modules stanag_types.erl and test_status.erl have been annotated and provide the most useful information. More modules will be documented soon. Rebar can be used to call EDoc to generate the HTML formatted documents. From the root directory type:
 ```
