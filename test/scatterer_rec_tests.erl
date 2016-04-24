@@ -22,7 +22,7 @@
 
 %% Define a test generator for scatterer records.
 scatterer_rec_test_() ->
-    [creation_checks(), payloadsize_checks()].
+    [creation_checks(), payloadsize_checks(), encode_decode_checks()].
 
 
 %% Create a HRR Scatterer Record and check all the fields in the record
@@ -63,6 +63,73 @@ creation_checks4() ->
      ?_assertEqual(133, scatterer_rec:get_scatterer_phase(R4)),
      ?_assertEqual(10320, scatterer_rec:get_range_index(R4)),
      ?_assertEqual(10432, scatterer_rec:get_doppler_index(R4))].
+
+%% Checks of the encode/decode functions.
+encode_decode_checks() ->
+    encode_decode_checks1(),
+    encode_decode_checks2(),
+    encode_decode_checks3(),
+    encode_decode_checks4().
+
+encode_decode_checks1() ->
+    % Create a sample record.
+    {EM, SM, SP, R1} = sample_record1(),
+
+    % Encode it
+    Bin = scatterer_rec:encode(R1, EM, SM, SP),
+
+    % Decode it again
+    {ok, SR} = scatterer_rec:decode(Bin, EM, SM, SP),
+
+    [?_assertEqual(34, scatterer_rec:get_scatterer_magnitude(SR)),
+     ?_assertEqual(0, scatterer_rec:get_scatterer_phase(SR)),
+     ?_assertEqual(0, scatterer_rec:get_range_index(SR)),
+     ?_assertEqual(0, scatterer_rec:get_doppler_index(SR))].
+
+encode_decode_checks2() ->
+    % Create a sample record.
+    {EM, SM, SP, R2} = sample_record2(),
+
+    % Encode it
+    Bin = scatterer_rec:encode(R2, EM, SM, SP),
+
+    % Decode it again
+    {ok, SR} = scatterer_rec:decode(Bin, EM, SM, SP),
+
+    [?_assertEqual(834, scatterer_rec:get_scatterer_magnitude(SR)),
+     ?_assertEqual(133, scatterer_rec:get_scatterer_phase(SR)),
+     ?_assertEqual(0, scatterer_rec:get_range_index(SR)),
+     ?_assertEqual(0, scatterer_rec:get_doppler_index(SR))].
+
+encode_decode_checks3() ->
+    % Create a sample record.
+    {EM, SM, SP, R3} = sample_record3(),
+
+    % Encode it
+    Bin = scatterer_rec:encode(R3, EM, SM, SP),
+
+    % Decode it again
+    {ok, SR} = scatterer_rec:decode(Bin, EM, SM, SP),
+
+    [?_assertEqual(834, scatterer_rec:get_scatterer_magnitude(SR)),
+     ?_assertEqual(1133, scatterer_rec:get_scatterer_phase(SR)),
+     ?_assertEqual(2341, scatterer_rec:get_range_index(SR)),
+     ?_assertEqual(0, scatterer_rec:get_doppler_index(SR))].
+
+encode_decode_checks4() ->
+    % Create a sample record.
+    {EM, SM, SP, R4} = sample_record4(),
+
+    % Encode it
+    Bin = scatterer_rec:encode(R4, EM, SM, SP),
+
+    % Decode it again
+    {ok, SR} = scatterer_rec:decode(Bin, EM, SM, SP),
+
+    [?_assertEqual(34, scatterer_rec:get_scatterer_magnitude(SR)),
+     ?_assertEqual(133, scatterer_rec:get_scatterer_phase(SR)),
+     ?_assertEqual(10320, scatterer_rec:get_range_index(SR)),
+     ?_assertEqual(10432, scatterer_rec:get_doppler_index(SR))].
 
 %% Create a HRR Scatterer Record and check the payload size of the record
 payloadsize_checks() ->

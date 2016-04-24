@@ -2,6 +2,7 @@
 
 -export([
     decode/4,
+    encode/4,
     new/1,
     payload_size/3,
     get_scatterer_magnitude/1,
@@ -20,9 +21,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Scatterer record decoding functions.
 
-decode(<<Record/binary>>, EM, MagnitudeByteSize, PhaseByteSize) ->
-
-    <<1:1, H32_2:1, H32_3:1, H32_4:1>> = EM,
+decode(<<Record/binary>>, {1, H32_2, H32_3, H32_4}, MagnitudeByteSize, PhaseByteSize) ->
 
     {ok, ScattererMagnitude, Bin1} = decode_scatterer_magnitude(
         Record,
@@ -82,6 +81,50 @@ decode_scatterer_phase(<<Record/binary>>, H32_2, PhaseByteSize) ->
                 2,
                 fun stanag_types:i16_to_integer/1,
                 0)
+    end.
+
+%% Encode a HRR Scatterer Record binary from the specified record.
+encode(#hrr_scatterer_record{scatterer_magnitude = ScattererMagnitude,
+        scatterer_phase = ScattererPhase, range_index = RangeIndex,
+        doppler_index = DopplerIndex},
+        {1, H32_2, H32_3, H32_4},
+        MagnitudeByteSize, PhaseByteSize) ->
+
+    F = fun({Param, ExistMask, EncFun}, Acc) ->
+            case ExistMask of
+                1 ->
+                     PB = EncFun(Param),
+                    <<Acc/binary,PB/binary>>;
+                0 ->
+                    Acc
+            end
+        end,
+
+    ParamTable = [
+        {{ScattererMagnitude, MagnitudeByteSize}, 1,
+            fun encode_scatterer_magnitude/1},
+        {{ScattererPhase, PhaseByteSize}, H32_2, fun encode_scatterer_phase/1},
+        {RangeIndex, H32_3, fun stanag_types:integer_to_i16/1},
+        {DopplerIndex, H32_4, fun stanag_types:integer_to_i16/1}],
+
+    lists:foldl(F, <<>>, ParamTable).
+
+encode_scatterer_magnitude({ScattererMagnitude, MagnitudeByteSize}) ->
+    case MagnitudeByteSize of
+        1 ->
+            stanag_types:integer_to_i8(ScattererMagnitude);
+        2 ->
+            stanag_types:integer_to_i16(ScattererMagnitude)
+    end.
+
+encode_scatterer_phase({ScattererPhase, PhaseByteSize}) ->
+    case PhaseByteSize of
+        0 ->
+            <<>>;
+        1 ->
+            stanag_types:integer_to_i8(ScattererPhase);
+        2 ->
+            stanag_types:integer_to_i16(ScattererPhase)
     end.
 
 %% Create a new HRR Scatterer Record with a set of parameters
