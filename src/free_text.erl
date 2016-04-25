@@ -13,6 +13,9 @@
 %% License for the specific language governing permissions and limitations 
 %% under the License.
 %%
+%% @doc Functions for manipulating free text segments defined in the 
+%%      Stanag 4607 standard.
+
 -module(free_text).
 
 -export([
@@ -31,7 +34,7 @@
 -define(ORIGINATOR_LENGTH, 10).
 -define(RECIPIENT_LENGTH, 10).
 
-%% Function to decode a binary free text segment.
+%% @doc Decode a binary free text segment.
 decode(<<Orig:?ORIGINATOR_LENGTH/binary,Recip:?RECIPIENT_LENGTH/binary,
          Text/binary>>) ->
     {ok, #free_text{
@@ -39,13 +42,13 @@ decode(<<Orig:?ORIGINATOR_LENGTH/binary,Recip:?RECIPIENT_LENGTH/binary,
         recipient = binary_to_list(Recip), 
         text = binary_to_list(Text)}}. 
 
-%% Function to encode a free text record as a binary.
+%% @doc Encode a free text record as a binary.
 encode(#free_text{originator = Or, recipient = Re, text = Text}) ->
     PadOr = sutils:add_trailing_spaces(Or, ?ORIGINATOR_LENGTH),
     PadRe = sutils:add_trailing_spaces(Re, ?RECIPIENT_LENGTH),
     list_to_binary(PadOr ++ PadRe ++ Text).
 
-%% Function to create a new free text record. Checks that the supplied 
+%% @doc Function to create a new free text record. Checks that the supplied 
 %% originator and recipient parameters are within the maximum length and all
 %% strings contain only valid BCS characters.
 new(Orig, Recip, Text) when is_list(Orig), is_list(Recip), is_list(Text),
@@ -66,18 +69,18 @@ new(Orig, Recip, Text) when is_list(Orig), is_list(Recip), is_list(Text),
 new0(Orig, Recip, Text) ->
     #free_text{originator = Orig, recipient = Recip, text = Text}.
 
-%% Function to return the expected payload size for the free text segment.
+%% @doc Calclulates the expected payload size for the free text segment.
 payload_size(#free_text{text = Text}) ->
     ?ORIGINATOR_LENGTH + ?RECIPIENT_LENGTH + length(Text).
 
-%% Function to convert a free text record into a dictionary.
+%% @doc Convert a free text record into a dictionary.
 to_dict(#free_text{originator = Orig, recipient = Recip, text = Text}) ->
     D1 = dict:new(),
     D2 = dict:store(originator, Orig, D1),
     D3 = dict:store(recipient, Recip, D2),
     dict:store(text, Text, D3).
 
-%% Function to display the contents of a free text segment.
+%% @doc Display the contents of a free text segment.
 display(#free_text{originator = Orig, recipient = Recip, text = Text}) ->
     io:format("****************************************~n"),
     io:format("** @free_text~n"),
@@ -86,7 +89,13 @@ display(#free_text{originator = Orig, recipient = Recip, text = Text}) ->
     io:format("text: ~p~n", [Text]).
     
 % Accessor functions.
+
+%% @doc Extract the originator field.
 get_originator(#free_text{originator = X}) -> X.
+
+%% @doc Extract the recipient field.
 get_recipient(#free_text{recipient = X}) -> X.
+
+%% @doc Extract the free text field.
 get_text(#free_text{text = X}) -> X.
 
