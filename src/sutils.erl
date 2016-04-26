@@ -13,6 +13,9 @@
 %% License for the specific language governing permissions and limitations
 %% under the License.
 %%
+%% @doc Utility functions for Stanag 4607 used in more than one module.
+%%
+
 -module(sutils).
 
 -export([
@@ -26,7 +29,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Utility functions
 
-% Function to remove trailing space characters (not all whitespace) from a
+% @doc Remove trailing space characters (not all whitespace) from a
 % list
 trim_trailing_spaces(Str) ->
     Rev = lists:reverse(Str),
@@ -34,7 +37,7 @@ trim_trailing_spaces(Str) ->
     RStrip = lists:dropwhile(F, Rev),
     lists:reverse(RStrip).
 
-% Function adds spaces to the specified string to make it of length N.
+% @doc Add spaces to the specified string to make it of length N.
 add_trailing_spaces(Str, N) when length(Str) < N ->
     % Inelegant list splice, creates a list of spaces first.
     Trail = [$  || _ <- lists:seq(1, N - length(Str))],
@@ -42,7 +45,7 @@ add_trailing_spaces(Str, N) when length(Str) < N ->
 add_trailing_spaces(Str, N) when length(Str) =:= N ->
     Str.
 
-%% Function to conditionally extract a paramater from the front of a binary
+%% @doc Conditionally extract a paramater from the front of a binary
 %% based on the state of a mask bit.
 conditional_extract(Bin, MaskBit, Size, ConvFn, Default) ->
     case MaskBit of
@@ -53,7 +56,7 @@ conditional_extract(Bin, MaskBit, Size, ConvFn, Default) ->
             {Default, Bin}
     end.
 
-%% Function to conditionally display a parameter based on a mask bit
+%% @doc Conditionally display a parameter based on a mask bit
 conditional_display(FmtStr, Params, MaskBit) ->
     case MaskBit of
         1 ->
@@ -63,13 +66,13 @@ conditional_display(FmtStr, Params, MaskBit) ->
             ok
     end.
 
-%% Generic function to take the first part of a binary and return the rest.
+%% @doc Take the first part of a binary and return the rest.
 extract_data(Bin, Len) ->
     Data = binary:part(Bin, 0, Len),
     Rem = binary:part(Bin, Len, (byte_size(Bin) - Len)),
     {ok, Data, Rem}.
 
-%% Generic function to take the first part of a binary, apply a function
+%% @doc Take the first part of a binary, apply a function to it
 %% and return the rest.
 extract_conv_data(Bin, Len, ConvFn) ->
     Data = binary:part(Bin, 0, Len),
