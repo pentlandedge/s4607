@@ -17,7 +17,39 @@
 
 -export([
     decode/1,
-    new/1]).
+    new/1,
+    get_existence_mask/1,
+    get_revisit_index/1,
+    get_dwell_index/1,
+    get_last_dwell_of_revisit/1,
+    get_mti_report_index/1,
+    get_num_of_target_scatterers/1,
+    get_num_of_range_samples/1,
+    get_num_of_doppler_samples/1,
+    get_mean_clutter_power/1,
+    get_detection_threshold/1,
+    get_range_resolution/1,
+    get_range_bin_spacing/1,
+    get_doppler_resolution/1,
+    get_doppler_bin_spacing/1,
+    get_center_frequency/1,
+    get_compression_flag/1,
+    get_range_weighting_type/1,
+    get_doppler_weighting_type/1,
+    get_maximum_pixel_power/1,
+    get_maximum_rcs/1,
+    get_range_of_origin/1,
+    get_doppler_of_origin/1,
+    get_type_of_hrr/1,
+    get_processing_mask/1,
+    get_num_bytes_magnitude/1,
+    get_num_bytes_phase/1,
+    get_range_extent_pixels/1,
+    get_range_to_nearest_edge/1,
+    get_index_of_zero_velocity/1,
+    get_target_radial_electrical_length/1,
+    get_electrical_length_uncertainty/1,
+    get_hrr_scatter_records/1]).
 
 -record(hrr_segment, {
     existence_mask,
@@ -307,3 +339,38 @@ decode_type_of_hrr(4) -> oversized_hrr_chip;
 decode_type_of_hrr(5) -> full_rdm;
 decode_type_of_hrr(6) -> partial_rdm;
 decode_type_of_hrr(7) -> full_range_pulse_data.
+
+%% Accessor functions to allow access to the record fields without creating
+%% client dependencies on the actual structure.
+get_existence_mask(#hrr_segment{existence_mask = X}) -> X.
+get_revisit_index(#hrr_segment{revisit_index = X}) -> X.
+get_dwell_index(#hrr_segment{dwell_index = X}) -> X.
+get_last_dwell_of_revisit(#hrr_segment{last_dwell_of_revisit = X}) -> X.
+get_mti_report_index(#hrr_segment{mti_report_index = X}) -> X.
+get_num_of_target_scatterers(#hrr_segment{num_of_target_scatterers = X}) -> X.
+get_num_of_range_samples(#hrr_segment{num_of_range_samples = X}) -> X.
+get_num_of_doppler_samples(#hrr_segment{num_of_doppler_samples = X}) -> X.
+get_mean_clutter_power(#hrr_segment{mean_clutter_power = X}) -> X.
+get_detection_threshold(#hrr_segment{detection_threshold = X}) -> X.
+get_range_resolution(#hrr_segment{range_resolution = X}) -> X.
+get_range_bin_spacing(#hrr_segment{range_bin_spacing = X}) -> X.
+get_doppler_resolution(#hrr_segment{doppler_resolution = X}) -> X.
+get_doppler_bin_spacing(#hrr_segment{doppler_bin_spacing = X}) -> X.
+get_center_frequency(#hrr_segment{center_frequency = X}) -> X.
+get_compression_flag(#hrr_segment{compression_flag = X}) -> X.
+get_range_weighting_type(#hrr_segment{range_weighting_type = X}) -> X.
+get_doppler_weighting_type(#hrr_segment{doppler_weighting_type = X}) -> X.
+get_maximum_pixel_power(#hrr_segment{maximum_pixel_power = X}) -> X.
+get_maximum_rcs(#hrr_segment{maximum_rcs = X}) -> X.
+get_range_of_origin(#hrr_segment{range_of_origin = X}) -> X.
+get_doppler_of_origin(#hrr_segment{doppler_of_origin = X}) -> X.
+get_type_of_hrr(#hrr_segment{type_of_hrr = X}) -> X.
+get_processing_mask(#hrr_segment{processing_mask = X}) -> X.
+get_num_bytes_magnitude(#hrr_segment{num_bytes_magnitude = X}) -> X.
+get_num_bytes_phase(#hrr_segment{num_bytes_phase = X}) -> X.
+get_range_extent_pixels(#hrr_segment{range_extent_pixels = X}) -> X.
+get_range_to_nearest_edge(#hrr_segment{range_to_nearest_edge = X}) -> X.
+get_index_of_zero_velocity(#hrr_segment{index_of_zero_velocity = X}) -> X.
+get_target_radial_electrical_length(#hrr_segment{target_radial_electrical_length = X}) -> X.
+get_electrical_length_uncertainty(#hrr_segment{electrical_length_uncertainty = X}) -> X.
+get_hrr_scatter_records(#hrr_segment{hrr_scatter_records = X}) -> X.
