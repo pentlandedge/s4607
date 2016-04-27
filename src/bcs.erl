@@ -21,6 +21,7 @@
 -export([is_valid_string/1, is_valid_char/1]).
 
 %% @doc Test whether a string contains only valid BCS characters.
+-spec is_valid_string(string()) -> boolean().
 is_valid_string([]) -> 
     true;
 is_valid_string([H|T]) ->
@@ -30,6 +31,7 @@ is_valid_string([H|T]) ->
     end.
 
 %% @doc Test whether a character belongs to the BCS set.
+-spec is_valid_char(char()) -> boolean().
 is_valid_char(16#0A) -> true;   % Line feed
 is_valid_char(16#0C) -> true;   % Form feed
 is_valid_char(16#0D) -> true;   % Carriage return
