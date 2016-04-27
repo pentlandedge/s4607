@@ -30,8 +30,6 @@ is_valid_string([H|T]) ->
     end.
 
 %% @doc Test whether a character belongs to the BCS set.
-%% Allows the caller to provide a character as a single element string or as
-%% an integer
 is_valid_char(16#0A) -> true;   % Line feed
 is_valid_char(16#0C) -> true;   % Form feed
 is_valid_char(16#0D) -> true;   % Carriage return
