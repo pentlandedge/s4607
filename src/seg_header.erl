@@ -31,26 +31,37 @@
 -record(seg_header, {type, size}).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Type specifications.
+
+-type seg_header() :: #seg_header{}.
+-type seg_header_bin() :: <<_:40>>.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Segment header decoding functions.
 
 %% @doc Decode the segment header binary.
+-spec decode(SegHdrBin::seg_header_bin()) -> {ok, seg_header()}.
 decode(<<S1, SegSize:32/integer-unsigned-big>>) ->
     SegType = decode_segment_type(S1),
     {ok, #seg_header{type = SegType, size = SegSize}}.
 
 %% @doc Encode a segment header as a binary.
+-spec encode(SegHdr::seg_header()) -> seg_header_bin().
 encode(#seg_header{type = T, size = S}) ->
     TypeBin = encode_segment_type(T),
     <<TypeBin/binary, S:32/integer-unsigned-big>>.
 
 %% @doc Create a new segment header record.
+-spec new(Type::atom(), Size::non_neg_integer()) -> seg_header().
 new(Type, Size) ->
     #seg_header{type = Type, size = Size}.
 
 %% @doc Return the size of the seg header in bytes.
+-spec header_size() -> pos_integer().
 header_size() -> 5.
 
 %% @doc Decodes the segment type.
+-spec decode_segment_type(T::pos_integer()) -> atom().
 decode_segment_type(1) -> mission;
 decode_segment_type(2) -> dwell;
 decode_segment_type(3) -> hrr;
@@ -69,11 +80,13 @@ decode_segment_type(102) -> job_acknowledge;
 decode_segment_type(_) -> reserved.
 
 %% @doc Encode the segment type field as a binary.
+-spec encode_segment_type(atom()) -> <<_:8>>.
 encode_segment_type(T) ->
     Val = encode_type(T),
     <<Val>>.
 
 %% Helper function with the type mappings.
+-spec encode_type(atom()) -> pos_integer().
 encode_type(mission) -> 1;
 encode_type(dwell) -> 2;
 encode_type(hrr) -> 3;
@@ -90,6 +103,7 @@ encode_type(job_request) -> 101;
 encode_type(job_acknowledge) -> 102.
 
 %% @doc Display the contents of a segment header.
+-spec display(SegHdr::seg_header()) -> ok.
 display(SegHdr) ->
     io:format("****************************************~n"),
     io:format("** @seg_header~n"),
@@ -97,8 +111,10 @@ display(SegHdr) ->
     io:format("Segment size: ~p~n", [get_segment_size(SegHdr)]).
 
 %% @doc Get the segment type from the seg header structure.
+-spec get_segment_type(SegHdr::seg_header()) -> atom().
 get_segment_type(#seg_header{type = T}) -> T.
 
 %% @doc Get the segment size from the seg header structure.
+-spec get_segment_size(SegHdr::seg_header()) -> non_neg_integer().
 get_segment_size(#seg_header{size = S}) -> S.
 
