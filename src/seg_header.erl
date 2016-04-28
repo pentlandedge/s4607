@@ -36,6 +36,11 @@
 -type seg_header() :: #seg_header{}.
 -type seg_header_bin() :: <<_:40>>.
 
+-type segment_type() :: mission | dwell | hrr | job_definition | free_text |
+    low_reflectivity_index | group | attached_target | test_and_status |
+    system_specific | processing_history | platform_loc | job_request |
+    job_acknowledge | reserved.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Segment header decoding functions.
 
@@ -52,7 +57,7 @@ encode(#seg_header{type = T, size = S}) ->
     <<TypeBin/binary, S:32/integer-unsigned-big>>.
 
 %% @doc Create a new segment header record.
--spec new(Type::atom(), Size::non_neg_integer()) -> seg_header().
+-spec new(Type::segment_type(), Size::non_neg_integer()) -> seg_header().
 new(Type, Size) ->
     #seg_header{type = Type, size = Size}.
 
@@ -61,7 +66,7 @@ new(Type, Size) ->
 header_size() -> 5.
 
 %% @doc Decodes the segment type.
--spec decode_segment_type(T::pos_integer()) -> atom().
+-spec decode_segment_type(T::pos_integer()) -> segment_type().
 decode_segment_type(1) -> mission;
 decode_segment_type(2) -> dwell;
 decode_segment_type(3) -> hrr;
@@ -80,13 +85,13 @@ decode_segment_type(102) -> job_acknowledge;
 decode_segment_type(_) -> reserved.
 
 %% @doc Encode the segment type field as a binary.
--spec encode_segment_type(atom()) -> <<_:8>>.
+-spec encode_segment_type(segment_type()) -> <<_:8>>.
 encode_segment_type(T) ->
     Val = encode_type(T),
     <<Val>>.
 
 %% Helper function with the type mappings.
--spec encode_type(atom()) -> pos_integer().
+-spec encode_type(segment_type()) -> pos_integer().
 encode_type(mission) -> 1;
 encode_type(dwell) -> 2;
 encode_type(hrr) -> 3;
@@ -111,7 +116,7 @@ display(SegHdr) ->
     io:format("Segment size: ~p~n", [get_segment_size(SegHdr)]).
 
 %% @doc Get the segment type from the seg header structure.
--spec get_segment_type(SegHdr::seg_header()) -> atom().
+-spec get_segment_type(SegHdr::seg_header()) -> segment_type().
 get_segment_type(#seg_header{type = T}) -> T.
 
 %% @doc Get the segment size from the seg header structure.
