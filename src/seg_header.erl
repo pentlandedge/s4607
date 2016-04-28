@@ -13,6 +13,9 @@
 %% License for the specific language governing permissions and limitations
 %% under the License.
 %%
+%% @doc This module provides functions for manipulating segment headers 
+%%      defined in the Stanag 4607 standard.
+
 -module(seg_header).
 
 -export([
@@ -30,23 +33,24 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Segment header decoding functions.
 
-%% Decode the segment header binary.
+%% @doc Decode the segment header binary.
 decode(<<S1, SegSize:32/integer-unsigned-big>>) ->
     SegType = decode_segment_type(S1),
     {ok, #seg_header{type = SegType, size = SegSize}}.
 
-%% Function to encode a segment header as a binary.
+%% @doc Encode a segment header as a binary.
 encode(#seg_header{type = T, size = S}) ->
     TypeBin = encode_segment_type(T),
     <<TypeBin/binary, S:32/integer-unsigned-big>>.
 
-%% Function to create a new segment header record.
+%% @doc Create a new segment header record.
 new(Type, Size) ->
     #seg_header{type = Type, size = Size}.
 
-%% Function to return the size of the seg header in bytes.
+%% @doc Return the size of the seg header in bytes.
 header_size() -> 5.
 
+%% @doc Decodes the segment type.
 decode_segment_type(1) -> mission;
 decode_segment_type(2) -> dwell;
 decode_segment_type(3) -> hrr;
@@ -64,7 +68,7 @@ decode_segment_type(101) -> job_request;
 decode_segment_type(102) -> job_acknowledge;
 decode_segment_type(_) -> reserved.
 
-%% Function to encode the segment type field as a binary.
+%% @doc Encode the segment type field as a binary.
 encode_segment_type(T) ->
     Val = encode_type(T),
     <<Val>>.
@@ -85,15 +89,16 @@ encode_type(platform_loc) -> 13;
 encode_type(job_request) -> 101;
 encode_type(job_acknowledge) -> 102.
 
+%% @doc Display the contents of a segment header.
 display(SegHdr) ->
     io:format("****************************************~n"),
     io:format("** @seg_header~n"),
     io:format("Segment type: ~p~n", [get_segment_type(SegHdr)]),
     io:format("Segment size: ~p~n", [get_segment_size(SegHdr)]).
 
-%% Function to get the segment type from the seg header structure.
+%% @doc Get the segment type from the seg header structure.
 get_segment_type(#seg_header{type = T}) -> T.
 
-%% Function to get the segment size from the seg header structure.
+%% @doc Get the segment size from the seg header structure.
 get_segment_size(#seg_header{size = S}) -> S.
 
