@@ -34,6 +34,11 @@
 -define(ORIGINATOR_LENGTH, 10).
 -define(RECIPIENT_LENGTH, 10).
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Type specifications.
+
+-type free_text() :: #free_text{}.
+
 %% @doc Decode a binary free text segment.
 decode(<<Orig:?ORIGINATOR_LENGTH/binary,Recip:?RECIPIENT_LENGTH/binary,
          Text/binary>>) ->
@@ -81,6 +86,7 @@ to_dict(#free_text{originator = Orig, recipient = Recip, text = Text}) ->
     dict:store(text, Text, D3).
 
 %% @doc Display the contents of a free text segment.
+-spec display(FT::free_text()) -> ok.
 display(#free_text{originator = Orig, recipient = Recip, text = Text}) ->
     io:format("****************************************~n"),
     io:format("** @free_text~n"),
@@ -91,11 +97,14 @@ display(#free_text{originator = Orig, recipient = Recip, text = Text}) ->
 % Accessor functions.
 
 %% @doc Extract the originator field.
+-spec get_originator(FT::free_text()) -> string().
 get_originator(#free_text{originator = X}) -> X.
 
 %% @doc Extract the recipient field.
+-spec get_recipient(FT::free_text()) -> string().
 get_recipient(#free_text{recipient = X}) -> X.
 
 %% @doc Extract the free text field.
+-spec get_text(FT::free_text()) -> string().
 get_text(#free_text{text = X}) -> X.
 
