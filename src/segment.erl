@@ -118,10 +118,8 @@ display(SegHdr, SegRec) ->
     % Extract the type and see if we know how to process it.
     SegType = seg_header:get_segment_type(SegHdr),
     case seg_type_to_module(SegType) of
-        {ok, ModName} ->
-            ModName:display(SegRec);
-        _ ->
-            ok
+        {ok, ModName} -> ModName:display(SegRec);
+        Error         -> Error 
     end.
 
 %% Extracts the first binary portion associated with a segment header.
