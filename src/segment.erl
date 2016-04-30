@@ -30,7 +30,13 @@
 
 -record(segment, {header, data}).
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Type specifications.
+
+-type segment() :: #segment{}. 
+
 %% @doc Decode a list of segments contained within the payload of a packet.
+-spec decode_segments(Bin::binary(), Acc::list()) -> [segment()].
 decode_segments(<<>>, Acc) ->
     lists:reverse(Acc);
 decode_segments(Bin, Acc) ->
@@ -60,6 +66,8 @@ decode_segments(Bin, Acc) ->
     decode_segments(SRem2, [Seg|Acc]).
 
 %% @doc Create a binary encoded segment from a segment record.
+-spec encode(Seg::segment()) -> 
+    {ok, Bin::binary()} | {error, unsupported_segment_type}.
 encode(#segment{header = SH, data = SegRec}) ->
     % Extract the type and see if we know how to process it.
     SegType = seg_header:get_segment_type(SH),
