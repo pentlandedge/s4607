@@ -85,6 +85,11 @@
     electrical_length_uncertainty,
     hrr_scatter_records}).
 
+-record(processing_mask, {
+    clutter_cancellation,
+    single_ambiguity_keystoning,
+    multi_ambiguity_keystoning}).
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% HRR segment decoding functions.
 
@@ -339,6 +344,16 @@ decode_type_of_hrr(4) -> oversized_hrr_chip;
 decode_type_of_hrr(5) -> full_rdm;
 decode_type_of_hrr(6) -> partial_rdm;
 decode_type_of_hrr(7) -> full_range_pulse_data.
+
+decode_processing_mask(<<PM>>) ->
+    <<ClutterCancellation:1, SingleAmbiguityKeystoning:1,
+    MultiAmbiguityKeystoning:1,
+    _Spare:5>> = PM,
+
+    #processing_mask{
+    clutter_cancellation = ClutterCancellation,
+    single_ambiguity_keystoning = SingleAmbiguityKeystoning,
+    multi_ambiguity_keystoning = MultiAmbiguityKeystoning}.
 
 %% Accessor functions to allow access to the record fields without creating
 %% client dependencies on the actual structure.
