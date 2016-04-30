@@ -35,7 +35,8 @@
 
 -type segment() :: #segment{}. 
 
-%% @doc Decode a list of segments contained within the payload of a packet.
+%% @doc Decode a binary encoded list of segments contained within the payload 
+%% of a packet.
 -spec decode_segments(Bin::binary(), Acc::list()) -> [segment()].
 decode_segments(<<>>, Acc) ->
     lists:reverse(Acc);
