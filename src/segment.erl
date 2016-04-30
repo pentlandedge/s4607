@@ -106,6 +106,7 @@ build_seg_header(SegType, SegRec) ->
     seg_header:new(SegType, SegSize).
 
 %% @doc Function to display a segment passed as a segment record.
+-spec display(Seg::segment()) -> ok.
 display(#segment{header = H, data = D}) ->
     display(H, D).
 
