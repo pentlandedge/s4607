@@ -13,6 +13,10 @@
 %% License for the specific language governing permissions and limitations
 %% under the License.
 %%
+%% @doc Stanag 4607 packets are comprised of segments of various types. This 
+%%      module contains generic segment handling functions. Code to handle 
+%%      each specific type of segment is delegated to separate modules.
+
 -module(segment).
 
 -export([
@@ -26,8 +30,7 @@
 
 -record(segment, {header, data}).
 
-%% Function to decode a list of segments contained within the payload of
-%% a packet.
+%% @doc Decode a list of segments contained within the payload of a packet.
 decode_segments(<<>>, Acc) ->
     lists:reverse(Acc);
 decode_segments(Bin, Acc) ->
@@ -56,7 +59,7 @@ decode_segments(Bin, Acc) ->
     % Loop over any remaining segments contained in this packet.
     decode_segments(SRem2, [Seg|Acc]).
 
-%% Function to create an encoded segment from a segment record.
+%% @doc Create a binary encoded segment from a segment record.
 encode(#segment{header = SH, data = SegRec}) ->
     % Extract the type and see if we know how to process it.
     SegType = seg_header:get_segment_type(SH),
@@ -69,7 +72,7 @@ encode(#segment{header = SH, data = SegRec}) ->
             {error, unsupported_segment_type}
     end.
 
-%% Function to create a new segment record for the specified segment type.
+%% @doc Create a new segment record for the specified segment type.
 new(SegType, SegRec) ->
     % Check we support the segment type then build it.
     {ok, _} = seg_type_to_module(SegType),
@@ -94,12 +97,12 @@ build_seg_header(SegType, SegRec) ->
     SegSize = seg_header:header_size() + ModName:payload_size(SegRec),
     seg_header:new(SegType, SegSize).
 
-%% Function to display a segment.
+%% @doc Function to display a segment passed as a segment record.
 display(#segment{header = H, data = D}) ->
     display(H, D).
 
-%% Function to display a segment. Segment should have been decoded prior to
-%% calling this function.
+%% @doc Function to display a segment passed as separate header and payload. 
+%% Segment should have been decoded prior to calling this function.
 display(SegHdr, SegRec) ->
     seg_header:display(SegHdr),
 
@@ -122,7 +125,11 @@ extract_segment_data(Bin, Len) ->
     sutils:extract_data(Bin, Len).
 
 %% Accessor functions.
+
+%% @doc Retrieve the segment header from a segment structure.
 get_header(#segment{header = H}) -> H.
+
+%% @doc Retrieve the data payload from a segment structure.
 get_data(#segment{data = D}) -> D.
 
 %% Function to map segment types to the module containing the processing
