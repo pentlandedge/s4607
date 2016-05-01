@@ -26,7 +26,8 @@ s4607_test_() ->
      encode_free_text_check(), encode_packet_loc_segment_check(),
      mission_packet_encode(), job_def_packet_encode(), dwell_packet_encode(),
      free_text_packet_encode(), platform_loc_packet_encode(),
-     packet_list_encode(), display_unsupported_seg()].
+     packet_list_encode(), display_unsupported_seg(), 
+     decode_unrecognised_seg()].
 
 encode_mission_segment_check() ->
     % Create a mission segment.
@@ -456,6 +457,21 @@ display_unsupported_seg() ->
     % Try to display it, expect an error.
     Ret = segment:display(Seg),
     [?_assertEqual({error, unsupported_segment_type}, Ret)]. 
+
+%% Checks that an attempt to decode an unrecognised segment type returns an 
+%% error and the original binary.
+decode_unrecognised_seg() ->
+    %% Create a binary segment header with an invalid segment type.
+    %% Set type = 200, seg size = 9 (hdr = 5, payload = 4).
+    SegHdrBin = <<200,0,0,0,9>>,
+    SegDataBin = <<1,2,3,4>>,
+    SegBin = <<SegHdrBin/binary, SegDataBin/binary>>,
+    Ret = segment:decode_segments(SegBin, []),
+    [SegRec] = Ret,
+    SegHdr = segment:get_header(SegRec),
+    SegData = segment:get_data(SegRec),
+    [?_assertEqual(reserved, seg_header:get_segment_type(SegHdr)),
+     ?_assertEqual(SegDataBin, SegData)]. 
 
 %% Function to create a list of packets containing dwells based on
 %% East Fortune runway.
