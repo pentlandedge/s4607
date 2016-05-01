@@ -13,6 +13,9 @@
 %% License for the specific language governing permissions and limitations 
 %% under the License.
 %%
+%% @doc Functions for manipulating job definition segments defined in the 
+%%      Stanag 4607 standard.
+
 -module(job_def).
 
 -export([
@@ -95,9 +98,7 @@
     terr_elev_model,
     geoid_model}).
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Job definition segment decoding functions.
-
+%% @doc Decode a binary encoded job definition segment.
 decode(<<JobID:32,SIDT,SIDM:6/binary,TFF:1/binary,Pri,
     J6:4/binary,J7:4/binary,J8:4/binary,J9:4/binary,J10:4/binary,J11:4/binary,
     J12:4/binary,J13:4/binary,J14,NRI:16,J16:16,J17:16,J18:16,J19,J20:16,
@@ -133,7 +134,7 @@ decode(<<JobID:32,SIDT,SIDM:6/binary,TFF:1/binary,Pri,
         terr_elev_model = decode_terrain_elev_model(J27),
         geoid_model = decode_geoid_model(J28)}}.
 
-%% Function to produce a binary encoded version of a job definition segment.
+%% @doc Produce a binary encoded job definition segment.
 encode(JD) ->
     % Function to encode each parameter in the list and append to an 
     % accumulated binary.
@@ -194,7 +195,7 @@ encode(JD) ->
     
     lists:foldl(F, <<>>, ParamList).
 
-%% Function to create a new job definition segment from a supplied list of 
+%% @doc Create a new job definition segment from a supplied list of 
 %% {parameter, Value} tuples.
 new(ParamList) ->
     % Local function to pull the parameter from the list or use a default
@@ -236,7 +237,7 @@ new(ParamList) ->
         terr_elev_model = F(terr_elev_model, ParamList, none_specified),
         geoid_model = F(geoid_model, ParamList, none_specified)}.
 
-%% Function to return the size of the job definition segment payload.
+%% @doc Return the size of the job definition segment payload.
 payload_size(_) -> 68.
 
 decode_sensor_id_type(0) -> unidentified;
@@ -570,6 +571,7 @@ egm(egm96) -> 1;
 egm(geo96) -> 2;
 egm(flat_earth) -> 3.
 
+%% @doc Display a job definition segment.
 display(JDS) ->
     io:format("****************************************~n"),
     io:format("** @job_def~n"),
@@ -603,23 +605,43 @@ display(JDS) ->
     io:format("Geoid model: ~p~n", [JDS#job_def.geoid_model]).
 
 %% Accessor functions to allow clients access to the contents
+%% @doc Get the job ID from the job definition structure.
 get_job_id(#job_def{job_id = X}) -> X.
+%% @doc Get the Geoid model from the job definition structure.
 get_geoid_model(#job_def{geoid_model = X}) -> X.
+%% @doc Get the sensor ID type parameter from the job definition structure.
 get_sensor_id_type(#job_def{sensor_id_type = X}) -> X.
+%% @doc Get the sensor ID model from the job definition structure.
 get_sensor_id_model(#job_def{sensor_id_model = X}) -> X.
+%% @doc Get the target filtering flag from the job definition structure.
 get_target_filt_flag(#job_def{target_filt_flag = X}) -> X.
+%% @doc Get the priority field from the job definition structure.
 get_priority(#job_def{priority = X}) -> X.
+%% @doc Get the point A Lat from the job definition structure.
 get_bounding_a_lat(#job_def{bounding_a_lat = X}) -> X.
+%% @doc Get the point A Lon from the job definition structure.
 get_bounding_a_lon(#job_def{bounding_a_lon = X}) -> X.
+%% @doc Get the point B Lat from the job definition structure.
 get_bounding_b_lat(#job_def{bounding_b_lat = X}) -> X.
+%% @doc Get the point B Lon from the job definition structure.
 get_bounding_b_lon(#job_def{bounding_b_lon = X}) -> X.
+%% @doc Get the point C Lat from the job definition structure.
 get_bounding_c_lat(#job_def{bounding_c_lat = X}) -> X.
+%% @doc Get the point C Lon from the job definition structure.
 get_bounding_c_lon(#job_def{bounding_c_lon = X}) -> X.
+%% @doc Get the point D Lat from the job definition structure.
 get_bounding_d_lat(#job_def{bounding_d_lat = X}) -> X.
+%% @doc Get the point D Lon from the job definition structure.
 get_bounding_d_lon(#job_def{bounding_d_lon = X}) -> X.
+%% @doc Get the radar mode from the job definition structure.
 get_radar_mode(#job_def{radar_mode = X}) -> X.
+%% @doc Get the nominal revisit interval from the job definition structure.
 get_nom_rev_int(#job_def{nom_rev_int = X}) -> X.
+%% @doc Get the along track position uncertainty from the job definition 
+%% structure.
 get_ns_pos_unc_along_track(#job_def{ns_pos_unc_along_track = X}) -> X.
+%% @doc Get the cross track position uncertainty from the job definition 
+%% structure.
 get_ns_pos_unc_cross_track(#job_def{ns_pos_unc_cross_track = X}) -> X.
 get_ns_pos_unc_alt(#job_def{ns_pos_unc_alt = X}) -> X.
 get_ns_pos_unc_heading(#job_def{ns_pos_unc_heading = X}) -> X.
