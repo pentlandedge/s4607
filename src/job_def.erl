@@ -109,7 +109,7 @@ decode(<<JobID:32,SIDT,SIDM:6/binary,TFF:1/binary,Pri,
         sensor_id_type = decode_sensor_id_type(SIDT),
         sensor_id_model = decode_sensor_id_model(SIDM),
         target_filt_flag = decode_target_filtering_flag(TFF),
-        priority = Pri,
+        priority = decode_priority(Pri),
         bounding_a_lat = stanag_types:sa32_to_float(J6),
         bounding_a_lon = stanag_types:ba32_to_float(J7),
         bounding_b_lat = stanag_types:sa32_to_float(J8),
@@ -354,7 +354,11 @@ encode_target_filtering_flag(FlagList) ->
     % Combine all bits into a binary.
     <<0:5,B2:1,B1:1,B0:1>>.
 
-% Function to encode the radar priority.
+%% Decode the radar priority.
+decode_priority(255) -> end_of_job;
+decode_priority(X) when X >= 1, X =< 99 -> X.
+
+%% Function to encode the radar priority.
 encode_priority(end_of_job) -> <<255>>;
 encode_priority(X) when X >= 1, X =< 99 -> <<X>>.
 

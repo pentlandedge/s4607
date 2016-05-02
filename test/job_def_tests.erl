@@ -27,7 +27,8 @@ job_def_test_() ->
      radar_mode_decode_checks(), radar_mode_encode_checks(),
      terr_elev_decode_checks(), terr_elev_encode_checks(),
      geoid_decode_checks(), geoid_encode_checks(),
-     target_filtering_decode_checks(), target_filtering_encode_checks()].
+     target_filtering_decode_checks(), target_filtering_encode_checks(),
+     end_of_job_priority_checks()].
 
 job1_checks() ->
     {ok, JD1} = job_def:decode(job_def1()),
@@ -180,6 +181,25 @@ target_filtering_encode_checks() ->
                              area_filtering_intersection_dwell_bounding])),
      ?_assertEqual(<<7>>, F(All))].
 
+end_of_job_priority_checks() ->
+    % Start with the sample job definition parameters then patch the ones we
+    % are interested in.
+    P1 = sample_job_def_params(),
+    
+    % Replace the priority field with an end of job indication.
+    P2 = proplists:delete(priority, P1),
+    P3 = [{priority, end_of_job}|P2],
+    
+    % Create a job definition segment.
+    JD = job_def:new(P3),
+
+    % Encode it, then decode it again.
+    EJD = job_def:encode(JD),
+    {ok, DEJD} = job_def:decode(EJD),
+    
+    % Check that the decoded priority field is correct.
+    [?_assertEqual(end_of_job, job_def:get_priority(DEJD))].
+    
 job_def1() ->
     <<1,2,3,4, 5, "Model1", 0, 23,
       64,0,0,0, 245,85,85,85, 64,0,0,0, 245,85,85,85, 64,0,0,0,
@@ -187,23 +207,24 @@ job_def1() ->
       16#27,16#10, 45, 0,128, 255,255, 127,74, 0,100, 5, 90, 3, 1, 3>>.
 
 sample_job_def() ->
-    P = [{job_id, 100}, {sensor_id_type, rotary_wing_radar},
-         {sensor_id_model, "Heli 1"}, {target_filt_flag, no_filtering}, {priority, 30},
-         {bounding_a_lat, 33.3}, {bounding_a_lon, 3.45},
-         {bounding_b_lat, 23.4}, {bounding_b_lon, 350},
-         {bounding_c_lat, -45.0}, {bounding_c_lon, 2.45},
-         {bounding_d_lat, -60.0}, {bounding_d_lon, 140},
-         {radar_mode, {monopulse_calibration, asars_aip}}, {nom_rev_int, 65000},
-         {ns_pos_unc_along_track, no_statement},
-         {ns_pos_unc_cross_track, 5000}, {ns_pos_unc_alt, 20000},
-         {ns_pos_unc_heading, 45}, {ns_pos_unc_sensor_speed, 65534},
-         {ns_val_slant_range_std_dev, 100},
-         {ns_val_cross_range_std_dev, no_statement},
-         {ns_val_tgt_vel_los_std_dev, 4000}, {ns_val_mdv, no_statement},
-         {ns_val_det_prob, 100}, {ns_val_false_alarm_density, 254},
-         {terr_elev_model, dgm50}, {geoid_model, geo96}],
+    job_def:new(sample_job_def_params()).
 
-    job_def:new(P).
+sample_job_def_params() ->
+    [{job_id, 100}, {sensor_id_type, rotary_wing_radar},
+     {sensor_id_model, "Heli 1"}, {target_filt_flag, no_filtering}, {priority, 30},
+     {bounding_a_lat, 33.3}, {bounding_a_lon, 3.45},
+     {bounding_b_lat, 23.4}, {bounding_b_lon, 350},
+     {bounding_c_lat, -45.0}, {bounding_c_lon, 2.45},
+     {bounding_d_lat, -60.0}, {bounding_d_lon, 140},
+     {radar_mode, {monopulse_calibration, asars_aip}}, {nom_rev_int, 65000},
+     {ns_pos_unc_along_track, no_statement},
+     {ns_pos_unc_cross_track, 5000}, {ns_pos_unc_alt, 20000},
+     {ns_pos_unc_heading, 45}, {ns_pos_unc_sensor_speed, 65534},
+     {ns_val_slant_range_std_dev, 100},
+     {ns_val_cross_range_std_dev, no_statement},
+     {ns_val_tgt_vel_los_std_dev, 4000}, {ns_val_mdv, no_statement},
+     {ns_val_det_prob, 100}, {ns_val_false_alarm_density, 254},
+     {terr_elev_model, dgm50}, {geoid_model, geo96}].
 
 %% Function to return a proplist with the mapping from sensor ID to the
 %% sensor type.
