@@ -605,6 +605,7 @@ display(JDS) ->
     io:format("Geoid model: ~p~n", [JDS#job_def.geoid_model]).
 
 %% Accessor functions to allow clients access to the contents
+
 %% @doc Get the job ID from the job definition structure.
 get_job_id(#job_def{job_id = X}) -> X.
 %% @doc Get the Geoid model from the job definition structure.
@@ -640,17 +641,28 @@ get_nom_rev_int(#job_def{nom_rev_int = X}) -> X.
 %% @doc Get the along track position uncertainty from the job definition 
 %% structure.
 get_ns_pos_unc_along_track(#job_def{ns_pos_unc_along_track = X}) -> X.
-%% @doc Get the cross track position uncertainty from the job definition 
-%% structure.
+%% @doc Get the nominal sensor cross track position uncertainty from the job 
+%% definition structure.
 get_ns_pos_unc_cross_track(#job_def{ns_pos_unc_cross_track = X}) -> X.
+%% @doc Get the nominal sensor altitude position uncertainty.
 get_ns_pos_unc_alt(#job_def{ns_pos_unc_alt = X}) -> X.
+%% @doc Get the nominal sensor heading uncertainty.
 get_ns_pos_unc_heading(#job_def{ns_pos_unc_heading = X}) -> X.
+%% @doc Get the nominal sensor speed uncertainty.
 get_ns_pos_unc_sensor_speed(#job_def{ns_pos_unc_sensor_speed = X}) -> X.
+%% @doc Get the nominal sensor slant range standard deviation.
 get_ns_val_slant_range_std_dev(#job_def{ns_val_slant_range_std_dev = X}) -> X.
+%% @doc Get the nominal sensor cross range standard deviation.
 get_ns_val_cross_range_std_dev(#job_def{ns_val_cross_range_std_dev = X}) -> X.
+%% @doc Get the nominal sensor target velocity along line of sight standard 
+%% deviation.
 get_ns_val_tgt_vel_los_std_dev(#job_def{ns_val_tgt_vel_los_std_dev = X}) -> X.
+%% @doc Get the nominal sensor minimum detectable velocity (MDV).
 get_ns_val_mdv(#job_def{ns_val_mdv = X}) -> X.
+%% @doc Get the nominal sensor target detection probablility. 
 get_ns_val_det_prob(#job_def{ns_val_det_prob = X}) -> X.
+%% @doc Get the nominal sensor false alarm density.
 get_ns_val_false_alarm_density(#job_def{ns_val_false_alarm_density = X}) -> X.
+%% @doc Get the terrain elevation model.
 get_terr_elev_model(#job_def{terr_elev_model = X}) -> X.
  
