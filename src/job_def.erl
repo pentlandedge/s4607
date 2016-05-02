@@ -240,6 +240,7 @@ new(ParamList) ->
 %% @doc Return the size of the job definition segment payload.
 payload_size(_) -> 68.
 
+%% @doc Decode the sensor ID enumerated type.
 decode_sensor_id_type(0) -> unidentified;
 decode_sensor_id_type(1) -> other;
 decode_sensor_id_type(2) -> hisar;
@@ -270,7 +271,7 @@ decode_sensor_id_type(26) -> anzpy_1;
 decode_sensor_id_type(27) -> vader;
 decode_sensor_id_type(255) -> no_statement.
 
-%% Function to encode the sensor ID type as a binary.
+%% @doc Encode the sensor ID type as a binary.
 encode_sensor_id_type(Type) ->
     Val = esid(Type),
     <<Val>>.
@@ -312,7 +313,7 @@ encode_sensor_id_model(M) ->
     Pad = sutils:add_trailing_spaces(M, 6),
     list_to_binary(Pad).
 
-%% Function to decode the bits in the target filtering flag.
+%% @doc Decode the bits in the target filtering flag.
 decode_target_filtering_flag(<<0>>) -> 
     no_filtering;
 decode_target_filtering_flag(<<0:5,B2:1,B1:1,B0:1>>) -> 
@@ -330,7 +331,7 @@ decode_target_filtering_flag(<<0:5,B2:1,B1:1,B0:1>>) ->
          end,
     L3.
 
-%% Function to encode the target filtering flag
+%% @doc Encode the target filtering flag in its binary form.
 encode_target_filtering_flag(no_filtering) ->
     <<0>>;
 encode_target_filtering_flag(FlagList) ->
@@ -357,7 +358,7 @@ encode_target_filtering_flag(FlagList) ->
 encode_priority(end_of_job) -> <<255>>;
 encode_priority(X) when X >= 1, X =< 99 -> <<X>>.
 
-%% Function to decode the various radar modes for different systems.
+%% @doc Decode the various radar modes for different systems.
 decode_radar_mode(0) -> {unspecified_mode, generic};
 decode_radar_mode(1) -> {mti, generic};
 decode_radar_mode(2) -> {hrr, generic};
@@ -419,7 +420,7 @@ decode_radar_mode(122) -> {dismount_gmti, vader};
 decode_radar_mode(123) -> {hrr_gmti, vader};
 decode_radar_mode(_) -> {available_for_future_use, reserved}.
 
-%% Function to encode the radar mode as a binary.
+%% @doc Encode the radar mode as a binary.
 encode_radar_mode({_System, _Mode} = RM) ->
     Value = erm(RM),
     <<Value>>.
@@ -515,7 +516,7 @@ gen_encode_range_ns(L, U, NS, ConvFun) ->
 erns(no_statement, _, _, NS) -> NS;
 erns(X, L, U, _) when X >= L, X =< U -> X.
 
-%% Decode the terrain elevation model parameter.
+%% @doc Decode the terrain elevation model parameter.
 decode_terrain_elev_model(0) -> none_specified;
 decode_terrain_elev_model(1) -> dted0;
 decode_terrain_elev_model(2) -> dted1;
@@ -532,7 +533,7 @@ decode_terrain_elev_model(12) -> sthd;
 decode_terrain_elev_model(13) -> sedris;
 decode_terrain_elev_model(_) -> reserved.
 
-%% Encode the terrain elevation parameter as a binary.
+%% @doc Encode the terrain elevation parameter as a binary.
 encode_terrain_elev_model(X) ->
     Val = etev(X),
     <<Val>>.
@@ -553,14 +554,14 @@ etev(ithd) -> 11;
 etev(sthd) -> 12;
 etev(sedris) -> 13.
 
-%% Decode the Geoid model parameter.
+%% @doc Decode the Geoid model parameter.
 decode_geoid_model(0) -> none_specified;
 decode_geoid_model(1) -> egm96;
 decode_geoid_model(2) -> geo96;
 decode_geoid_model(3) -> flat_earth;
 decode_geoid_model(_) -> reserved.
 
-%% Function to encode the Geoid model parameter as a binary.
+%% @doc Encode the Geoid model parameter as a binary.
 encode_geoid_model(X) ->
     Val = egm(X),
     <<Val>>.
