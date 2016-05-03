@@ -28,7 +28,8 @@ job_def_test_() ->
      terr_elev_decode_checks(), terr_elev_encode_checks(),
      geoid_decode_checks(), geoid_encode_checks(),
      target_filtering_decode_checks(), target_filtering_encode_checks(),
-     end_of_job_priority_checks(), radar_mode_decode_reserved_checks()].
+     end_of_job_priority_checks(), radar_mode_decode_reserved_checks(),
+     cross_range_std_dev_checks()].
 
 job1_checks() ->
     {ok, JD1} = job_def:decode(job_def1()),
@@ -203,6 +204,27 @@ end_of_job_priority_checks() ->
 radar_mode_decode_reserved_checks() ->
     Val = {available_for_future_use, reserved},
     [?_assertEqual(Val, job_def:decode_radar_mode(119))].
+
+cross_range_std_dev_checks() ->
+    % Start with the sample job definition parameters then patch the ones we
+    % are interested in.
+    P1 = sample_job_def_params(),
+    
+    % Replace the cross range standard dev parameter. 
+    P2 = proplists:delete(ns_val_cross_range_std_dev, P1),
+    P3 = [{ns_val_cross_range_std_dev, 179.0}|P2],
+    
+    % Create a job definition segment.
+    JD = job_def:new(P3),
+
+    % Encode it, then decode it again.
+    EJD = job_def:encode(JD),
+    {ok, DEJD} = job_def:decode(EJD),
+    
+    % Check that the decoded priority field is correct.
+    Delta = 0.001,
+    DecodedStdDev = job_def:get_ns_val_cross_range_std_dev(DEJD),
+    [?_assert(almost_equal(179.0, DecodedStdDev, Delta))].
 
 job_def1() ->
     <<1,2,3,4, 5, "Model1", 0, 23,
