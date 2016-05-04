@@ -98,7 +98,16 @@
     terr_elev_model,
     geoid_model}).
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Type specifications.
+
+-opaque job_def() :: #job_def{}.
+-type job_def_bin() :: <<_:544>>.
+
+-export_type([job_def/0, job_def_bin/0]).
+
 %% @doc Decode a binary encoded job definition segment.
+-spec decode(Bin::job_def_bin()) -> {ok, job_def()}.
 decode(<<JobID:32,SIDT,SIDM:6/binary,TFF:1/binary,Pri,
     J6:4/binary,J7:4/binary,J8:4/binary,J9:4/binary,J10:4/binary,J11:4/binary,
     J12:4/binary,J13:4/binary,J14,NRI:16,J16:16,J17:16,J18:16,J19,J20:16,
@@ -135,6 +144,7 @@ decode(<<JobID:32,SIDT,SIDM:6/binary,TFF:1/binary,Pri,
         geoid_model = decode_geoid_model(J28)}}.
 
 %% @doc Produce a binary encoded job definition segment.
+-spec encode(JobDef::job_def()) -> job_def_bin().
 encode(JD) ->
     % Function to encode each parameter in the list and append to an 
     % accumulated binary.
@@ -197,6 +207,7 @@ encode(JD) ->
 
 %% @doc Create a new job definition segment from a supplied list of 
 %% {parameter, Value} tuples.
+-spec new(ParamList::list()) -> job_def().
 new(ParamList) ->
     % Local function to pull the parameter from the list or use a default
     % value.
@@ -238,6 +249,7 @@ new(ParamList) ->
         geoid_model = F(geoid_model, ParamList, none_specified)}.
 
 %% @doc Return the size of the job definition segment payload.
+-spec payload_size(any()) -> non_neg_integer().
 payload_size(_) -> 68.
 
 %% @doc Decode the sensor ID enumerated type.
