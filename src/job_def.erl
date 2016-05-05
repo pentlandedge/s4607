@@ -105,7 +105,7 @@
 
 -type job_def_bin() :: <<_:544>>.
 -type flag_list() :: [atom()].
-
+-type priority() :: 1..99.
 -export_type([job_def/0, job_def_bin/0]).
 
 %% @doc Decode a binary encoded job definition segment.
@@ -352,6 +352,8 @@ decode_target_filtering_flag(<<0:5,B2:1,B1:1,B0:1>>) ->
     L3.
 
 %% @doc Encode the target filtering flag in its binary form.
+-spec encode_target_filtering_flag(Filt) -> <<_:8>>
+    when Filt :: no_filtering | flag_list().
 encode_target_filtering_flag(no_filtering) ->
     <<0>>;
 encode_target_filtering_flag(FlagList) ->
@@ -375,10 +377,14 @@ encode_target_filtering_flag(FlagList) ->
     <<0:5,B2:1,B1:1,B0:1>>.
 
 %% Decode the radar priority.
+-spec decode_priority(byte()) -> end_of_job | Priority 
+    when Priority :: priority().
 decode_priority(255) -> end_of_job;
 decode_priority(X) when X >= 1, X =< 99 -> X.
 
 %% Function to encode the radar priority.
+-spec encode_priority(P) -> <<_:8>>
+    when P :: end_of_job | priority().
 encode_priority(end_of_job) -> <<255>>;
 encode_priority(X) when X >= 1, X =< 99 -> <<X>>.
 
