@@ -389,6 +389,7 @@ encode_priority(end_of_job) -> <<255>>;
 encode_priority(X) when X >= 1, X =< 99 -> <<X>>.
 
 %% @doc Decode the various radar modes for different systems.
+-spec decode_radar_mode(byte()) -> {atom(), atom()}.
 decode_radar_mode(0) -> {unspecified_mode, generic};
 decode_radar_mode(1) -> {mti, generic};
 decode_radar_mode(2) -> {hrr, generic};
@@ -451,11 +452,13 @@ decode_radar_mode(123) -> {hrr_gmti, vader};
 decode_radar_mode(_) -> {available_for_future_use, reserved}.
 
 %% @doc Encode the radar mode as a binary.
-encode_radar_mode({_System, _Mode} = RM) ->
+-spec encode_radar_mode({atom(), atom()}) -> <<_:8>>.
+encode_radar_mode({_Mode, _System} = RM) ->
     Value = erm(RM),
     <<Value>>.
 
 %% Helper function for encoding the radar mode.
+-spec erm({atom(), atom()}) -> byte().
 erm({unspecified_mode, generic}) -> 0;
 erm({mti, generic}) -> 1;
 erm({hrr, generic}) -> 2;
