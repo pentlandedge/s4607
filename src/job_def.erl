@@ -102,7 +102,9 @@
 %% Type specifications.
 
 -opaque job_def() :: #job_def{}.
+
 -type job_def_bin() :: <<_:544>>.
+-type flag_list() :: [atom()].
 
 -export_type([job_def/0, job_def_bin/0]).
 
@@ -253,6 +255,7 @@ new(ParamList) ->
 payload_size(_) -> 68.
 
 %% @doc Decode the sensor ID enumerated type.
+-spec decode_sensor_id_type(byte()) -> atom(). 
 decode_sensor_id_type(0) -> unidentified;
 decode_sensor_id_type(1) -> other;
 decode_sensor_id_type(2) -> hisar;
@@ -284,10 +287,12 @@ decode_sensor_id_type(27) -> vader;
 decode_sensor_id_type(255) -> no_statement.
 
 %% @doc Encode the sensor ID type as a binary.
+-spec encode_sensor_id_type(atom()) -> <<_:8>>.
 encode_sensor_id_type(Type) ->
     Val = esid(Type),
     <<Val>>.
 
+-spec esid(atom()) -> byte().
 esid(unidentified) -> 0;
 esid(other) -> 1;
 esid(hisar) -> 2;
@@ -318,14 +323,17 @@ esid(anzpy_1) -> 26;
 esid(vader) -> 27;
 esid(no_statement) -> 255.
 
+-spec decode_sensor_id_model(binary()) -> string().
 decode_sensor_id_model(Bin) ->
     sutils:trim_trailing_spaces(binary_to_list(Bin)).
 
+-spec encode_sensor_id_model(string()) -> binary().
 encode_sensor_id_model(M) ->
     Pad = sutils:add_trailing_spaces(M, 6),
     list_to_binary(Pad).
 
 %% @doc Decode the bits in the target filtering flag.
+-spec decode_target_filtering_flag(<<_:8>>) -> no_filtering | flag_list().
 decode_target_filtering_flag(<<0>>) -> 
     no_filtering;
 decode_target_filtering_flag(<<0:5,B2:1,B1:1,B0:1>>) -> 
