@@ -108,6 +108,8 @@
 -type priority() :: 1..99.
 -export_type([job_def/0, job_def_bin/0]).
 
+-type geoid_model() :: none_specified | egm96 | geo96 | flat_earth.
+
 %% @doc Decode a binary encoded job definition segment.
 -spec decode(Bin::job_def_bin()) -> {ok, job_def()}.
 decode(<<JobID:32,SIDT,SIDM:6/binary,TFF:1/binary,Pri,
@@ -588,6 +590,7 @@ etev(sthd) -> 12;
 etev(sedris) -> 13.
 
 %% @doc Decode the Geoid model parameter.
+-spec decode_geoid_model(byte()) -> geoid_model() | reserved.
 decode_geoid_model(0) -> none_specified;
 decode_geoid_model(1) -> egm96;
 decode_geoid_model(2) -> geo96;
@@ -595,17 +598,20 @@ decode_geoid_model(3) -> flat_earth;
 decode_geoid_model(_) -> reserved.
 
 %% @doc Encode the Geoid model parameter as a binary.
+-spec encode_geoid_model(GM::geoid_model()) -> <<_:8>>.
 encode_geoid_model(X) ->
     Val = egm(X),
     <<Val>>.
 
 % Helper functioon to map Geoid models to the integer value.
+-spec egm(GM::geoid_model()) -> byte().
 egm(none_specified) -> 0;
 egm(egm96) -> 1;
 egm(geo96) -> 2;
 egm(flat_earth) -> 3.
 
 %% @doc Display a job definition segment.
+-spec display(JobDef::job_def()) -> ok.
 display(JDS) ->
     io:format("****************************************~n"),
     io:format("** @job_def~n"),
