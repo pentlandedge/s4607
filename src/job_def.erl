@@ -110,6 +110,9 @@
 
 -type geoid_model() :: none_specified | egm96 | geo96 | flat_earth.
 
+-type elev_model() ::  none_specified | dted0 | dted1 | dted2 | dted3 | 
+    dted4 | dted5 | srtm1 | srtm2 | dgm50 | dgm250 | ithd | sthd | sedris.
+
 %% @doc Decode a binary encoded job definition segment.
 -spec decode(Bin::job_def_bin()) -> {ok, job_def()}.
 decode(<<JobID:32,SIDT,SIDM:6/binary,TFF:1/binary,Pri,
@@ -552,6 +555,7 @@ erns(no_statement, _, _, NS) -> NS;
 erns(X, L, U, _) when X >= L, X =< U -> X.
 
 %% @doc Decode the terrain elevation model parameter.
+-spec decode_terrain_elev_model(byte()) -> elev_model() | reserved.
 decode_terrain_elev_model(0) -> none_specified;
 decode_terrain_elev_model(1) -> dted0;
 decode_terrain_elev_model(2) -> dted1;
@@ -569,11 +573,13 @@ decode_terrain_elev_model(13) -> sedris;
 decode_terrain_elev_model(_) -> reserved.
 
 %% @doc Encode the terrain elevation parameter as a binary.
+-spec encode_terrain_elev_model(ElevModel::elev_model()) -> <<_:8>>.
 encode_terrain_elev_model(X) ->
     Val = etev(X),
     <<Val>>.
 
 %% Helper function with the mapping from model -> integer.
+-spec etev(ElevModel::elev_model()) -> byte().
 etev(none_specified) -> 0;
 etev(dted0) -> 1;
 etev(dted1) -> 2;
