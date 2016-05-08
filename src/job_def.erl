@@ -664,24 +664,42 @@ get_sensor_id_model(#job_def{sensor_id_model = X}) -> X.
 get_target_filt_flag(#job_def{target_filt_flag = X}) -> X.
 %% @doc Get the priority field from the job definition structure.
 get_priority(#job_def{priority = X}) -> X.
+
 %% @doc Get the point A Lat from the job definition structure.
+-spec get_bounding_a_lat(JobDef::job_def()) -> float().
 get_bounding_a_lat(#job_def{bounding_a_lat = X}) -> X.
+
 %% @doc Get the point A Lon from the job definition structure.
+-spec get_bounding_a_lon(JobDef::job_def()) -> float().
 get_bounding_a_lon(#job_def{bounding_a_lon = X}) -> X.
+
 %% @doc Get the point B Lat from the job definition structure.
+-spec get_bounding_b_lat(JobDef::job_def()) -> float().
 get_bounding_b_lat(#job_def{bounding_b_lat = X}) -> X.
+
 %% @doc Get the point B Lon from the job definition structure.
+-spec get_bounding_b_lon(JobDef::job_def()) -> float().
 get_bounding_b_lon(#job_def{bounding_b_lon = X}) -> X.
+
 %% @doc Get the point C Lat from the job definition structure.
+-spec get_bounding_c_lat(JobDef::job_def()) -> float().
 get_bounding_c_lat(#job_def{bounding_c_lat = X}) -> X.
+
 %% @doc Get the point C Lon from the job definition structure.
+-spec get_bounding_c_lon(JobDef::job_def()) -> float().
 get_bounding_c_lon(#job_def{bounding_c_lon = X}) -> X.
+
 %% @doc Get the point D Lat from the job definition structure.
+-spec get_bounding_d_lat(JobDef::job_def()) -> float().
 get_bounding_d_lat(#job_def{bounding_d_lat = X}) -> X.
+
 %% @doc Get the point D Lon from the job definition structure.
+-spec get_bounding_d_lon(JobDef::job_def()) -> float().
 get_bounding_d_lon(#job_def{bounding_d_lon = X}) -> X.
+
 %% @doc Get the radar mode from the job definition structure.
 get_radar_mode(#job_def{radar_mode = X}) -> X.
+
 %% @doc Get the nominal revisit interval from the job definition structure.
 get_nom_rev_int(#job_def{nom_rev_int = X}) -> X.
 %% @doc Get the along track position uncertainty from the job definition 
