@@ -727,6 +727,8 @@ get_ns_val_mdv(#job_def{ns_val_mdv = X}) -> X.
 get_ns_val_det_prob(#job_def{ns_val_det_prob = X}) -> X.
 %% @doc Get the nominal sensor false alarm density.
 get_ns_val_false_alarm_density(#job_def{ns_val_false_alarm_density = X}) -> X.
+
 %% @doc Get the terrain elevation model.
+-spec get_terr_elev_model(JobDef::job_def()) -> elev_model().
 get_terr_elev_model(#job_def{terr_elev_model = X}) -> X.
  
