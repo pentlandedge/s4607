@@ -707,18 +707,34 @@ get_radar_mode(#job_def{radar_mode = X}) -> X.
 
 %% @doc Get the nominal revisit interval from the job definition structure.
 get_nom_rev_int(#job_def{nom_rev_int = X}) -> X.
+
 %% @doc Get the along track position uncertainty from the job definition 
 %% structure.
+-spec get_ns_pos_unc_along_track(JobDef::job_def()) -> NomUnc
+    when NomUnc :: no_statement | non_neg_integer().
 get_ns_pos_unc_along_track(#job_def{ns_pos_unc_along_track = X}) -> X.
+
 %% @doc Get the nominal sensor cross track position uncertainty from the job 
 %% definition structure.
+-spec get_ns_pos_unc_cross_track(JobDef::job_def()) -> NomUnc
+    when NomUnc :: no_statement | non_neg_integer().
 get_ns_pos_unc_cross_track(#job_def{ns_pos_unc_cross_track = X}) -> X.
+
 %% @doc Get the nominal sensor altitude position uncertainty.
+-spec get_ns_pos_unc_alt(JobDef::job_def()) -> NomUnc
+    when NomUnc :: no_statement | non_neg_integer().
 get_ns_pos_unc_alt(#job_def{ns_pos_unc_alt = X}) -> X.
+
 %% @doc Get the nominal sensor heading uncertainty.
+-spec get_ns_pos_unc_heading(JobDef::job_def()) -> NomUnc
+    when NomUnc :: no_statement | non_neg_integer().
 get_ns_pos_unc_heading(#job_def{ns_pos_unc_heading = X}) -> X.
+
 %% @doc Get the nominal sensor speed uncertainty.
+-spec get_ns_pos_unc_sensor_speed(JobDef::job_def()) -> NomUnc
+    when NomUnc :: no_statement | non_neg_integer().
 get_ns_pos_unc_sensor_speed(#job_def{ns_pos_unc_sensor_speed = X}) -> X.
+
 %% @doc Get the nominal sensor slant range standard deviation.
 get_ns_val_slant_range_std_dev(#job_def{ns_val_slant_range_std_dev = X}) -> X.
 %% @doc Get the nominal sensor cross range standard deviation.
