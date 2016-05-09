@@ -108,6 +108,7 @@
 -type priority() :: 1..99.
 -export_type([job_def/0, job_def_bin/0]).
 
+-type job_id() :: pos_integer().
 -type geoid_model() :: none_specified | egm96 | geo96 | flat_earth.
 
 -type elev_model() ::  none_specified | dted0 | dted1 | dted2 | dted3 | 
@@ -653,9 +654,13 @@ display(JDS) ->
 %% Accessor functions to allow clients access to the contents
 
 %% @doc Get the job ID from the job definition structure.
+-spec get_job_id(JobDef::job_def()) -> job_id().
 get_job_id(#job_def{job_id = X}) -> X.
+
 %% @doc Get the Geoid model from the job definition structure.
+-spec get_geoid_model(JobDef::job_def()) -> geoid_model().
 get_geoid_model(#job_def{geoid_model = X}) -> X.
+
 %% @doc Get the sensor ID type parameter from the job definition structure.
 get_sensor_id_type(#job_def{sensor_id_type = X}) -> X.
 %% @doc Get the sensor ID model from the job definition structure.
