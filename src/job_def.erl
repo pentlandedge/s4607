@@ -665,14 +665,18 @@ get_geoid_model(#job_def{geoid_model = X}) -> X.
 
 %% @doc Get the sensor ID type parameter from the job definition structure.
 get_sensor_id_type(#job_def{sensor_id_type = X}) -> X.
+
 %% @doc Get the sensor ID model from the job definition structure.
+-spec get_sensor_id_model(JobDef::job_def()) -> string().
 get_sensor_id_model(#job_def{sensor_id_model = X}) -> X.
+
 %% @doc Get the target filtering flag from the job definition structure.
 get_target_filt_flag(#job_def{target_filt_flag = X}) -> X.
 
 %% @doc Get the priority field from the job definition structure. 1 is the 
 %% highest priority, 99 the lowest. Alternatively, an end of job indication
 %% may be given.
+-spec get_priority(JobDef::job_def()) -> end_of_job | priority().
 get_priority(#job_def{priority = X}) -> X.
 
 %% @doc Get the point A Lat from the job definition structure.
@@ -712,6 +716,8 @@ get_bounding_d_lon(#job_def{bounding_d_lon = X}) -> X.
 get_radar_mode(#job_def{radar_mode = X}) -> X.
 
 %% @doc Get the nominal revisit interval from the job definition structure.
+%% The units are in deciseconds.
+-spec get_nom_rev_int(JobDef::job_def()) -> non_neg_integer().
 get_nom_rev_int(#job_def{nom_rev_int = X}) -> X.
 
 %% @doc Get the along track position uncertainty from the job definition 
