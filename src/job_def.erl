@@ -114,6 +114,8 @@
 -type elev_model() ::  none_specified | dted0 | dted1 | dted2 | dted3 | 
     dted4 | dted5 | srtm1 | srtm2 | dgm50 | dgm250 | ithd | sthd | sedris.
 
+-type radar_mode() :: {atom(), atom()}.
+
 %% @doc Decode a binary encoded job definition segment.
 -spec decode(Bin::job_def_bin()) -> {ok, job_def()}.
 decode(<<JobID:32,SIDT,SIDM:6/binary,TFF:1/binary,Pri,
@@ -395,7 +397,7 @@ encode_priority(end_of_job) -> <<255>>;
 encode_priority(X) when X >= 1, X =< 99 -> <<X>>.
 
 %% @doc Decode the various radar modes for different systems.
--spec decode_radar_mode(byte()) -> {atom(), atom()}.
+-spec decode_radar_mode(byte()) -> radar_mode().
 decode_radar_mode(0) -> {unspecified_mode, generic};
 decode_radar_mode(1) -> {mti, generic};
 decode_radar_mode(2) -> {hrr, generic};
@@ -458,13 +460,13 @@ decode_radar_mode(123) -> {hrr_gmti, vader};
 decode_radar_mode(_) -> {available_for_future_use, reserved}.
 
 %% @doc Encode the radar mode as a binary.
--spec encode_radar_mode({atom(), atom()}) -> <<_:8>>.
+-spec encode_radar_mode(RadarMode::radar_mode()) -> <<_:8>>.
 encode_radar_mode({_Mode, _System} = RM) ->
     Value = erm(RM),
     <<Value>>.
 
 %% Helper function for encoding the radar mode.
--spec erm({atom(), atom()}) -> byte().
+-spec erm(RadarMode::radar_mode()) -> byte().
 erm({unspecified_mode, generic}) -> 0;
 erm({mti, generic}) -> 1;
 erm({hrr, generic}) -> 2;
@@ -703,6 +705,7 @@ get_bounding_d_lat(#job_def{bounding_d_lat = X}) -> X.
 get_bounding_d_lon(#job_def{bounding_d_lon = X}) -> X.
 
 %% @doc Get the radar mode from the job definition structure.
+-spec get_radar_mode(JobDef::job_def()) -> radar_mode().
 get_radar_mode(#job_def{radar_mode = X}) -> X.
 
 %% @doc Get the nominal revisit interval from the job definition structure.
