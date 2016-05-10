@@ -669,7 +669,10 @@ get_sensor_id_type(#job_def{sensor_id_type = X}) -> X.
 get_sensor_id_model(#job_def{sensor_id_model = X}) -> X.
 %% @doc Get the target filtering flag from the job definition structure.
 get_target_filt_flag(#job_def{target_filt_flag = X}) -> X.
-%% @doc Get the priority field from the job definition structure.
+
+%% @doc Get the priority field from the job definition structure. 1 is the 
+%% highest priority, 99 the lowest. Alternatively, an end of job indication
+%% may be given.
 get_priority(#job_def{priority = X}) -> X.
 
 %% @doc Get the point A Lat from the job definition structure.
