@@ -738,18 +738,40 @@ get_ns_pos_unc_heading(#job_def{ns_pos_unc_heading = X}) -> X.
     when NomUnc :: no_statement | non_neg_integer().
 get_ns_pos_unc_sensor_speed(#job_def{ns_pos_unc_sensor_speed = X}) -> X.
 
-%% @doc Get the nominal sensor slant range standard deviation.
+%% @doc Get the nominal sensor slant range standard deviation. Units if a 
+%% numerical value is returned are in decimetres.
+-spec get_ns_val_slant_range_std_dev(JobDef::job_def()) -> StdDev
+    when StdDev :: no_statement | non_neg_integer().
 get_ns_val_slant_range_std_dev(#job_def{ns_val_slant_range_std_dev = X}) -> X.
-%% @doc Get the nominal sensor cross range standard deviation.
+
+%% @doc Get the nominal sensor cross range standard deviation. A numerical 
+%% return is an angle.
+-spec get_ns_val_cross_range_std_dev(JobDef::job_def()) -> StdDev
+    when StdDev :: no_statement | float().
 get_ns_val_cross_range_std_dev(#job_def{ns_val_cross_range_std_dev = X}) -> X.
+
 %% @doc Get the nominal sensor target velocity along line of sight standard 
-%% deviation.
+%% deviation. Numerical values are cm/sec.
+-spec get_ns_val_tgt_vel_los_std_dev(JobDef::job_def()) -> StdDev
+    when StdDev :: no_statement | non_neg_integer().
 get_ns_val_tgt_vel_los_std_dev(#job_def{ns_val_tgt_vel_los_std_dev = X}) -> X.
-%% @doc Get the nominal sensor minimum detectable velocity (MDV).
+
+%% @doc Get the nominal sensor minimum detectable velocity (MDV). Units are
+%% decimetres/sec.
+-spec get_ns_val_mdv(JobDef::job_def()) -> MDV
+    when MDV :: no_statement | non_neg_integer().
 get_ns_val_mdv(#job_def{ns_val_mdv = X}) -> X.
+
 %% @doc Get the nominal sensor target detection probablility. 
+%% Probabilties are in percent.
+-spec get_ns_val_det_prob(JobDef::job_def()) -> DetProb
+    when DetProb :: no_statement | 0..100.
 get_ns_val_det_prob(#job_def{ns_val_det_prob = X}) -> X.
+
 %% @doc Get the nominal sensor false alarm density.
+%% The false alarm density is expressed in negative dB.
+-spec get_ns_val_false_alarm_density(JobDef::job_def()) -> Density
+    when Density :: no_statement | non_neg_integer().
 get_ns_val_false_alarm_density(#job_def{ns_val_false_alarm_density = X}) -> X.
 
 %% @doc Get the terrain elevation model.
