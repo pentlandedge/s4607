@@ -265,7 +265,10 @@ new(ParamList) ->
         terr_elev_model = F(terr_elev_model, ParamList, none_specified),
         geoid_model = F(geoid_model, ParamList, none_specified)}.
 
-%% @doc Return the size of the job definition segment payload.
+%% @doc Return the expected size of the job definition segment payload in 
+%% bytes. Since the payload size is fixed for job definition, the argument is
+%% ignored but retained in order to have a consistent API with the other 
+%% segments.
 -spec payload_size(any()) -> non_neg_integer().
 payload_size(_) -> 68.
 
