@@ -679,6 +679,8 @@ get_sensor_id_type(#job_def{sensor_id_type = X}) -> X.
 get_sensor_id_model(#job_def{sensor_id_model = X}) -> X.
 
 %% @doc Get the target filtering flag from the job definition structure.
+-spec get_target_filt_flag(JobDef::job_def()) -> TFF
+    when TFF :: no_filtering | flag_list().
 get_target_filt_flag(#job_def{target_filt_flag = X}) -> X.
 
 %% @doc Get the priority field from the job definition structure. 1 is the 
