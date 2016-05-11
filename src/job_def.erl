@@ -116,6 +116,13 @@
 
 -type radar_mode() :: {atom(), atom()}.
 
+-type sensor_id_type() :: unidentified | other | hisar | astor | 
+    rotary_wing_radar | global_hawk_sensor | horizon | apy_3 | apy_6 | 
+    apy_8 | radarsat2 | asars_2a | tesar | mp_rtip | apg_77 | apg_79 | 
+    apg_81 | apg_6v1 | dpy_1 | sidm | limit | tcar | lsrs | 
+    ugs_single_sensor | ugs_cluster_sensor | imaster_gmti | anzpy_1 | 
+    vader | no_statement.
+
 %% @doc Decode a binary encoded job definition segment.
 -spec decode(Bin::job_def_bin()) -> {ok, job_def()}.
 decode(<<JobID:32,SIDT,SIDM:6/binary,TFF:1/binary,Pri,
@@ -263,7 +270,7 @@ new(ParamList) ->
 payload_size(_) -> 68.
 
 %% @doc Decode the sensor ID enumerated type.
--spec decode_sensor_id_type(byte()) -> atom(). 
+-spec decode_sensor_id_type(byte()) -> sensor_id_type(). 
 decode_sensor_id_type(0) -> unidentified;
 decode_sensor_id_type(1) -> other;
 decode_sensor_id_type(2) -> hisar;
@@ -295,7 +302,7 @@ decode_sensor_id_type(27) -> vader;
 decode_sensor_id_type(255) -> no_statement.
 
 %% @doc Encode the sensor ID type as a binary.
--spec encode_sensor_id_type(atom()) -> <<_:8>>.
+-spec encode_sensor_id_type(Type::sensor_id_type()) -> <<_:8>>.
 encode_sensor_id_type(Type) ->
     Val = esid(Type),
     <<Val>>.
@@ -664,6 +671,7 @@ get_job_id(#job_def{job_id = X}) -> X.
 get_geoid_model(#job_def{geoid_model = X}) -> X.
 
 %% @doc Get the sensor ID type parameter from the job definition structure.
+-spec get_sensor_id_type(JobDef::job_def()) -> sensor_id_type().
 get_sensor_id_type(#job_def{sensor_id_type = X}) -> X.
 
 %% @doc Get the sensor ID model from the job definition structure.
