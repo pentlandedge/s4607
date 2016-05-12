@@ -157,6 +157,9 @@
 
 -export_type([sensor_id_type/0, radar_mode/0]).
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Function declarations.
+
 %% @doc Decode a binary encoded job definition segment.
 -spec decode(Bin::job_def_bin()) -> {ok, job_def()}.
 decode(<<JobID:32,SIDT,SIDM:6/binary,TFF:1/binary,Pri,
@@ -344,7 +347,7 @@ encode_sensor_id_type(Type) ->
     Val = esid(Type),
     <<Val>>.
 
--spec esid(atom()) -> byte().
+-spec esid(Type::sensor_id_type()) -> byte().
 esid(unidentified) -> 0;
 esid(other) -> 1;
 esid(hisar) -> 2;
