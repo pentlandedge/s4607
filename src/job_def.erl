@@ -106,6 +106,7 @@
 -type job_def_bin() :: <<_:544>>.
 -type flag_list() :: [atom()].
 -type priority() :: 1..99.
+
 -export_type([job_def/0, job_def_bin/0]).
 
 -type job_id() :: pos_integer().
@@ -114,7 +115,7 @@
 -type elev_model() ::  none_specified | dted0 | dted1 | dted2 | dted3 | 
     dted4 | dted5 | srtm1 | srtm2 | dgm50 | dgm250 | ithd | sthd | sedris.
 
--type radar_mode() :: {atom(), atom()}.
+-export_type([job_id/0, geoid_model/0, elev_model/0]).
 
 -type sensor_id_type() :: unidentified | other | hisar | astor | 
     rotary_wing_radar | global_hawk_sensor | horizon | apy_3 | apy_6 | 
@@ -122,6 +123,39 @@
     apg_81 | apg_6v1 | dpy_1 | sidm | limit | tcar | lsrs | 
     ugs_single_sensor | ugs_cluster_sensor | imaster_gmti | anzpy_1 | 
     vader | no_statement.
+
+-type radar_mode() :: {unspecified_mode, generic} | {mti, generic} | 
+    {hrr, generic} | {uhrr, generic} | {hur, generic} | {fti, generic} | 
+    {attack_control_satc, joint_stars} | {attack_control, joint_stars} | 
+    {satc, joint_stars} | {attack_planning_satc, joint_stars} | 
+    {attack_planning, joint_stars} | {med_res_sector_search, joint_stars} | 
+    {low_res_sector_search, joint_stars} | 
+    {wide_area_search_grca, joint_stars} | 
+    {wide_area_search_rrca, joint_stars} | 
+    {attack_plannning_with_tracking, joint_stars} | 
+    {attack_control_with_tracking, joint_stars} | 
+    {wide_area_mti, asars_aip} | {coarse_res_search, asars_aip} | 
+    {med_res_search, asars_aip} | {high_res_search, asars_aip} | 
+    {point_imaging, asars_aip} | {swath_mti, asars_aip} | 
+    {repetititve_point_imaging, asars_aip} | 
+    {monopulse_calibration, asars_aip} | {search, asars_2} | 
+    {emti_wide_frame_search, asars_2} | {emti_narrow_frame_search, asars_2} | 
+    {emti_augmented_spot, asars_2} | {emti_wide_area_mti, asars_2} | 
+    {gmti_ppi_mode, tuav} | {gmti_expanded_mode, tuav} | 
+    {narrow_sector_search, arl_m} | {single_beam_scan, arl_m} | 
+    {wide_area, arl_m} | {grca, reserved} | {rrca, reserved} | 
+    {sector_search, reserved} | {horizon_basic, horizon} | 
+    {horizon_high_sensitivity, horizon} | {horizon_burn_through, horizon} | 
+    {creso_acquisition, creso} | {creso_count, creso} | 
+    {was_mti_exo, astor} | {was_mti_endo_exo, astor} | {ss_mti_exo, astor} | 
+    {ss_mti_endo_exo, astor} | {test_status_mode, reserved} | 
+    {mti_spot_scan, lynx_i_ii} | {mti_arc_scan, lynx_i_ii} | 
+    {hrr_mti_spot_scan, lynx_i_ii} | {hrr_mti_arc_scan, lynx_i_ii} | 
+    {grca, global_hawk} | {rrca, global_hawk} | {gmti_hrr, global_hawk} | 
+    {small_area_gmti, vader} | {wide_area_gmti, vader} | 
+    {dismount_gmti, vader} | {hrr_gmti, vader}.
+
+-export_type([sensor_id_type/0, radar_mode/0]).
 
 %% @doc Decode a binary encoded job definition segment.
 -spec decode(Bin::job_def_bin()) -> {ok, job_def()}.
@@ -407,7 +441,8 @@ encode_priority(end_of_job) -> <<255>>;
 encode_priority(X) when X >= 1, X =< 99 -> <<X>>.
 
 %% @doc Decode the various radar modes for different systems.
--spec decode_radar_mode(byte()) -> radar_mode().
+-spec decode_radar_mode(byte()) -> Mode
+    when Mode :: radar_mode() | {available_for_future_use, reserved}.
 decode_radar_mode(0) -> {unspecified_mode, generic};
 decode_radar_mode(1) -> {mti, generic};
 decode_radar_mode(2) -> {hrr, generic};
@@ -725,7 +760,8 @@ get_bounding_d_lat(#job_def{bounding_d_lat = X}) -> X.
 get_bounding_d_lon(#job_def{bounding_d_lon = X}) -> X.
 
 %% @doc Get the radar mode from the job definition structure.
--spec get_radar_mode(JobDef::job_def()) -> radar_mode().
+-spec get_radar_mode(JobDef::job_def()) -> Mode
+    when Mode :: radar_mode() | {available_for_future_use, reserved}.
 get_radar_mode(#job_def{radar_mode = X}) -> X.
 
 %% @doc Get the nominal revisit interval from the job definition structure.
