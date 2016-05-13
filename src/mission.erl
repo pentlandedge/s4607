@@ -53,6 +53,10 @@
 
 -export_type([mission_segment/0, mission_segment_bin/0]).
 
+-type platform_type() :: atom().
+
+-export_type([platform_type/0]).
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Mission segment decoding/encoding functions.
 
@@ -70,7 +74,7 @@ decode(<<M1:12/binary, M2:12/binary, M3, M4:10/binary,
         platform_type = Type, platform_config = Config, year = Year,
         month = Month, day = Day}}.
 
-%% @doc Convert a mission segment to an ecoded binary form.
+%% @doc Convert a mission segment to an encoded binary form.
 -spec encode(MS::mission_segment()) -> mission_segment_bin().
 encode(#mission_segment{mission_plan = MP, flight_plan = FP, 
     platform_type = Type, platform_config = Config,
@@ -90,7 +94,16 @@ encode(#mission_segment{mission_plan = MP, flight_plan = FP,
 
     <<B1/binary,B2/binary,B3/binary,B4/binary,B5/binary,Month,Day>>.
 
-%% Simple function to create a mission segment from the supplied parameters.
+%% @doc Create a mission segment structure from the supplied parameters.
+-spec new(Mission, Flight, Type, Config, Year, Month, Day) -> MS 
+    when Mission::string(), 
+        Flight::string(), 
+        Type::platform_type(),
+        Config::string(), 
+        Year::stanag_types:i16_int(),
+        Month::stanag_types:i8_int(),
+        Day::stanag_types:i8_int(),
+        MS::mission_segment().
 new(Mission, Flight, Type, Config, Year, Month, Day) ->
     #mission_segment{mission_plan = Mission, flight_plan = Flight, 
         platform_type = Type, platform_config = Config, year = Year,
