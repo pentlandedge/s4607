@@ -53,7 +53,15 @@
 
 -export_type([mission_segment/0, mission_segment_bin/0]).
 
--type platform_type() :: atom().
+-type platform_type() :: unidentified | acs | arl_m | sentinel | 
+    rotary_wing_radar | global_hawk_navy | horizon | e_8 | p_3c | predator | 
+    radarsat2 | u_2 | e_10 | ugs_single | ugs_cluster | ground_based | 
+    uav_army | uav_marines | uav_navy | uav_air_force | 
+    global_hawk_air_force | global_hawk_australia | global_hawk_germany | 
+    paul_revere | mariner_uav | bac_111 | coyote | king_air | limit | 
+    nrl_np_3b | sostar_x | watchkeeper | alliance_ground_surveillance | 
+    stryker | ags_hale_uav | sidm | reaper | warrior_a | warrior | 
+    twin_otter | other. 
 
 -export_type([platform_type/0]).
 
@@ -109,9 +117,12 @@ new(Mission, Flight, Type, Config, Year, Month, Day) ->
         platform_type = Type, platform_config = Config, year = Year,
         month = Month, day = Day}.
 
-%% Function to return the size of the mission segment payload.
+%% @doc Return the size of an encoded mission segment payload.
+-spec payload_size(any()) -> non_neg_integer().
 payload_size(_) -> 39.
 
+%% @doc Decode the platform type parameter.
+-spec decode_platform_type(PT::byte()) -> future_use | platform_type(). 
 decode_platform_type(0) -> unidentified;
 decode_platform_type(1) -> acs;
 decode_platform_type(2) -> arl_m;
