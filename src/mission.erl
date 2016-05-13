@@ -45,8 +45,19 @@
     day}).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Type specifications.
+
+-opaque mission_segment() :: #mission_segment{}.
+
+-type mission_segment_bin() :: <<_:312>>.
+
+-export_type([mission_segment/0, mission_segment_bin/0]).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Mission segment decoding/encoding functions.
 
+%% @doc Decode a binary mission segment.
+-spec decode(Bin::mission_segment_bin())-> {ok, mission_segment()}.
 decode(<<M1:12/binary, M2:12/binary, M3, M4:10/binary, 
     Year:16/integer-unsigned-big, Month, Day>>) ->
 
@@ -59,7 +70,8 @@ decode(<<M1:12/binary, M2:12/binary, M3, M4:10/binary,
         platform_type = Type, platform_config = Config, year = Year,
         month = Month, day = Day}}.
 
-%% Function takes a mission segment and returns an ecoded binary form.
+%% @doc Convert a mission segment to an ecoded binary form.
+-spec encode(MS::mission_segment()) -> mission_segment_bin().
 encode(#mission_segment{mission_plan = MP, flight_plan = FP, 
     platform_type = Type, platform_config = Config,
     year = Year, month = Month, day = Day}) ->
