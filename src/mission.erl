@@ -166,12 +166,15 @@ decode_platform_type(39) -> twin_otter;
 decode_platform_type(255) -> other;
 decode_platform_type(_) -> future_use.
 
-%% Function to convert a platform type to a binary representation.
-encode_platform_type(X) when is_atom(X) ->
-    Val = ept(X),
+%% @doc Convert a platform type parameter to a binary representation.
+-spec encode_platform_type(Type::platform_type()) -> <<_:8>>.
+encode_platform_type(Type) when is_atom(Type) ->
+    Val = ept(Type),
     <<Val>>.
 
-%% Helper function with the atom -> integer mappings for the platform type.
+%% @doc Helper function with the atom -> integer mappings for the platform 
+%% type.
+-spec ept(Type::platform_type()) -> byte().
 ept(unidentified) -> 0;
 ept(acs) -> 1;
 ept(arl_m) -> 2;
@@ -214,6 +217,8 @@ ept(warrior) -> 38;
 ept(twin_otter) -> 39;
 ept(other) -> 255.
 
+%% @doc Display the contents of a decoded mission segment structure.
+-spec display(MSeg::mission_segment()) -> ok.
 display(MSeg) ->
     io:format("****************************************~n"),
     io:format("** @mission~n"),
