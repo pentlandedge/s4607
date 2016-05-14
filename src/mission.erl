@@ -230,28 +230,40 @@ display(MSeg) ->
     io:format("Month: ~p~n", [get_month(MSeg)]),
     io:format("Day: ~p~n", [get_day(MSeg)]).
 
-%% Accessor function for the mission plan field.
+%% @doc Accessor function for the mission plan field.
+-spec get_mission_plan(MS::mission_segment()) -> string().
 get_mission_plan(#mission_segment{mission_plan = M}) -> M.
 
-%% Accessor function for the flight plan field.
+%% @doc Accessor function for the flight plan field.
+-spec get_flight_plan(MS::mission_segment()) -> string().
 get_flight_plan(#mission_segment{flight_plan = F}) -> F.
 
-%% Accessor function for the platform type field.
+%% @doc Accessor function for the platform type field.
+-spec get_platform_type(MS::mission_segment()) -> platform_type().
 get_platform_type(#mission_segment{platform_type = T}) -> T.
 
-%% Accessor function for the platform config field.
+%% @doc Accessor function for the platform config field.
+-spec get_platform_config(MS::mission_segment()) -> string().
 get_platform_config(#mission_segment{platform_config = C}) -> C.
 
-%% Accessor function for the year field.
+%% @doc Accessor function for the year field.
+-spec get_year(MS::mission_segment()) -> stanag_types:i16_int().
 get_year(#mission_segment{year = Y}) -> Y.
 
-%% Accessor function for the month field.
+%% @doc Accessor function for the month field.
+-spec get_month(MS::mission_segment()) -> stanag_types:i8_int().
 get_month(#mission_segment{month = M}) -> M.
 
-%% Accessor function for the day field.
+%% @doc Accessor function for the day field.
+-spec get_day(MS::mission_segment()) -> stanag_types:i8_int().
 get_day(#mission_segment{day = D}) -> D.
 
-%% Convenience function to allow a caller to extract all of the time fields
-%% as a single tuple.
+%% @doc Convenience function to allow a caller to extract all of the 
+%% reference time fields (which is really a date) as a single tuple.
+-spec get_time(MS::mission_segment()) -> Date
+    when Date :: {Year, Month, Day},
+        Year :: stanag_types:i16_int(),
+        Month :: stanag_types:i8_int(),
+        Day :: stanag_types:i8_int().
 get_time(#mission_segment{year = Y, month = M, day = D}) -> {Y, M, D}.
 
