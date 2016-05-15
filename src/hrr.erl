@@ -190,7 +190,7 @@ decode(<<EM:5/binary, RI:16/integer-unsigned-big,
     TypeOfHrrDecoded = decode_type_of_hrr(TypeOfHrr),
 
     {ok, ProcessingMask, Bin20} = sutils:extract_conv_data(
-        Bin19, 1, fun stanag_types:i8_to_integer/1),
+        Bin19, 1, fun decode_processing_mask/1),
 
     {ok, NumBytesMagnitude, Bin21} = sutils:extract_conv_data(
         Bin20, 1, fun stanag_types:i8_to_integer/1),
@@ -341,10 +341,8 @@ decode_type_of_hrr(5) -> full_rdm;
 decode_type_of_hrr(6) -> partial_rdm;
 decode_type_of_hrr(7) -> full_range_pulse_data.
 
-decode_processing_mask(<<PM>>) ->
-    <<ClutterCancellation:1, SingleAmbiguityKeystoning:1,
-    MultiAmbiguityKeystoning:1,
-    _Spare:5>> = PM,
+decode_processing_mask(<<ClutterCancellation:1, SingleAmbiguityKeystoning:1,
+    MultiAmbiguityKeystoning:1, _Spare:5>>) ->
 
     #processing_mask{
     clutter_cancellation = ClutterCancellation,
