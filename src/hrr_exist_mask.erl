@@ -47,6 +47,7 @@
     get_num_bytes_phase/1,
     get_range_extent_pixels/1,
     get_range_to_nearest_edge/1,
+    get_index_of_zero_velocity/1,
     get_target_radial_electrical_length/1,
     get_electrical_length_uncertainty/1,
     get_scatterer_magnitude/1,
