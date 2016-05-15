@@ -98,29 +98,25 @@ decode(<<EM:5/binary, RI:16/integer-unsigned-big,
 
     % Fixed part of the HRR segement is pattern matched above, remainder
     % depends on the existence mask.
-    <<16#7:3,
-    H5:1,H6:1,H7:1,1:1,H9:1,16#1F:5,H15:1,16#F:4,
-    H20:1,H21:1,H22:1,16#F:4,H27:1,H28:1,H29:1,H30:1,
-    H31:1,1:1,_H32_2:1,_H32_3:1,_H32_4:1,
-    _Spare:6>> = EM,
+    EMrec = hrr_exist_mask:decode(EM),
 
     {MtiReportIndex, Bin1} = sutils:conditional_extract(
         Rest,
-        H5,
+        hrr_exist_mask:get_mti_report_index(EMrec),
         2,
         fun stanag_types:i16_to_integer/1,
         0),
 
     {NumOfTargetScatterers, Bin2} = sutils:conditional_extract(
         Bin1,
-        H6,
+        hrr_exist_mask:get_num_of_target_scatterers(EMrec),
         2,
         fun stanag_types:i16_to_integer/1,
         0),
 
     {NumOfRangeSamples, Bin3} = sutils:conditional_extract(
         Bin2,
-        H7,
+        hrr_exist_mask:get_num_of_range_samples(EMrec),
         2,
         fun stanag_types:i16_to_integer/1,
         0),
@@ -130,7 +126,7 @@ decode(<<EM:5/binary, RI:16/integer-unsigned-big,
 
     {MeanClutterPower, Bin5} = sutils:conditional_extract(
         Bin4,
-        H9,
+        hrr_exist_mask:get_mean_clutter_power(EMrec),
         1,
         fun stanag_types:i8_to_integer/1,
         0),
@@ -152,7 +148,7 @@ decode(<<EM:5/binary, RI:16/integer-unsigned-big,
 
     {CenterFrequency, Bin11} = sutils:conditional_extract(
         Bin10,
-        H15,
+        hrr_exist_mask:get_center_frequency(EMrec),
         4,
         fun stanag_types:b32_to_float/1,
         1.0),
@@ -171,21 +167,21 @@ decode(<<EM:5/binary, RI:16/integer-unsigned-big,
 
     {MaximumRcs, Bin16} = sutils:conditional_extract(
         Bin15,
-        H20,
+        hrr_exist_mask:get_maximum_rcs(EMrec),
         1,
         fun stanag_types:s8_to_integer/1,
         0),
 
     {RangeOfOrigin, Bin17} = sutils:conditional_extract(
         Bin16,
-        H21,
+        hrr_exist_mask:get_range_of_origin(EMrec),
         2,
         fun stanag_types:s16_to_integer/1,
         0),
 
     {DopplerOfOrigin, Bin18} = sutils:conditional_extract(
         Bin17,
-        H22,
+        hrr_exist_mask:get_doppler_of_origin(EMrec),
         4,
         fun stanag_types:h32_to_float/1,
         0.0),
@@ -204,35 +200,35 @@ decode(<<EM:5/binary, RI:16/integer-unsigned-big,
 
     {RangeExtentPixels, Bin23} = sutils:conditional_extract(
         Bin22,
-        H27,
+        hrr_exist_mask:get_range_extent_pixels(EMrec),
         1,
         fun stanag_types:i8_to_integer/1,
         0),
 
     {RangeToNearestEdge, Bin24} = sutils:conditional_extract(
         Bin23,
-        H28,
+        hrr_exist_mask:get_range_to_nearest_edge(EMrec),
         1,
         fun stanag_types:i8_to_integer/1,
         0),
 
     {IndexOfZeroVelocity, Bin25} = sutils:conditional_extract(
         Bin24,
-        H29,
+        hrr_exist_mask:get_index_of_zero_velocity(EMrec),
         1,
         fun stanag_types:i8_to_integer/1,
         0),
 
     {TargetRadialElectricalLength, Bin26} = sutils:conditional_extract(
         Bin25,
-        H30,
+        hrr_exist_mask:get_target_radial_electrical_length(EMrec),
         4,
         fun stanag_types:b32_to_float/1,
         0.0),
 
     {ElectricalLengthUncertainty, Bin27} = sutils:conditional_extract(
         Bin26,
-        H31,
+        hrr_exist_mask:get_electrical_length_uncertainty(EMrec),
         4,
         fun stanag_types:b32_to_float/1,
         0.0),
@@ -240,7 +236,7 @@ decode(<<EM:5/binary, RI:16/integer-unsigned-big,
     HrrScatterRecords = Bin27,
 
     {ok, #hrr_segment{
-        existence_mask = EM,
+        existence_mask = EMrec,
         revisit_index = RI,
         dwell_index = DI,
         last_dwell_of_revisit = decode_last_dwell_of_revisit(LD),
