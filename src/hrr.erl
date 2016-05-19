@@ -18,6 +18,7 @@
 -export([
     decode/1,
     new/1,
+    display/1,
     get_existence_mask/1,
     get_revisit_index/1,
     get_dwell_index/1,
@@ -269,7 +270,7 @@ decode(<<EM:5/binary, RI:16/integer-unsigned-big,
         electrical_length_uncertainty = ElectricalLengthUncertainty,
         hrr_scatter_records = HrrScatterRecords}}.
 
-%% Function to create a new HRR segment structure from the specified fields.
+%% Create a new HRR segment structure from the specified fields.
 new(Fields) ->
     % Local function to pull the parameter from the list or supply a default
     % value.
@@ -345,9 +346,72 @@ decode_processing_mask(<<ClutterCancellation:1, SingleAmbiguityKeystoning:1,
     MultiAmbiguityKeystoning:1, _Spare:5>>) ->
 
     #processing_mask{
-    clutter_cancellation = ClutterCancellation,
-    single_ambiguity_keystoning = SingleAmbiguityKeystoning,
-    multi_ambiguity_keystoning = MultiAmbiguityKeystoning}.
+        clutter_cancellation = ClutterCancellation,
+        single_ambiguity_keystoning = SingleAmbiguityKeystoning,
+        multi_ambiguity_keystoning = MultiAmbiguityKeystoning}.
+
+display(HRR) ->
+    io:format("****************************************~n"),
+    io:format("** @hrr~n"),
+    EM = HRR#hrr_segment.existence_mask,
+    hrr_exist_mask:display(EM),
+    io:format("Revisit index: ~p~n", [get_revisit_index(HRR)]),
+    io:format("Dwell index: ~p~n", [get_dwell_index(HRR)]),
+    io:format("Last dwell of revisit: ~p~n", [get_last_dwell_of_revisit(HRR)]),
+    sutils:conditional_display("MTI Report Index: ~p~n",
+        [get_mti_report_index(HRR)],
+        hrr_exist_mask:get_mti_report_index(EM)),
+    sutils:conditional_display("Number of Target Scatterers: ~p~n",
+        [get_num_of_target_scatterers(HRR)],
+        hrr_exist_mask:get_num_of_target_scatterers(EM)),
+    sutils:conditional_display("Number of Range Samples/Total Scatterers: ~p~n",
+        [get_num_of_range_samples(HRR)],
+        hrr_exist_mask:get_num_of_range_samples(EM)),
+    io:format("Number of Doppler Samples: ~p~n", [get_num_of_doppler_samples(EM)]),
+    sutils:conditional_display("Mean Clutter Power: ~p~n",
+        [get_mean_clutter_power(HRR)],
+        hrr_exist_mask:get_mean_clutter_power(EM)),
+    io:format("Detection Threshold: ~p~n", [get_detection_threshold(EM)]),
+    io:format("Range Resolution: ~p~n", [get_range_resolution(EM)]),
+    io:format("Range Bin Spacing: ~p~n", [get_range_bin_spacing(EM)]),
+    io:format("Doppler Resolution: ~p~n", [get_doppler_resolution(EM)]),
+    io:format("Doppler Bin Spacing / PRF: ~p~n", [get_doppler_bin_spacing(EM)]),
+    sutils:conditional_display("Center Frequency: ~p~n",
+        [get_center_frequency(HRR)],
+        hrr_exist_mask:get_center_frequency(EM)),
+    io:format("Compression Flag: ~p~n", [get_compression_flag(EM)]),
+    io:format("Range Weighting Function Type: ~p~n", [get_range_weighting_type(EM)]),
+    io:format("Doppler Weighting Function Type: ~p~n", [get_doppler_weighting_type(EM)]),
+    io:format("Maximum Pixel Power: ~p~n", [get_maximum_pixel_power(EM)]),
+    sutils:conditional_display("Maximum RCS: ~p~n",
+        [get_maximum_rcs(HRR)],
+        hrr_exist_mask:get_maximum_rcs(EM)),
+    sutils:conditional_display("Range of Origin: ~p~n",
+        [get_range_of_origin(HRR)],
+        hrr_exist_mask:get_range_of_origin(EM)),
+    sutils:conditional_display("Doppler of Origin: ~p~n",
+        [get_doppler_of_origin(HRR)],
+        hrr_exist_mask:get_doppler_of_origin(EM)),
+    io:format("Type of HRR/RDM: ~p~n", [get_type_of_hrr(EM)]),
+    io:format("Processing Mask: ~p~n", [get_processing_mask(EM)]),
+    io:format("Number Bytes Magnitude: ~p~n", [get_num_bytes_magnitude(EM)]),
+    io:format("Number Bytes Phase: ~p~n", [get_num_bytes_phase(EM)]),
+    sutils:conditional_display("Range Extent In Pixels: ~p~n",
+        [get_range_extent_pixels(HRR)],
+        hrr_exist_mask:get_range_extent_pixels(EM)),
+    sutils:conditional_display("Range To Nearest Edge In Chip: ~p~n",
+        [get_range_to_nearest_edge(HRR)],
+        hrr_exist_mask:get_range_to_nearest_edge(EM)),
+    sutils:conditional_display("Index Of Zero Velocity Bin: ~p~n",
+        [get_index_of_zero_velocity(HRR)],
+        hrr_exist_mask:get_index_of_zero_velocity(EM)),
+    sutils:conditional_display("Target Radial Electrical Length: ~p~n",
+        [get_target_radial_electrical_length(HRR)],
+        hrr_exist_mask:get_target_radial_electrical_length(EM)),
+    sutils:conditional_display("Electrical Length Uncertainty: ~p~n",
+        [get_electrical_length_uncertainty(HRR)],
+        hrr_exist_mask:get_electrical_length_uncertainty(EM)).
+
 
 %% Accessor functions to allow access to the record fields without creating
 %% client dependencies on the actual structure.
