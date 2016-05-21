@@ -40,7 +40,7 @@ decode(<<Record/binary>>, {1, H32_2, H32_3, H32_4}, MagnitudeByteSize, PhaseByte
         fun stanag_types:i16_to_integer/1,
         0),
 
-    {DopplerIndex, _} = sutils:conditional_extract(
+    {DopplerIndex, Bin4} = sutils:conditional_extract(
         Bin3,
         H32_4,
         2,
@@ -52,7 +52,7 @@ decode(<<Record/binary>>, {1, H32_2, H32_3, H32_4}, MagnitudeByteSize, PhaseByte
         scatterer_phase = ScattererPhase,
         range_index = RangeIndex,
         doppler_index = DopplerIndex
-    }}.
+    }, Bin4}.
 
 decode_scatterer_magnitude(<<Record/binary>>, MagnitudeByteSize) ->
     case MagnitudeByteSize of

@@ -79,7 +79,7 @@ encode_decode_checks1() ->
     Bin = scatterer_rec:encode(R1, EM, SM, SP),
 
     % Decode it again
-    {ok, SR} = scatterer_rec:decode(Bin, EM, SM, SP),
+    {ok, SR, _} = scatterer_rec:decode(Bin, EM, SM, SP),
 
     [?_assertEqual(34, scatterer_rec:get_scatterer_magnitude(SR)),
      ?_assertEqual(0, scatterer_rec:get_scatterer_phase(SR)),
@@ -94,7 +94,7 @@ encode_decode_checks2() ->
     Bin = scatterer_rec:encode(R2, EM, SM, SP),
 
     % Decode it again
-    {ok, SR} = scatterer_rec:decode(Bin, EM, SM, SP),
+    {ok, SR, _} = scatterer_rec:decode(Bin, EM, SM, SP),
 
     [?_assertEqual(834, scatterer_rec:get_scatterer_magnitude(SR)),
      ?_assertEqual(133, scatterer_rec:get_scatterer_phase(SR)),
@@ -109,7 +109,7 @@ encode_decode_checks3() ->
     Bin = scatterer_rec:encode(R3, EM, SM, SP),
 
     % Decode it again
-    {ok, SR} = scatterer_rec:decode(Bin, EM, SM, SP),
+    {ok, SR, _} = scatterer_rec:decode(Bin, EM, SM, SP),
 
     [?_assertEqual(834, scatterer_rec:get_scatterer_magnitude(SR)),
      ?_assertEqual(1133, scatterer_rec:get_scatterer_phase(SR)),
@@ -124,7 +124,7 @@ encode_decode_checks4() ->
     Bin = scatterer_rec:encode(R4, EM, SM, SP),
 
     % Decode it again
-    {ok, SR} = scatterer_rec:decode(Bin, EM, SM, SP),
+    {ok, SR, _} = scatterer_rec:decode(Bin, EM, SM, SP),
 
     [?_assertEqual(34, scatterer_rec:get_scatterer_magnitude(SR)),
      ?_assertEqual(133, scatterer_rec:get_scatterer_phase(SR)),
