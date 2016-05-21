@@ -234,6 +234,9 @@ decode(<<EM:5/binary, RI:16/integer-unsigned-big,
         fun stanag_types:b32_to_float/1,
         0.0),
 
+    NumOfRecords = get_number_of_scatterer_records(TypeOfHrrDecoded,
+        NumOfTargetScatterers, NumOfRangeSamples, NumOfDopplerSamples),
+
     HrrScatterRecords = Bin27,
 
     {ok, #hrr_segment{
@@ -349,6 +352,13 @@ decode_processing_mask(<<ClutterCancellation:1, SingleAmbiguityKeystoning:1,
         clutter_cancellation = ClutterCancellation,
         single_ambiguity_keystoning = SingleAmbiguityKeystoning,
         multi_ambiguity_keystoning = MultiAmbiguityKeystoning}.
+
+get_number_of_scatterer_records(sparse_hrr_chip, _, NumOfRangeSamples, _) ->
+    NumOfRangeSamples;
+get_number_of_scatterer_records(_, NumOfTargetScatterers, 0, _) ->
+    NumOfTargetScatterers;
+get_number_of_scatterer_records(_, _, NumOfRangeSamples, NumOfDopplerSamples) ->
+    NumOfRangeSamples * NumOfDopplerSamples.
 
 display(HRR) ->
     io:format("****************************************~n"),
