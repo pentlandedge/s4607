@@ -70,5 +70,5 @@ minimal_hrr() ->
 
 %% Utility function to compare whether floating point values are within a
 %% specified range.
-almost_equal(V1, V2, Delta) ->
-    abs(V1 - V2) =< Delta.
+%% almost_equal(V1, V2, Delta) ->
+%%    abs(V1 - V2) =< Delta.

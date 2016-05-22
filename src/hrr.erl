@@ -234,7 +234,7 @@ decode(<<EM:5/binary, RI:16/integer-unsigned-big,
         fun stanag_types:b32_to_float/1,
         0.0),
 
-    NumOfRecords = get_number_of_scatterer_records(TypeOfHrrDecoded,
+    _NumOfRecords = get_number_of_scatterer_records(TypeOfHrrDecoded,
         NumOfTargetScatterers, NumOfRangeSamples, NumOfDopplerSamples),
 
     HrrScatterRecords = Bin27,
