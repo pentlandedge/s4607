@@ -13,6 +13,9 @@
 %% License for the specific language governing permissions and limitations 
 %% under the License.
 %%
+%% @doc Functions for manipulating target reports which are included within 
+%%      dwell segments defined in the Stanag 4607 standard.
+
 -module(tgt_report).
 
 -export([
