@@ -405,7 +405,8 @@ to_dict(#tgt_report{
 %% @doc Decode the target classification parameter.
 decode_target_classification(<<Val:8>>) ->
     decode_target_classification(Val);
-    
+
+%% @doc Helper function with the target classification mapping.
 decode_target_classification(0) -> no_information_live_target;
 decode_target_classification(1) -> tracked_vehicle_live_target;
 decode_target_classification(2) -> wheeled_vehicle_live_target;
@@ -441,12 +442,12 @@ decode_target_classification(254) -> other_simulated_target;
 decode_target_classification(255) -> unknown_simulated_target;
 decode_target_classification(_) -> reserved.
 
-%% Function to convert a target classification to the binary representation.
+%% @doc Encode a target classification in the binary representation.
 encode_target_classification(X) when is_atom(X) ->
     Val = etc(X),
     <<Val>>.
 
-%% Helper functions with the encode mapping.
+%% @doc Helper functions with the mapping to encode target classifications.
 etc(no_information_live_target) -> 0;
 etc(tracked_vehicle_live_target) -> 1;
 etc(wheeled_vehicle_live_target) -> 2;
@@ -480,7 +481,8 @@ etc(large_multiple_return_simulated_maritime_target) -> 141;
 etc(tagging_device) -> 142;
 etc(other_simulated_target) -> 254;
 etc(unknown_simulated_target) -> 255.
- 
+
+%% @doc Function to display the contents of a target report structure.
 display(TR, EM) ->
     io:format("****************************************~n"),
     io:format("** @tgt_report~n"),
@@ -540,23 +542,60 @@ display(TR, EM) ->
         exist_mask:get_target_rcs(EM)).
 
 %% Accessor functions to allow clients to read the individual record fields.
+
+%% @doc Accessor function for the MTI report index field.
 get_mti_report_index(#tgt_report{mti_report_index = X}) -> X.
+
+%% @doc Accessor function for the high resolution Latitude.
 get_target_hr_lat(#tgt_report{target_hr_lat = X}) -> X.
+
+%% @doc Accessor function for the high resolution Longitude.
 get_target_hr_lon(#tgt_report{target_hr_lon = X}) -> X.
+
+%% @doc Accessor function for the target location delta Latitude.
 get_target_delta_lat(#tgt_report{target_delta_lat = X}) -> X.
+
+%% @doc Accessor function for the target location delta Longitude.
 get_target_delta_lon(#tgt_report{target_delta_lon = X}) -> X.
+
+%% @doc Accessor function for the geodetic height.
 get_geodetic_height(#tgt_report{geodetic_height = X}) -> X.
+
+%% @doc Accessor function for the target velocity line of sight component.
 get_target_vel_los(#tgt_report{target_vel_los = X}) -> X.
+
+%% @doc Accessor function for the target wrap velocity.
 get_target_wrap_velocity(#tgt_report{target_wrap_velocity = X}) -> X.
+
+%% @doc Accessor function for the estimated signal to noise ratio of the 
+%% target, expressed in dB.
 get_target_snr(#tgt_report{target_snr = X}) -> X.
+
+%% @doc Accessor function for the target classification field.
 get_target_classification(#tgt_report{target_classification = X}) -> X.
+
+%% @doc Accessor function for the target classification probability.
 get_target_class_prob(#tgt_report{target_class_prob = X}) -> X.
+
+%% @doc Accessor function for the target slant range uncertainty.
 get_target_slant_range_unc(#tgt_report{target_slant_range_unc = X}) -> X.
+
+%% @doc Accessor function for the target cross range uncertainty.
 get_target_cross_range_unc(#tgt_report{target_cross_range_unc = X}) -> X.
+
+%% @doc Accessor function for the target height uncertainty.
 get_target_height_unc(#tgt_report{target_height_unc = X}) -> X.
+
+%% @doc Accessor function for the target radial velocity uncertainty.
 get_target_rad_vel_unc(#tgt_report{target_rad_vel_unc = X}) -> X.
+
+%% @doc Accessor function for the truth tag application field.
 get_truth_tag_app(#tgt_report{truth_tag_app = X}) -> X.
+
+%% @doc Accessor function for the truth tag entity field.
 get_truth_tag_entity(#tgt_report{truth_tag_entity = X}) -> X.
+
+%% @doc Accessor function for the target radar cross section (RCS) field.
 get_target_rcs(#tgt_report{target_rcs = X}) -> X.
 
 
