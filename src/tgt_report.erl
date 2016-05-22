@@ -69,6 +69,9 @@
     truth_tag_entity,
     target_rcs}).
 
+
+%% @doc Decode the target report binary. The existence mask parameter is 
+%% required to indicate the set of parameters present.
 decode(TrBin, EM) ->
     
     {MRI, Rem1} = sutils:conditional_extract(
@@ -219,7 +222,7 @@ decode(TrBin, EM) ->
         
     {ok, TR, Rem18}.
 
-%% Function to encode a target report binary from the specified record. 
+%% @doc Encode a target report binary from the specified record. 
 %% Uses the existence mask to decide which fields to use.
 encode(#tgt_report{
     mti_report_index = MRI,
@@ -275,7 +278,7 @@ encode(#tgt_report{
 
     lists:foldl(F, <<>>, ParamTable).
 
-%% Function to allow the creation of a new target report with a set of 
+%% @doc Function to allow the creation of a new target report with a set of 
 %% parameters provided as a list of [{param_name, value}] tuples.
 new(RepParams) ->
     % Local function to pull the parameter from the list or supply a default
@@ -307,8 +310,8 @@ new(RepParams) ->
         truth_tag_entity = F(truth_tag_entity, RepParams),
         target_rcs = F(target_rcs, RepParams)}.
 
-%% Function to calculate the size in bytes of a target report, depending upon
-%% which fields have been set in the existence mask.
+%% @doc Calculate the expected size in bytes of an encoded target report, 
+%% depending upon the fields set in the existence mask.
 payload_size(EM) ->
     
     SizeList = [
@@ -342,8 +345,8 @@ payload_size(EM) ->
     % Accumulate the total size for all the included parameters.
     lists:foldl(F, 0, SizeList).
 
-%% Function to convert a target report to a dict. Uses the existence mask to
-%% add only the valid parameters.
+%% @doc Convert a target report to a dict. Uses the existence mask to add 
+%% only the valid parameters.
 to_dict(#tgt_report{
     mti_report_index = MRI,
     target_hr_lat = TgtHiResLat,
@@ -399,6 +402,7 @@ to_dict(#tgt_report{
 
     lists:foldl(F, dict:new(), ParamTable).
 
+%% @doc Decode the target classification parameter.
 decode_target_classification(<<Val:8>>) ->
     decode_target_classification(Val);
     
