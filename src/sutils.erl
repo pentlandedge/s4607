@@ -26,11 +26,15 @@
     extract_data/2,
     extract_conv_data/3]).
 
+-type mask_bit() :: 0..1.
+-export_type[mask_bit/0].
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Utility functions
 
 % @doc Remove trailing space characters (not all whitespace) from a
 % list
+-spec trim_trailing_spaces(Str::string()) -> string().
 trim_trailing_spaces(Str) ->
     Rev = lists:reverse(Str),
     F = fun(C) -> C =:= $\  end,
@@ -38,6 +42,7 @@ trim_trailing_spaces(Str) ->
     lists:reverse(RStrip).
 
 % @doc Add spaces to the specified string to make it of length N.
+-spec add_trailing_spaces(Str::string(), N::non_neg_integer()) -> string().
 add_trailing_spaces(Str, N) when length(Str) < N ->
     % Inelegant list splice, creates a list of spaces first.
     Trail = [$  || _ <- lists:seq(1, N - length(Str))],
@@ -57,6 +62,10 @@ conditional_extract(Bin, MaskBit, Size, ConvFn, Default) ->
     end.
 
 %% @doc Conditionally display a parameter based on a mask bit
+-spec conditional_display(FmtStr, Params, MaskBit) -> ok 
+    when FmtStr :: string(),
+    Params :: list(),
+    MaskBit :: mask_bit().
 conditional_display(FmtStr, Params, MaskBit) ->
     case MaskBit of
         1 ->
