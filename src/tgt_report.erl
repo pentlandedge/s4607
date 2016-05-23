@@ -78,9 +78,6 @@
 -opaque tgt_report() :: #tgt_report{}.
 -export_type([tgt_report/0]).
 
-% This is a hack for now until some of the dependencies can be fixed.
--type remainder() :: any().
-
 %% @doc Decode the target report binary. The existence mask parameter is 
 %% required to indicate the set of parameters present.
 
@@ -88,7 +85,7 @@
 %-spec decode(TrBin, EM) -> {ok, tgt_report(), Remainder} when 
 %    TrBin :: binary(),
 %    EM :: exist_mask:exist_mask(),
-%    Remainder :: remainder().
+%    Remainder :: binary().
 decode(TrBin, EM) ->
     
     {MRI, Rem1} = sutils:conditional_extract(
