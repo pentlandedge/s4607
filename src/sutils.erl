@@ -52,6 +52,14 @@ add_trailing_spaces(Str, N) when length(Str) =:= N ->
 
 %% @doc Conditionally extract a paramater from the front of a binary
 %% based on the state of a mask bit.
+-spec conditional_extract(Bin, MaskBit, Size, ConvFn, Default) -> {Val, Rem}
+    when Bin :: binary(),
+    MaskBit :: mask_bit(),
+    Size :: non_neg_integer(),
+    ConvFn :: function(),
+    Default :: any(),
+    Val :: any(),
+    Rem :: binary().
 conditional_extract(Bin, MaskBit, Size, ConvFn, Default) ->
     case MaskBit of
         1 ->
