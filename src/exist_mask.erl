@@ -119,6 +119,9 @@
     truth_tag_entity,
     target_rcs}).
 
+-opaque exist_mask() :: #exist_mask{}.
+-export_type([exist_mask/0]).
+
 %% Function to decode the existance mask. Will crash caller if the mask 
 %% does not have the mandatory bits set.
 decode(<<16#FF, 
