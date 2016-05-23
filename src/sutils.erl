@@ -76,6 +76,10 @@ conditional_display(FmtStr, Params, MaskBit) ->
     end.
 
 %% @doc Take the first part of a binary and return the rest.
+-spec extract_data(Bin::binary(), Len) -> {ok, Data, Rem}
+    when Len :: non_neg_integer(),
+    Data :: binary(),
+    Rem :: binary().
 extract_data(Bin, Len) ->
     Data = binary:part(Bin, 0, Len),
     Rem = binary:part(Bin, Len, (byte_size(Bin) - Len)),
