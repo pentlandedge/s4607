@@ -80,12 +80,11 @@
 
 %% @doc Decode the target report binary. The existence mask parameter is 
 %% required to indicate the set of parameters present.
-
-% Type spec needs fixed.
-%-spec decode(TrBin, EM) -> {ok, tgt_report(), Remainder} when 
-%    TrBin :: binary(),
-%    EM :: exist_mask:exist_mask(),
-%    Remainder :: binary().
+-spec decode(TrBin, EM) -> {ok, tgt_report(), Remainder} when 
+    TrBin :: binary(),
+    EM :: exist_mask:exist_mask(),
+    EM :: any(),
+    Remainder :: binary().
 decode(TrBin, EM) ->
     
     {MRI, Rem1} = sutils:conditional_extract(
