@@ -98,8 +98,14 @@ extract_data(Bin, Len) ->
     Rem = binary:part(Bin, Len, (byte_size(Bin) - Len)),
     {ok, Data, Rem}.
 
-%% @doc Take the first part of a binary, apply a function to it
+%% @doc Take the first part of a binary, apply the conversion function to it
 %% and return the rest.
+-spec extract_conv_data(Bin, Len, ConvFn) -> {ok, Ret, Rem}
+    when Bin :: binary(),
+    Len :: non_neg_integer(),
+    ConvFn :: function(),
+    Ret :: any(),
+    Rem :: binary().
 extract_conv_data(Bin, Len, ConvFn) ->
     Data = binary:part(Bin, 0, Len),
     Rem = binary:part(Bin, Len, (byte_size(Bin) - Len)),
