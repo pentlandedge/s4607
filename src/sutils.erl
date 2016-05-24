@@ -51,7 +51,10 @@ add_trailing_spaces(Str, N) when length(Str) =:= N ->
     Str.
 
 %% @doc Conditionally extract a paramater from the front of a binary
-%% based on the state of a mask bit.
+%% based on the state of a mask bit. If the mask bit is set, then the 
+%% parameter is extracted and the conversion function is applied. If the 
+%% mask bit is not set then no parameter is extracted and the default value
+%% is returned.
 -spec conditional_extract(Bin, MaskBit, Size, ConvFn, Default) -> {Val, Rem}
     when Bin :: binary(),
     MaskBit :: mask_bit(),
@@ -69,7 +72,9 @@ conditional_extract(Bin, MaskBit, Size, ConvFn, Default) ->
             {Default, Bin}
     end.
 
-%% @doc Conditionally display a parameter based on a mask bit
+%% @doc Conditionally display a parameter based on a mask bit. If the bit is
+%% set then the parameters are displayed. No action is taken if the mask bit
+%% is not set.
 -spec conditional_display(FmtStr, Params, MaskBit) -> ok 
     when FmtStr :: string(),
     Params :: list(),
