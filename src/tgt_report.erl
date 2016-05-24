@@ -237,6 +237,7 @@ decode(TrBin, EM) ->
 
 %% @doc Encode a target report binary from the specified record. 
 %% Uses the existence mask to decide which fields to use.
+-spec encode(TR::tgt_report(), EM::exist_mask:exist_mask()) -> binary().
 encode(#tgt_report{
     mti_report_index = MRI,
     target_hr_lat = TgtHiResLat,
