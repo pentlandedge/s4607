@@ -234,10 +234,17 @@ decode(<<EM:5/binary, RI:16/integer-unsigned-big,
         fun stanag_types:b32_to_float/1,
         0.0),
 
-    _NumOfRecords = get_number_of_scatterer_records(TypeOfHrrDecoded,
+    NumOfRecords = get_number_of_scatterer_records(TypeOfHrrDecoded,
         NumOfTargetScatterers, NumOfRangeSamples, NumOfDopplerSamples),
 
-    HrrScatterRecords = Bin27,
+    HrrScatterRecords = decode_scatterer_rec_list(Bin27,
+        {1,
+        hrr_exist_mask:get_scatterer_phase(EMrec),
+        hrr_exist_mask:get_range_index(EMrec),
+        hrr_exist_mask:get_doppler_index(EMrec)},
+        NumOfRecords,
+        NumOfTargetScatterers,
+        NumBytesPhase),
 
     {ok, #hrr_segment{
         existence_mask = EMrec,
@@ -359,6 +366,14 @@ get_number_of_scatterer_records(_, NumOfTargetScatterers, 0, _) ->
     NumOfTargetScatterers;
 get_number_of_scatterer_records(_, _, NumOfRangeSamples, NumOfDopplerSamples) ->
     NumOfRangeSamples * NumOfDopplerSamples.
+
+decode_scatterer_rec_list(Bin, EM, RecordCount, MagnitudeByteSize, PhaseByteSize) ->
+    decode_scatterer_rec_list(Bin, EM, RecordCount, MagnitudeByteSize, PhaseByteSize, []).
+decode_scatterer_rec_list(_Bin, _EM, 0, _MagnitudeByteSize, _PhaseByteSize, AccRecords) ->
+    lists:reverse(AccRecords);
+decode_scatterer_rec_list(Bin, EM, RecordCount, MagnitudeByteSize, PhaseByteSize, AccRecords) when RecordCount > 0 ->
+    {ok, SR, Rem} = scatterer_rec:decode(Bin, EM, MagnitudeByteSize, PhaseByteSize),
+    decode_scatterer_rec_list(Rem, EM, RecordCount-1, MagnitudeByteSize, PhaseByteSize, [SR|AccRecords]).
 
 display(HRR) ->
     io:format("****************************************~n"),
