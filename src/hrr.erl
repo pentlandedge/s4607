@@ -17,7 +17,10 @@
 
 -export([
     decode/1,
+    encode/1,
     new/1,
+    new_processing_mask/3,
+    payload_size/1,
     display/1,
     get_existence_mask/1,
     get_revisit_index/1,
@@ -243,7 +246,7 @@ decode(<<EM:5/binary, RI:16/integer-unsigned-big,
         hrr_exist_mask:get_range_index(EMrec),
         hrr_exist_mask:get_doppler_index(EMrec)},
         NumOfRecords,
-        NumOfTargetScatterers,
+        NumBytesMagnitude,
         NumBytesPhase),
 
     {ok, #hrr_segment{
@@ -279,6 +282,90 @@ decode(<<EM:5/binary, RI:16/integer-unsigned-big,
         target_radial_electrical_length = TargetRadialElectricalLength,
         electrical_length_uncertainty = ElectricalLengthUncertainty,
         hrr_scatter_records = HrrScatterRecords}}.
+
+encode(HRR) ->
+    % Extract the existence mask from the incoming HRR segment.
+    EM = get_existence_mask(HRR),
+
+    % Create a local function to wrap the check of the existence mask and
+    % the parameter encoding/appending.
+    % Exploits the trick that the function to access the HRR segment
+    % fields is the same as that to access the corresponding existence mask
+    % field.
+    F = fun({EvalFun, EncFun}, Acc) ->
+            case hrr_exist_mask:EvalFun(EM) of
+                1 ->
+                    Param = hrr:EvalFun(HRR),
+                    PB = EncFun(Param),
+                    <<Acc/binary,PB/binary>>;
+                0 ->
+                    Acc
+            end
+        end,
+
+    ParamTable = [
+        {get_revisit_index, fun stanag_types:integer_to_i16/1},
+        {get_dwell_index, fun stanag_types:integer_to_i16/1},
+        {get_last_dwell_of_revisit, fun encode_last_dwell_of_revisit/1},
+        {get_mti_report_index, fun stanag_types:integer_to_i16/1},
+        {get_num_of_target_scatterers, fun stanag_types:integer_to_i16/1},
+        {get_num_of_range_samples, fun stanag_types:integer_to_i16/1},
+        {get_num_of_doppler_samples, fun stanag_types:integer_to_i16/1},
+        {get_mean_clutter_power, fun stanag_types:integer_to_i8/1},
+        {get_detection_threshold, fun stanag_types:integer_to_i8/1},
+        {get_range_resolution, fun stanag_types:float_to_b16/1},
+        {get_range_bin_spacing, fun stanag_types:float_to_b16/1},
+        {get_doppler_resolution, fun stanag_types:float_to_h32/1},
+        {get_doppler_bin_spacing, fun stanag_types:float_to_h32/1},
+        {get_center_frequency, fun stanag_types:float_to_ba32/1},
+        {get_compression_flag, fun encode_compression_flag/1},
+        {get_range_weighting_type, fun encode_range_weighting_type/1},
+        {get_doppler_weighting_type, fun encode_doppler_weighting_type/1},
+        {get_maximum_pixel_power, fun stanag_types:float_to_b16/1},
+        {get_maximum_rcs, fun stanag_types:integer_to_s8/1},
+        {get_range_of_origin, fun stanag_types:integer_to_s16/1},
+        {get_doppler_of_origin, fun stanag_types:float_to_h32/1},
+        {get_type_of_hrr, fun encode_type_of_hrr/1},
+        {get_processing_mask, fun encode_processing_mask/1},
+        {get_num_bytes_magnitude, fun stanag_types:integer_to_i8/1},
+        {get_num_bytes_phase, fun stanag_types:integer_to_i8/1},
+        {get_range_extent_pixels, fun stanag_types:integer_to_i8/1},
+        {get_range_to_nearest_edge, fun stanag_types:integer_to_i32/1},
+        {get_index_of_zero_velocity, fun stanag_types:integer_to_i8/1},
+        {get_target_radial_electrical_length, fun stanag_types:float_to_b32/1},
+        {get_electrical_length_uncertainty, fun stanag_types:float_to_b32/1}],
+
+
+    EMenc = hrr_exist_mask:encode(EM),
+    % Produce a binary hrr segment, missing only the scatterer records.
+    Bin1 = lists:foldl(F, EMenc, ParamTable),
+    % Append any scatterer records.
+    encode_scatterer_records(
+        get_number_of_scatterer_records(
+            get_type_of_hrr(HRR),
+            get_num_of_target_scatterers(HRR),
+            get_num_of_range_samples(HRR),
+            get_num_of_doppler_samples(HRR)),
+        get_hrr_scatter_records(HRR),
+        get_num_bytes_magnitude(HRR),
+        get_num_bytes_phase(HRR),
+        EM, Bin1).
+
+%% Helper function for the hrr encode: encodes all of the scatterer records.
+%% InitBin can be set to the HRR segment prior to adding the records
+%% so that the scatterer records are automatically added to the end of the
+%% HRR segment.
+encode_scatterer_records(0, _RepList, _EM, _MagBytes, _PhaseBytes, InitBin) ->
+    InitBin;
+encode_scatterer_records(RepCount, RepList, EM, MagBytes, PhaseBytes, InitBin)
+    when RepCount =:= length(RepList) ->
+
+    F = fun(R, Acc) ->
+            Bin = scatterer_rec:encode(R, EM, MagBytes, PhaseBytes),
+            <<Acc/binary,Bin/binary>>
+        end,
+    lists:foldl(F, InitBin, RepList).
+
 
 %% Create a new HRR segment structure from the specified fields.
 new(Fields) ->
@@ -328,19 +415,33 @@ new(Fields) ->
 decode_last_dwell_of_revisit(0) -> additional_dwells;
 decode_last_dwell_of_revisit(1) -> no_additional_dwells.
 
+encode_last_dwell_of_revisit(additional_dwells) -> <<0>>;
+encode_last_dwell_of_revisit(no_additional_dwells) -> <<1>>.
+
 decode_compression_flag(<<X>>) -> decode_compression_flag(X);
 decode_compression_flag(0) -> no_compression;
 decode_compression_flag(1) -> threshold_decomposition_x10.
+
+encode_compression_flag(no_compression) -> <<0>>;
+encode_compression_flag(threshold_decomposition_x10) -> <<1>>.
 
 decode_range_weighting_type(<<X>>) -> decode_range_weighting_type(X);
 decode_range_weighting_type(0) -> no_statement;
 decode_range_weighting_type(1) -> taylor_weighting;
 decode_range_weighting_type(2) -> other.
 
+encode_range_weighting_type(no_statement) -> <<0>>;
+encode_range_weighting_type(taylor_weighting) -> <<1>>;
+encode_range_weighting_type(other) -> <<2>>.
+
 decode_doppler_weighting_type(<<X>>) -> decode_doppler_weighting_type(X);
 decode_doppler_weighting_type(0) -> no_statement;
 decode_doppler_weighting_type(1) -> taylor_weighting;
 decode_doppler_weighting_type(2) -> other.
+
+encode_doppler_weighting_type(no_statement) -> <<0>>;
+encode_doppler_weighting_type(taylor_weighting) -> <<1>>;
+encode_doppler_weighting_type(other) -> <<2>>.
 
 decode_type_of_hrr(<<X>>) -> decode_type_of_hrr(X);
 decode_type_of_hrr(0) -> other;
@@ -352,6 +453,23 @@ decode_type_of_hrr(5) -> full_rdm;
 decode_type_of_hrr(6) -> partial_rdm;
 decode_type_of_hrr(7) -> full_range_pulse_data.
 
+encode_type_of_hrr(other) -> <<0>>;
+encode_type_of_hrr(one_d_hrr_chip) -> <<1>>;
+encode_type_of_hrr(two_d_hrr_chip) -> <<2>>;
+encode_type_of_hrr(sparse_hrr_chip) -> <<3>>;
+encode_type_of_hrr(oversized_hrr_chip) -> <<4>>;
+encode_type_of_hrr(full_rdm) -> <<5>>;
+encode_type_of_hrr(partial_rdm) -> <<6>>;
+encode_type_of_hrr(full_range_pulse_data) -> <<7>>.
+
+new_processing_mask(ClutterCancellation,
+                    SingleAmbiguityKeystoning,
+                    MultiAmbiguityKeystoning) ->
+    #processing_mask{
+        clutter_cancellation = ClutterCancellation,
+        single_ambiguity_keystoning = SingleAmbiguityKeystoning,
+        multi_ambiguity_keystoning = MultiAmbiguityKeystoning}.
+
 decode_processing_mask(<<ClutterCancellation:1, SingleAmbiguityKeystoning:1,
     MultiAmbiguityKeystoning:1, _Spare:5>>) ->
 
@@ -360,12 +478,13 @@ decode_processing_mask(<<ClutterCancellation:1, SingleAmbiguityKeystoning:1,
         single_ambiguity_keystoning = SingleAmbiguityKeystoning,
         multi_ambiguity_keystoning = MultiAmbiguityKeystoning}.
 
-get_number_of_scatterer_records(sparse_hrr_chip, _, NumOfRangeSamples, _) ->
-    NumOfRangeSamples;
-get_number_of_scatterer_records(_, NumOfTargetScatterers, 0, _) ->
-    NumOfTargetScatterers;
-get_number_of_scatterer_records(_, _, NumOfRangeSamples, NumOfDopplerSamples) ->
-    NumOfRangeSamples * NumOfDopplerSamples.
+encode_processing_mask(#processing_mask{
+        clutter_cancellation = ClutterCancellation,
+        single_ambiguity_keystoning = SingleAmbiguityKeystoning,
+        multi_ambiguity_keystoning = MultiAmbiguityKeystoning}) ->
+
+    <<ClutterCancellation:1, SingleAmbiguityKeystoning:1,
+    MultiAmbiguityKeystoning:1, 0:5>>.
 
 decode_scatterer_rec_list(Bin, EM, RecordCount, MagnitudeByteSize, PhaseByteSize) ->
     decode_scatterer_rec_list(Bin, EM, RecordCount, MagnitudeByteSize, PhaseByteSize, []).
@@ -374,6 +493,75 @@ decode_scatterer_rec_list(_Bin, _EM, 0, _MagnitudeByteSize, _PhaseByteSize, AccR
 decode_scatterer_rec_list(Bin, EM, RecordCount, MagnitudeByteSize, PhaseByteSize, AccRecords) when RecordCount > 0 ->
     {ok, SR, Rem} = scatterer_rec:decode(Bin, EM, MagnitudeByteSize, PhaseByteSize),
     decode_scatterer_rec_list(Rem, EM, RecordCount-1, MagnitudeByteSize, PhaseByteSize, [SR|AccRecords]).
+
+%% Calculate the expected size of a HRR segment once encoded.
+payload_size(#hrr_segment{existence_mask = EM, type_of_hrr = TypeOfHrr,
+            num_of_target_scatterers = NumOfTargetScatterers,
+            num_of_range_samples = NumOfRangeSamples,
+            num_of_doppler_samples = NumOfDopplerSamples,
+            num_bytes_magnitude = MagnitudeByteSize,
+            num_bytes_phase = PhaseByteSize}) ->
+    TypeOfHrrDecoded = decode_type_of_hrr(TypeOfHrr),
+    SRCount = get_number_of_scatterer_records(TypeOfHrrDecoded,
+        NumOfTargetScatterers, NumOfRangeSamples, NumOfDopplerSamples),
+    payload_size(EM, SRCount, MagnitudeByteSize, PhaseByteSize).
+
+payload_size(EM, SRCount, MagnitudeByteSize, PhaseByteSize) ->
+    SizeList = [
+        {get_revisit_index, 2},
+        {get_dwell_index, 2},
+        {get_last_dwell_of_revisit, 1},
+        {get_mti_report_index, 2},
+        {get_num_of_target_scatterers, 2},
+        {get_num_of_range_samples, 2},
+        {get_num_of_doppler_samples, 2},
+        {get_mean_clutter_power, 1},
+        {get_detection_threshold, 1},
+        {get_range_resolution, 2},
+        {get_range_bin_spacing, 2},
+        {get_doppler_resolution, 4},
+        {get_doppler_bin_spacing, 4},
+        {get_center_frequency, 4},
+        {get_compression_flag, 1},
+        {get_range_weighting_type, 1},
+        {get_doppler_weighting_type, 1},
+        {get_maximum_pixel_power, 2},
+        {get_maximum_rcs, 1},
+        {get_range_of_origin, 2},
+        {get_doppler_of_origin, 4},
+        {get_type_of_hrr, 1},
+        {get_processing_mask, 1},
+        {get_num_bytes_magnitude, 1},
+        {get_num_bytes_phase, 1},
+        {get_range_extent_pixels, 1},
+        {get_range_to_nearest_edge, 4},
+        {get_index_of_zero_velocity, 1},
+        {get_target_radial_electrical_length, 4},
+        {get_electrical_length_uncertainty, 4}],
+
+    % Define a function to accumulate the size.
+    F = fun({GetF, Size}, Acc) ->
+            case hrr_exist_mask:GetF(EM) of
+                1 -> Acc + Size;
+                0 -> Acc
+            end
+        end,
+    HRREM = {hrr_exist_mask:get_scatterer_magnitude(EM),
+             hrr_exist_mask:get_scatterer_phase(EM),
+             hrr_exist_mask:get_range_index(EM),
+             hrr_exist_mask:get_doppler_index(EM)},
+    % Accumulate the total size for all the included parameters (excluding
+    % the scatterer records). Initial size of 5 is to allow for the existence
+    % mask itself.
+    HRRSize = lists:foldl(F, 5, SizeList),
+
+    % Calculate the size for the scatterer records.
+    SRSize = SRCount * scatterer_rec:payload_size(HRREM, MagnitudeByteSize, PhaseByteSize),
+
+    % Return the combined total of the hrr and the scatterer records.
+    HRRSize + SRSize.
+
+
 
 display(HRR) ->
     io:format("****************************************~n"),
@@ -472,3 +660,11 @@ get_index_of_zero_velocity(#hrr_segment{index_of_zero_velocity = X}) -> X.
 get_target_radial_electrical_length(#hrr_segment{target_radial_electrical_length = X}) -> X.
 get_electrical_length_uncertainty(#hrr_segment{electrical_length_uncertainty = X}) -> X.
 get_hrr_scatter_records(#hrr_segment{hrr_scatter_records = X}) -> X.
+
+get_number_of_scatterer_records(sparse_hrr_chip, _, NumOfRangeSamples, _) ->
+    NumOfRangeSamples;
+get_number_of_scatterer_records(_, NumOfTargetScatterers, 0, _) ->
+    NumOfTargetScatterers;
+get_number_of_scatterer_records(_, _, NumOfRangeSamples, NumOfDopplerSamples) ->
+    NumOfRangeSamples * NumOfDopplerSamples.
+
