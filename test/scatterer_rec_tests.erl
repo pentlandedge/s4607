@@ -75,6 +75,9 @@ encode_decode_checks1() ->
     % Create a sample record.
     {EM, SM, SP, R1} = sample_record1(),
 
+    % Display the record
+    scatterer_rec:display(R1, EM),
+
     % Encode it
     Bin = scatterer_rec:encode(R1, EM, SM, SP),
 

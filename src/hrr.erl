@@ -347,9 +347,15 @@ encode(HRR) ->
             get_num_of_range_samples(HRR),
             get_num_of_doppler_samples(HRR)),
         get_hrr_scatter_records(HRR),
+        {
+            hrr_exist_mask:get_scatterer_magnitude(EM),
+            hrr_exist_mask:get_scatterer_phase(EM),
+            hrr_exist_mask:get_range_index(EM),
+            hrr_exist_mask:get_doppler_index(EM)
+        },
         get_num_bytes_magnitude(HRR),
         get_num_bytes_phase(HRR),
-        EM, Bin1).
+        Bin1).
 
 %% Helper function for the hrr encode: encodes all of the scatterer records.
 %% InitBin can be set to the HRR segment prior to adding the records
@@ -501,8 +507,7 @@ payload_size(#hrr_segment{existence_mask = EM, type_of_hrr = TypeOfHrr,
             num_of_doppler_samples = NumOfDopplerSamples,
             num_bytes_magnitude = MagnitudeByteSize,
             num_bytes_phase = PhaseByteSize}) ->
-    TypeOfHrrDecoded = decode_type_of_hrr(TypeOfHrr),
-    SRCount = get_number_of_scatterer_records(TypeOfHrrDecoded,
+    SRCount = get_number_of_scatterer_records(TypeOfHrr,
         NumOfTargetScatterers, NumOfRangeSamples, NumOfDopplerSamples),
     payload_size(EM, SRCount, MagnitudeByteSize, PhaseByteSize).
 
