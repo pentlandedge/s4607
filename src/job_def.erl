@@ -58,6 +58,7 @@
 -export([
     decode_sensor_id_type/1,
     encode_sensor_id_type/1,
+    decode_priority/1,
     decode_radar_mode/1,
     encode_radar_mode/1,
     decode_terrain_elev_model/1,
@@ -432,10 +433,11 @@ encode_target_filtering_flag(FlagList) ->
     <<0:5,B2:1,B1:1,B0:1>>.
 
 %% Decode the radar priority.
--spec decode_priority(byte()) -> end_of_job | Priority 
+-spec decode_priority(byte()) -> end_of_job | Priority | {error, priority, byte()}
     when Priority :: priority().
 decode_priority(255) -> end_of_job;
-decode_priority(X) when X >= 1, X =< 99 -> X.
+decode_priority(X) when X >= 1, X =< 99 -> X;
+decode_priority(X) -> {error, priority, X}.
 
 %% Function to encode the radar priority.
 -spec encode_priority(P) -> <<_:8>>

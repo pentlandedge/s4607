@@ -28,8 +28,8 @@ job_def_test_() ->
      terr_elev_decode_checks(), terr_elev_encode_checks(),
      geoid_decode_checks(), geoid_encode_checks(),
      target_filtering_decode_checks(), target_filtering_encode_checks(),
-     end_of_job_priority_checks(), radar_mode_decode_reserved_checks(),
-     cross_range_std_dev_checks()].
+     end_of_job_priority_checks(), invalid_priority_checks(), 
+     radar_mode_decode_reserved_checks(), cross_range_std_dev_checks()].
 
 job1_checks() ->
     {ok, JD1} = job_def:decode(job_def1()),
@@ -200,6 +200,9 @@ end_of_job_priority_checks() ->
     
     % Check that the decoded priority field is correct.
     [?_assertEqual(end_of_job, job_def:get_priority(DEJD))].
+
+invalid_priority_checks() ->
+     [?_assertEqual({error, priority, 0}, job_def:decode_priority(0))].
 
 radar_mode_decode_reserved_checks() ->
     Val = {available_for_future_use, reserved},
