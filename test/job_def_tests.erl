@@ -202,7 +202,8 @@ end_of_job_priority_checks() ->
     [?_assertEqual(end_of_job, job_def:get_priority(DEJD))].
 
 invalid_priority_checks() ->
-     [?_assertEqual({error, priority, 0}, job_def:decode_priority(0))].
+     [?_assertEqual({error, priority, 0}, job_def:decode_priority(0)),
+      ?_assertEqual({error, priority, 100}, job_def:decode_priority(100))].
 
 radar_mode_decode_reserved_checks() ->
     Val = {available_for_future_use, reserved},

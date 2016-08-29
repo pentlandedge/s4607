@@ -168,12 +168,21 @@ decode(<<JobID:32,SIDT,SIDM:6/binary,TFF:1/binary,Pri,
     J12:4/binary,J13:4/binary,J14,NRI:16,J16:16,J17:16,J18:16,J19,J20:16,
     J21:16,J22:2/binary,J23:16,J24,J25,J26,J27,J28>>) ->
 
+    % Start the process of detecting decode errors rather than simply 
+    % crashing the process. Can later give the user the option of a 
+    % "strict" or "permissive" decode.
+    
+    Priority = case decode_priority(Pri) of 
+                   {error, priority, X} -> X;
+                   X                    -> X
+               end,
+    
     {ok, #job_def{
         job_id = JobID,
         sensor_id_type = decode_sensor_id_type(SIDT),
         sensor_id_model = decode_sensor_id_model(SIDM),
         target_filt_flag = decode_target_filtering_flag(TFF),
-        priority = decode_priority(Pri),
+        priority = Priority,
         bounding_a_lat = stanag_types:sa32_to_float(J6),
         bounding_a_lon = stanag_types:ba32_to_float(J7),
         bounding_b_lat = stanag_types:sa32_to_float(J8),
