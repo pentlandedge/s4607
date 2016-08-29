@@ -170,7 +170,9 @@ decode(<<JobID:32,SIDT,SIDM:6/binary,TFF:1/binary,Pri,
 
     % Start the process of detecting decode errors rather than simply 
     % crashing the process. Can later give the user the option of a 
-    % "strict" or "permissive" decode.
+    % "strict" or "permissive" decode. For now we are simply doing a 
+    % permissive decode where the priority field is accepted even when it is
+    % not in the specified range.
     
     Priority = case decode_priority(Pri) of 
                    {error, priority, X} -> X;
