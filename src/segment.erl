@@ -146,6 +146,7 @@ get_data(#segment{data = D}) -> D.
 %% decode/1, encode/1, payload_size/1, display/1.
 seg_type_to_module(mission)         -> {ok, mission};
 seg_type_to_module(dwell)           -> {ok, dwell};
+seg_type_to_module(hrr)             -> {ok, hrr};
 seg_type_to_module(job_definition)  -> {ok, job_def};
 seg_type_to_module(free_text)       -> {ok, free_text};
 seg_type_to_module(platform_loc)    -> {ok, platform_loc};

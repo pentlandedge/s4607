@@ -1,7 +1,7 @@
 # s4607
 Stanag 4607 library written in Erlang. Stanag 4607 is a NATO standard for sharing radar information. Erlang is a wonderful programming language for developing distributed systems, providing a good platform on which to develop software to connect and control sensors of various kinds.
 
-This software is still under development, but can now decode and encode the packet header, dwell, mission, job definition, free text and platform location segments. The high-range resolution (HRR) and test and status segments have been implemented but are not linked into the top levels of the library yet. Once complete, the focus will shift to improving the top level API and documentation to make the library more convenient to use.
+This software is still under development, but can now decode and encode the packet header, dwell, mission, hrr, job definition, free text and platform location segments. The test and status segment has been implemented but is not linked into the top levels of the library yet. Once complete, the focus will shift to improving the top level API and documentation to make the library more convenient to use.
 
 The software has been released under an Apache free software license.
 ## Building
