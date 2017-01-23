@@ -59,7 +59,10 @@ write_file(File, BinList) ->
 %% a structured representation i.e. a list of packets with nested segments
 %% as appropriate.
 decode(Bin) ->
-    decode_packets(Bin, []).
+    try decode_packets(Bin, [])
+    catch
+        _:_ -> {error, failed_decode}
+    end.
 
 decode_packets(<<>>, Acc) ->
     lists:reverse(Acc);

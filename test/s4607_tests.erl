@@ -27,7 +27,8 @@ s4607_test_() ->
      mission_packet_encode(), job_def_packet_encode(), dwell_packet_encode(),
      free_text_packet_encode(), platform_loc_packet_encode(),
      packet_list_encode(), display_unsupported_seg(), 
-     decode_unrecognised_seg(), encode_unrecocgnised_seg()].
+     decode_unrecognised_seg(), encode_unrecocgnised_seg(),
+     decode_junk()].
 
 encode_mission_segment_check() ->
     % Create a mission segment.
@@ -483,6 +484,12 @@ encode_unrecocgnised_seg() ->
     Seg = {segment, SH, SegData},
     Ret = segment:encode(Seg),
     [?_assertEqual({error, unsupported_segment_type}, Ret)]. 
+
+%% Check that feeding junk into the decode returns an error.
+decode_junk() ->
+    Bin = <<"Some garbage to decode.">>,
+    {Code, Reason} = s4607:decode(Bin),
+    [?_assertEqual({error, failed_decode}, {Code, Reason})]. 
 
 %% Function to create a list of packets containing dwells based on
 %% East Fortune runway.
