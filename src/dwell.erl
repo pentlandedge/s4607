@@ -15,6 +15,7 @@
 %%
 -module(dwell).
 
+%% Main API functions.
 -export([
     decode/1, 
     encode/1,
@@ -23,6 +24,10 @@
     payload_size/2,
     to_dict/1,
     display/1,
+    update_targets/2]).
+
+%% Accessor functions for accessing elements of the dwell segment.
+-export([
     get_existence_mask/1,
     get_revisit_index/1,
     get_dwell_index/1,
@@ -590,6 +595,14 @@ display(DS) ->
     sutils:conditional_display("MDV: ~p~n", [get_mdv(DS)], exist_mask:get_mdv(EM)),
     F = fun(TR) -> tgt_report:display(TR, EM) end,
     lists:map(F, DS#dwell_segment.targets).
+
+%% @doc Update the targets in a dwell segment. Updates the target report count 
+%% in the dwell segment too.
+update_targets(#dwell_segment{} = DS, NewTargets) when is_list(NewTargets) ->
+    TgtCount = length(NewTargets),
+    DS#dwell_segment{
+        targets = NewTargets,  
+        target_report_count = TgtCount}.
 
 %% Accessor functions to allow access to the record fields with out creating 
 %% client dependencies on the actual structure.
