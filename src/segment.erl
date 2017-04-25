@@ -25,6 +25,7 @@
     new/2,
     display/1,
     display/2,
+    update_segment_data/2,
     get_header/1,
     get_data/1]).
 
@@ -131,6 +132,11 @@ extract_segment_header(<<Hdr:5/binary,Rest/binary>>) ->
 %% (which should have had the header removed already).
 extract_segment_data(Bin, Len) ->
     sutils:extract_data(Bin, Len).
+
+%% Update the data in a segment.
+update_segment_data(#segment{header = SegHdr}, SegRec) ->
+    SegType = seg_header:get_segment_type(SegHdr),
+    new(SegType, SegRec).
 
 %% Accessor functions.
 
