@@ -24,6 +24,9 @@
     decode_classification/1,
     decode_us_packet_code/1,
     decode_exercise_indicator/1,
+    update_size/2]).
+
+-export([
     get_version_id/1,
     get_packet_size/1,
     get_nationality/1,
@@ -275,6 +278,10 @@ display(PktHdr) ->
     io:format("Platform ID: ~p~n", [get_platform_id(PktHdr)]),
     io:format("Mission ID: ~p~n", [get_mission_id(PktHdr)]),
     io:format("Job ID: ~p~n", [get_job_id(PktHdr)]).
+
+%% @doc Update the size field in a packet header.
+update_size(#pheader{} = Hdr, NewSize) ->
+    Hdr#pheader{packet_size = NewSize}.
 
 %% Get the version ID from a packet header
 get_version_id(#pheader{version = V}) -> V.

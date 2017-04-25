@@ -33,7 +33,8 @@
     update_properties/2,
     packet_generator/1,
     get_segments/1,
-    get_segments_by_type/2]).
+    get_segments_by_type/2,
+    update_segments_in_packet/2]).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Record definitions.
@@ -207,4 +208,16 @@ get_segments_by_type(SegTypes, PacketList) when is_list(SegTypes),
         end,
 
     lists:filter(F, SegList).
+
+%% @doc Update the list of segments in a packet and amend the packet header.
+update_segments_in_packet(#packet{header = Hdr}, Segs) when is_list(Segs) ->
+    % Work out the size of the packet.
+    PaySize = s4607:packet_payload_size(Segs),
+    Size = pheader:header_size() + PaySize,
+
+    % Update the packet header.
+    PktHdr = pheader:update_size(Hdr, Size),
+
+    % Wrap the segments inside a new packet.
+    s4607:new_packet(PktHdr, Segs).
 
