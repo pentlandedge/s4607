@@ -339,7 +339,7 @@ encode(DS) ->
         {get_platform_pitch, fun stanag_types:float_to_sa16/1},
         {get_platform_roll, fun stanag_types:float_to_sa16/1},
         {get_dwell_center_lat, fun stanag_types:float_to_sa32/1},
-        {get_dwell_center_lon, fun stanag_types:float_to_sa32/1},
+        {get_dwell_center_lon, fun stanag_types:float_to_ba32/1},
         {get_dwell_range_half_extent, fun stanag_types:float_to_b16/1},
         {get_dwell_angle_half_extent, fun stanag_types:float_to_ba16/1},
         {get_sensor_heading, fun stanag_types:float_to_sa16/1},
