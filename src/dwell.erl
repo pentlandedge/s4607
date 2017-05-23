@@ -24,6 +24,7 @@
     payload_size/2,
     to_dict/1,
     display/1,
+    to_csv_iolist/1,
     update_targets/2]).
 
 %% Accessor functions for accessing elements of the dwell segment.
@@ -95,6 +96,11 @@
     mdv,
     targets}).
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Type specifications.
+
+-opaque dwell_segment() :: #dwell_segment{}.
+-export_type([dwell_segment/0]).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Dwell segment decoding functions.
@@ -595,6 +601,58 @@ display(DS) ->
     sutils:conditional_display("MDV: ~p~n", [get_mdv(DS)], exist_mask:get_mdv(EM)),
     F = fun(TR) -> tgt_report:display(TR, EM) end,
     lists:map(F, DS#dwell_segment.targets).
+
+%% @doc Function to display the contents of a dwell segment.
+-spec to_csv_iolist(DS::dwell_segment()) -> iolist().
+to_csv_iolist(DS) ->
+    EM = dwell:get_existence_mask(DS),
+    F = fun({FmtStr, FnName}) ->
+            Args = [dwell:FnName(DS)],
+            ExistBit = exist_mask:FnName(EM),
+            sutils:conditional_format(FmtStr, Args, ExistBit)       
+        end,
+
+    Params = 
+        [{"~p,", get_revisit_index},
+         {"~p,", get_dwell_index},
+         {"~p,", get_last_dwell_of_revisit},
+         {"~p,", get_target_report_count},
+         {"~p,", get_dwell_time},
+         {"~p,", get_sensor_lat},
+         {"~p,", get_sensor_lon},
+         {"~p,", get_sensor_alt},
+         {"~p,", get_lat_scale_factor},
+         {"~p,", get_lon_scale_factor},
+         {"~p,", get_spu_along_track},
+         {"~p,", get_spu_cross_track},
+         {"~p,", get_spu_alt},
+         {"~p,", get_sensor_track},
+         {"~p,", get_sensor_speed},
+         {"~p,", get_sensor_vert_vel},
+         {"~p,", get_sensor_track_unc},
+         {"~p,", get_sensor_speed_unc},
+         {"~p,", get_sensor_vert_vel_unc},
+         {"~p,", get_platform_heading},
+         {"~p,", get_platform_pitch},
+         {"~p,", get_platform_roll},
+         {"~p,", get_dwell_center_lat},
+         {"~p,", get_dwell_center_lon},
+         {"~p,", get_dwell_range_half_extent},
+         {"~p,", get_dwell_angle_half_extent},
+         {"~p,", get_sensor_heading},
+         {"~p,", get_sensor_pitch},
+         {"~p,", get_sensor_roll},
+         {"~p", get_mdv}],
+
+    DwellList = lists:map(F, Params),
+
+    Tgts = get_targets(DS),
+    TgtIO = [tgt_report:to_csv_iolist(T, EM) || T <- Tgts],
+
+    %% Prefix the line identifier and add all the targets (which will span
+    %% multiple lines).
+    %% Also add an empty field placeholder for the existence mask.
+    ["DS,,"|DwellList] ++ io_lib:format("~n", []) ++ TgtIO.
 
 %% @doc Update the targets in a dwell segment. Updates the target report count 
 %% in the dwell segment too.

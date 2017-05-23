@@ -557,6 +557,9 @@ display(TR, EM) ->
         exist_mask:get_target_rcs(EM)).
 
 %% @doc Function to display the contents of a target report structure.
+-spec to_csv_iolist(
+    TR::tgt_report(), 
+    EM::exist_mask:exist_mask()) -> iolist().
 to_csv_iolist(TR, EM) ->
     F = fun({FmtStr, FnName}) ->
             Args = [tgt_report:FnName(TR)],
@@ -582,12 +585,12 @@ to_csv_iolist(TR, EM) ->
          {"~p,", get_target_rad_vel_unc},
          {"~p,", get_truth_tag_app},
          {"~p,", get_truth_tag_entity},
-         {"~p~n", get_target_rcs}],
+         {"~p", get_target_rcs}],
 
     ParamList = lists:map(F, Params),
 
     %% Prefix the line identifier.
-    ["TR,"|ParamList].
+    ["TR,"|ParamList] ++ io_lib:format("~n", []).
 
 %% Accessor functions to allow clients to read the individual record fields.
 
