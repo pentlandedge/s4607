@@ -24,6 +24,7 @@
     new/7,
     payload_size/1,
     display/1, 
+    to_csv_iolist/1,
     decode_platform_type/1,
     encode_platform_type/1,
     get_mission_plan/1,
@@ -229,6 +230,18 @@ display(MSeg) ->
     io:format("Year: ~p~n", [get_year(MSeg)]),
     io:format("Month: ~p~n", [get_month(MSeg)]),
     io:format("Day: ~p~n", [get_day(MSeg)]).
+
+%% @doc Convert the segment data into a CSV string.
+-spec to_csv_iolist(MS::mission_segment()) -> iolist().
+to_csv_iolist(MSeg) ->
+    Args = [get_mission_plan(MSeg),
+            get_flight_plan(MSeg),
+            get_platform_type(MSeg),
+            get_platform_config(MSeg),
+            get_year(MSeg),
+            get_month(MSeg),
+            get_day(MSeg)],
+    io_lib:format("MS,~s,~s,~p,~s,~p,~p,~p~n", Args). 
 
 %% @doc Accessor function for the mission plan field.
 -spec get_mission_plan(MS::mission_segment()) -> string().
