@@ -25,6 +25,7 @@
     new/2,
     display/1,
     display/2,
+    to_csv_iolist/1,
     update_segment_data/2,
     get_header/1,
     get_data/1]).
@@ -123,6 +124,21 @@ display(SegHdr, SegRec) ->
         {ok, ModName} -> ModName:display(SegRec);
         Error         -> Error 
     end.
+
+%% @doc Convert the segment to a CSV iolist. Not all segment types are 
+%% supported at present.
+-spec to_csv_iolist(Seg::segment() | [segment()]) -> iolist().
+to_csv_iolist(#segment{header = H, data = D}) ->
+    HdrIO = seg_header:to_csv_iolist(H),
+    SegType = seg_header:get_segment_type(H),
+    DataIO = case SegType of
+                mission -> mission:to_csv_iolist(D);
+                dwell   -> dwell:to_csv_iolist(D);
+                _       -> []
+             end,
+    HdrIO ++ DataIO;
+to_csv_iolist(Segs) when is_list(Segs) ->
+    lists:map(fun to_csv_iolist/1, Segs).
 
 %% Extracts the first binary portion associated with a segment header.
 extract_segment_header(<<Hdr:5/binary,Rest/binary>>) ->

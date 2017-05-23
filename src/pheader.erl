@@ -21,6 +21,7 @@
     new/1,
     header_size/0,
     display/1, 
+    to_csv_iolist/1,
     decode_classification/1,
     decode_us_packet_code/1,
     decode_exercise_indicator/1,
@@ -278,6 +279,19 @@ display(PktHdr) ->
     io:format("Platform ID: ~p~n", [get_platform_id(PktHdr)]),
     io:format("Mission ID: ~p~n", [get_mission_id(PktHdr)]),
     io:format("Job ID: ~p~n", [get_job_id(PktHdr)]).
+
+to_csv_iolist(PktHdr) ->
+    Args = [get_version_id(PktHdr),
+            get_packet_size(PktHdr),
+            get_nationality(PktHdr),
+            get_classification(PktHdr),
+            get_class_system(PktHdr),
+            get_packet_code(PktHdr),
+            get_exercise_indicator(PktHdr),
+            get_platform_id(PktHdr),
+            get_mission_id(PktHdr),
+            get_job_id(PktHdr)],
+    io_lib:format("PH,~p,~p,~s,~p,~s,~p,~p,~s,~p,~p~n", Args). 
 
 %% @doc Update the size field in a packet header.
 update_size(#pheader{} = Hdr, NewSize) ->

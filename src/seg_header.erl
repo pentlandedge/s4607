@@ -24,6 +24,7 @@
     new/2,
     header_size/0,
     display/1,
+    to_csv_iolist/1,
     decode_segment_type/1,
     get_segment_type/1,
     get_segment_size/1]).
@@ -114,6 +115,12 @@ display(SegHdr) ->
     io:format("** @seg_header~n"),
     io:format("Segment type: ~p~n", [get_segment_type(SegHdr)]),
     io:format("Segment size: ~p~n", [get_segment_size(SegHdr)]).
+
+%% @doc Convert a segment header to an iolist.
+-spec to_csv_iolist(SegHdr::seg_header()) -> iolist().
+to_csv_iolist(SegHdr) ->
+    Args = [get_segment_type(SegHdr), get_segment_size(SegHdr)],
+    io_lib:format("SH,~p,~p~n", Args).
 
 %% @doc Get the segment type from the seg header structure.
 -spec get_segment_type(SegHdr::seg_header()) -> segment_type().
