@@ -25,6 +25,7 @@
     payload_size/1,
     to_dict/2,
     display/2,
+    to_csv_iolist/2,
     get_mti_report_index/1,
     get_target_hr_lat/1,
     get_target_hr_lon/1,
@@ -554,6 +555,39 @@ display(TR, EM) ->
     sutils:conditional_display("Target RCS: ~p~n", 
         [get_target_rcs(TR)], 
         exist_mask:get_target_rcs(EM)).
+
+%% @doc Function to display the contents of a target report structure.
+to_csv_iolist(TR, EM) ->
+    F = fun({FmtStr, FnName}) ->
+            Args = [tgt_report:FnName(TR)],
+            ExistBit = exist_mask:FnName(EM),
+            sutils:conditional_format(FmtStr, Args, ExistBit)       
+        end,
+
+    Params = 
+        [{"~p,", get_mti_report_index}, 
+         {"~p,", get_target_hr_lat},
+         {"~p,", get_target_hr_lon},
+         {"~p,", get_target_delta_lat},
+         {"~p,", get_target_delta_lon},
+         {"~p,", get_geodetic_height},
+         {"~p,", get_target_vel_los},
+         {"~p,", get_target_wrap_velocity},
+         {"~p,", get_target_snr},
+         {"~p,", get_target_classification},
+         {"~p,", get_target_class_prob},
+         {"~p,", get_target_slant_range_unc},
+         {"~p,", get_target_cross_range_unc},
+         {"~p,", get_target_height_unc},
+         {"~p,", get_target_rad_vel_unc},
+         {"~p,", get_truth_tag_app},
+         {"~p,", get_truth_tag_entity},
+         {"~p~n", get_target_rcs}],
+
+    ParamList = lists:map(F, Params),
+
+    %% Prefix the line identifier.
+    ["TR,"|ParamList].
 
 %% Accessor functions to allow clients to read the individual record fields.
 

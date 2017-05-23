@@ -23,6 +23,7 @@
     add_trailing_spaces/2,
     conditional_extract/5,
     conditional_display/3,
+    conditional_format/3,
     extract_data/2,
     extract_conv_data/3]).
 
@@ -86,6 +87,19 @@ conditional_display(FmtStr, Params, MaskBit) ->
             ok;
         0 ->
             ok
+    end.
+
+%% @doc Conditionally format a string based on a mask bit. If the bit is
+%% set then the format is performed. If the bit is not set, then the empty
+%% iolist is returned.
+-spec conditional_format(FmtStr, Params, MaskBit) -> iolist() 
+    when FmtStr :: string(),
+    Params :: list(),
+    MaskBit :: mask_bit().
+conditional_format(FmtStr, Params, MaskBit) ->
+    case MaskBit of
+        1 -> io_lib:format(FmtStr, Params); 
+        0 -> [] 
     end.
 
 %% @doc Take the first part of a binary and return the rest.
