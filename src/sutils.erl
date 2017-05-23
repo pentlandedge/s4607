@@ -90,8 +90,8 @@ conditional_display(FmtStr, Params, MaskBit) ->
     end.
 
 %% @doc Conditionally format a string based on a mask bit. If the bit is
-%% set then the format is performed. If the bit is not set, then the empty
-%% iolist is returned.
+%% set then the format is performed. If the bit is not set, then a comma to
+%% represent an empty field is returned.
 -spec conditional_format(FmtStr, Params, MaskBit) -> iolist() 
     when FmtStr :: string(),
     Params :: list(),
@@ -99,7 +99,7 @@ conditional_display(FmtStr, Params, MaskBit) ->
 conditional_format(FmtStr, Params, MaskBit) ->
     case MaskBit of
         1 -> io_lib:format(FmtStr, Params); 
-        0 -> [] 
+        0 -> "," 
     end.
 
 %% @doc Take the first part of a binary and return the rest.
