@@ -132,10 +132,11 @@ to_csv_iolist(#segment{header = H, data = D}) ->
     HdrIO = seg_header:to_csv_iolist(H),
     SegType = seg_header:get_segment_type(H),
     DataIO = case SegType of
-                mission  -> mission:to_csv_iolist(D);
-                dwell    -> dwell:to_csv_iolist(D);
-                free_text-> free_text:to_csv_iolist(D);
-                _        -> []
+                mission        -> mission:to_csv_iolist(D);
+                dwell          -> dwell:to_csv_iolist(D);
+                free_text      -> free_text:to_csv_iolist(D);
+                job_definition -> job_def:to_csv_iolist(D);
+                _              -> []
              end,
     HdrIO ++ DataIO;
 to_csv_iolist(Segs) when is_list(Segs) ->

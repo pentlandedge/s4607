@@ -25,7 +25,8 @@
     decode_classification/1,
     decode_us_packet_code/1,
     decode_exercise_indicator/1,
-    update_size/2]).
+    update_size/2,
+    version_id_to_float_str/1]).
 
 -export([
     get_version_id/1,
@@ -269,7 +270,7 @@ encode_platform_id(PlatID) when is_list(PlatID), length(PlatID) =< 10 ->
 display(PktHdr) ->
     io:format("****************************************~n"),
     io:format("** @pheader~n"),
-    io:format("Version: ~p~n", [get_version_id(PktHdr)]),
+    io:format("Version: ~s~n", [version_id_to_float_str(get_version_id(PktHdr))]),
     io:format("Packet size: ~p~n", [get_packet_size(PktHdr)]), 
     io:format("Nationality: ~p~n", [get_nationality(PktHdr)]),
     io:format("Classification: ~p~n", [get_classification(PktHdr)]),
@@ -281,7 +282,7 @@ display(PktHdr) ->
     io:format("Job ID: ~p~n", [get_job_id(PktHdr)]).
 
 to_csv_iolist(PktHdr) ->
-    Args = [get_version_id(PktHdr),
+    Args = [version_id_to_float_str(get_version_id(PktHdr)),
             get_packet_size(PktHdr),
             get_nationality(PktHdr),
             get_classification(PktHdr),
@@ -291,11 +292,15 @@ to_csv_iolist(PktHdr) ->
             get_platform_id(PktHdr),
             get_mission_id(PktHdr),
             get_job_id(PktHdr)],
-    io_lib:format("PH,~p,~p,~s,~p,~s,~p,~p,~s,~p,~p~n", Args). 
+    io_lib:format("PH,~s,~p,~s,~p,~s,~p,~p,~s,~p,~p~n", Args). 
 
 %% @doc Update the size field in a packet header.
 update_size(#pheader{} = Hdr, NewSize) ->
     Hdr#pheader{packet_size = NewSize}.
+
+%% @doc Convert the version ID tuple to a string showing a float.
+version_id_to_float_str({Maj,Min}) -> 
+    io_lib:format("~p.~p", [Maj, Min]).
 
 %% Get the version ID from a packet header
 get_version_id(#pheader{version = V}) -> V.

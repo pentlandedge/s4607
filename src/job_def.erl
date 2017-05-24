@@ -24,6 +24,7 @@
     new/1,
     payload_size/1,
     display/1,
+    to_csv_iolist/1,
     get_job_id/1,
     get_sensor_id_type/1,
     get_sensor_id_model/1,
@@ -713,6 +714,49 @@ display(JDS) ->
     io:format("Nom. false alarm density.: ~p~n", [get_ns_val_false_alarm_density(JDS)]),
     io:format("Terrain elevation model: ~p~n", [get_terr_elev_model(JDS)]),
     io:format("Geoid model: ~p~n", [get_geoid_model(JDS)]).
+
+%% @doc Convert the segment data into a CSV string.
+-spec to_csv_iolist(SegData::job_def()) -> iolist().
+to_csv_iolist(SegData) ->
+    F = fun({FmtStr, FnName}) ->
+            Args = [job_def:FnName(SegData)],
+            io_lib:format(FmtStr, Args)
+        end,
+
+    Params = 
+        [{"~p,", get_job_id},
+         {"~p,", get_sensor_id_type},
+         {"~p,", get_sensor_id_model},
+         {"~p,", get_target_filt_flag},
+         {"~p,", get_priority},
+         {"~p,", get_bounding_a_lat},
+         {"~p,", get_bounding_a_lon},
+         {"~p,", get_bounding_b_lat},
+         {"~p,", get_bounding_b_lon},
+         {"~p,", get_bounding_c_lat},
+         {"~p,", get_bounding_c_lon},
+         {"~p,", get_bounding_d_lat},
+         {"~p,", get_bounding_d_lon},
+         {"~p,", get_radar_mode},
+         {"~p,", get_nom_rev_int},
+         {"~p,", get_ns_pos_unc_along_track},
+         {"~p,", get_ns_pos_unc_cross_track},
+         {"~p,", get_ns_pos_unc_alt},
+         {"~p,", get_ns_pos_unc_heading},
+         {"~p,", get_ns_pos_unc_sensor_speed},
+         {"~p,", get_ns_val_slant_range_std_dev},
+         {"~p,", get_ns_val_cross_range_std_dev},
+         {"~p,", get_ns_val_tgt_vel_los_std_dev},
+         {"~p,", get_ns_val_mdv},
+         {"~p,", get_ns_val_det_prob},
+         {"~p,", get_ns_val_false_alarm_density},
+         {"~p,", get_terr_elev_model},
+         {"~p,", get_geoid_model}],
+
+    ParamList = lists:map(F, Params),
+
+    %% Prefix the line identifier.
+    ["JD,"|ParamList] ++ io_lib:format("~n", []).
 
 %% Accessor functions to allow clients access to the contents
 
