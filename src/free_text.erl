@@ -25,6 +25,7 @@
     payload_size/1,
     to_dict/1,
     display/1,
+    to_csv_iolist/1,
     get_originator/1, 
     get_recipient/1, 
     get_text/1]).
@@ -101,6 +102,14 @@ display(#free_text{originator = Orig, recipient = Recip, text = Text}) ->
     io:format("recipient: ~p~n", [Recip]),
     io:format("text: ~p~n", [Text]).
     
+%% @doc Convert the segment data into a CSV string.
+-spec to_csv_iolist(SegData::free_text()) -> iolist().
+to_csv_iolist(SegData) ->
+    Args = [get_originator(SegData),
+            get_recipient(SegData),
+            get_text(SegData)],
+    io_lib:format("FT,~s,~s,~s~n", Args). 
+
 % Accessor functions.
 
 %% @doc Extract the originator field.
