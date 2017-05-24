@@ -25,6 +25,7 @@
     payload_size/1,
     display/1,
     to_csv_iolist/1,
+    get_radar_mode_str/1,
     get_job_id/1,
     get_sensor_id_type/1,
     get_sensor_id_model/1,
@@ -519,7 +520,11 @@ decode_radar_mode(120) -> {small_area_gmti, vader};
 decode_radar_mode(121) -> {wide_area_gmti, vader};
 decode_radar_mode(122) -> {dismount_gmti, vader};
 decode_radar_mode(123) -> {hrr_gmti, vader};
-decode_radar_mode(_) -> {available_for_future_use, reserved}.
+decode_radar_mode(_)   -> {available_for_future_use, reserved}.
+
+-spec radar_mode_to_str(RadarMode::radar_mode()) -> string().
+radar_mode_to_str({Mode, Sys}) ->
+    io_lib:format("~s ~s", [Mode, Sys]).
 
 %% @doc Encode the radar mode as a binary.
 -spec encode_radar_mode(RadarMode::radar_mode()) -> <<_:8>>.
@@ -726,7 +731,7 @@ to_csv_iolist(SegData) ->
     Params = 
         [{"~p,", get_job_id},
          {"~p,", get_sensor_id_type},
-         {"~p,", get_sensor_id_model},
+         {"~s,", get_sensor_id_model},
          {"~p,", get_target_filt_flag},
          {"~p,", get_priority},
          {"~p,", get_bounding_a_lat},
@@ -737,7 +742,7 @@ to_csv_iolist(SegData) ->
          {"~p,", get_bounding_c_lon},
          {"~p,", get_bounding_d_lat},
          {"~p,", get_bounding_d_lon},
-         {"~p,", get_radar_mode},
+         {"~s,", get_radar_mode_str},           % Using a string convert.
          {"~p,", get_nom_rev_int},
          {"~p,", get_ns_pos_unc_along_track},
          {"~p,", get_ns_pos_unc_cross_track},
@@ -757,6 +762,12 @@ to_csv_iolist(SegData) ->
 
     %% Prefix the line identifier.
     ["JD,"|ParamList] ++ io_lib:format("~n", []).
+
+%% @doc Helper function to wrap the conversion of the radar mode to a string.
+-spec get_radar_mode_str(JobDef::job_def()) -> string().
+get_radar_mode_str(JobDef) ->
+    RM = get_radar_mode(JobDef),
+    radar_mode_to_str(RM).
 
 %% Accessor functions to allow clients access to the contents
 
