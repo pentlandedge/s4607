@@ -1,0 +1,20 @@
+#!/usr/bin/env escript
+%% -*- erlang -*-
+%%! -smp enable -sname convert_4607_to_csv -pa ebin -mnesia debug verbose
+main([InFile, OutFile]) ->
+    try
+        Bin = s4607:read_file(InFile),
+        PacketList = s4607:decode(Bin),
+        IO = s4607:packets_to_csv_iolist(PacketList),
+        ok = file:write_file(OutFile, IO)
+    catch
+        _:_ ->
+            usage()
+    end;
+main(_) ->
+    usage().
+
+usage() ->
+    io:format("usage: display_4607 filename\n"),
+    halt(1).
+
