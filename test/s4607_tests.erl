@@ -28,7 +28,7 @@ s4607_test_() ->
      free_text_packet_encode(), platform_loc_packet_encode(),
      packet_list_encode(), display_unsupported_seg(), 
      decode_unrecognised_seg(), encode_unrecocgnised_seg(),
-     decode_junk(), check_is_4607()].
+     decode_junk(), check_is_4607(), check_is_not_4607()].
 
 encode_mission_segment_check() ->
     % Create a mission segment.
@@ -498,6 +498,11 @@ check_is_4607() ->
     [Bin|_] = s4607:encode_packets(PacketList),
     [?_assertEqual(true, s4607:is_4607(Bin))]. 
     
+%% Check that a string of bytes is not detected as 4607. 
+check_is_not_4607() -> 
+    Bin = <<"12345678901234567890123456789012">>,
+    [?_assertEqual(false, s4607:is_4607(Bin))]. 
+
 %% Function to create a list of packets containing dwells based on
 %% East Fortune runway.
 east_fortune_packet_list() ->
