@@ -36,7 +36,8 @@
     packet_generator/1,
     get_segments/1,
     get_segments_by_type/2,
-    update_segments_in_packet/2]).
+    update_segments_in_packet/2,
+    is_4607/1]).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Record definitions.
@@ -230,4 +231,16 @@ update_segments_in_packet(#packet{header = Hdr}, Segs) when is_list(Segs) ->
 
     % Wrap the segments inside a new packet.
     s4607:new_packet(PktHdr, Segs).
+
+%% @doc Test whether a binary looks like 4607 data. Attempts to decode the 
+%% packet header.
+is_4607(Bin) ->
+    try 
+        {ok, Hdr, _R1} = extract_packet_header(Bin),
+        {ok, _H1} = pheader:decode(Hdr),
+        true
+    catch
+        _:_ -> 
+            false
+    end.
 
