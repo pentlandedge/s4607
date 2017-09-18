@@ -166,7 +166,7 @@ encode_platform_type_checks() ->
      ?_assertEqual(<<33>>, mission:encode_platform_type(stryker)),
      ?_assertEqual(<<34>>, mission:encode_platform_type(ags_hale_uav)),
      ?_assertEqual(<<35>>, mission:encode_platform_type(sidm)),
-     ?_assertEqual(<<36>>, mission:encode_platform_type(reaper)),
+     ?_assertEqual(<<36>>, mission:encode_platform_type(mq_9_reaper)),
      ?_assertEqual(<<37>>, mission:encode_platform_type(warrior_a)),
      ?_assertEqual(<<38>>, mission:encode_platform_type(warrior)),
      ?_assertEqual(<<39>>, mission:encode_platform_type(twin_otter))].

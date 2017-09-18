@@ -226,10 +226,24 @@ ept(alliance_ground_surveillance) -> 32;
 ept(stryker) -> 33;
 ept(ags_hale_uav) -> 34;
 ept(sidm) -> 35;
-ept(reaper) -> 36;
+ept(mq_9_reaper) -> 36;
 ept(warrior_a) -> 37;
 ept(warrior) -> 38;
 ept(twin_otter) -> 39;
+ept(lemv) -> 40;
+ept(p8a_poseidon) -> 41;
+ept(a160) -> 42;
+ept(mq_1c_gray_eagle) -> 43;
+ept(rq_7c_shadow) -> 44;
+ept(pgss) -> 45;
+ept(pdts) -> 46;
+ept(lras_3) -> 47;
+ept(raid_tower) -> 48;
+ept(heron) -> 49;
+ept(scan_eagle) -> 50;
+ept(fire_scout) -> 51;
+ept(f35_joint_strike_fighter) -> 52;
+ept(s_61_sea_king) -> 53;
 ept(other) -> 255.
 
 %% @doc Display the contents of a decoded mission segment structure.
