@@ -332,7 +332,7 @@ decode_sensor_id_type(3) -> astor;
 decode_sensor_id_type(4) -> rotary_wing_radar;
 decode_sensor_id_type(5) -> global_hawk_sensor;
 decode_sensor_id_type(6) -> horizon;
-decode_sensor_id_type(7) -> apy_3;
+decode_sensor_id_type(7) -> apy_7;
 decode_sensor_id_type(8) -> apy_6;
 decode_sensor_id_type(9) -> apy_8;
 decode_sensor_id_type(10) -> radarsat2;
@@ -342,7 +342,7 @@ decode_sensor_id_type(13) -> mp_rtip;
 decode_sensor_id_type(14) -> apg_77;
 decode_sensor_id_type(15) -> apg_79;
 decode_sensor_id_type(16) -> apg_81;
-decode_sensor_id_type(17) -> apg_6v1;
+decode_sensor_id_type(17) -> apy_6v1;
 decode_sensor_id_type(18) -> dpy_1;
 decode_sensor_id_type(19) -> sidm;
 decode_sensor_id_type(20) -> limit;
@@ -353,6 +353,8 @@ decode_sensor_id_type(24) -> ugs_cluster_sensor;
 decode_sensor_id_type(25) -> imaster_gmti;
 decode_sensor_id_type(26) -> anzpy_1;
 decode_sensor_id_type(27) -> vader;
+decode_sensor_id_type(28) -> aar_57;
+decode_sensor_id_type(29) -> ddr;
 decode_sensor_id_type(255) -> no_statement.
 
 %% @doc Encode the sensor ID type as a binary.
@@ -369,7 +371,7 @@ esid(astor) -> 3;
 esid(rotary_wing_radar) -> 4;
 esid(global_hawk_sensor) -> 5;
 esid(horizon) -> 6;
-esid(apy_3) -> 7;
+esid(apy_7) -> 7;
 esid(apy_6) -> 8;
 esid(apy_8) -> 9;
 esid(radarsat2) -> 10;
@@ -379,7 +381,7 @@ esid(mp_rtip) -> 13;
 esid(apg_77) -> 14;
 esid(apg_79) -> 15;
 esid(apg_81) -> 16;
-esid(apg_6v1) -> 17;
+esid(apy_6v1) -> 17;
 esid(dpy_1) -> 18;
 esid(sidm) -> 19;
 esid(limit) -> 20;
@@ -390,6 +392,8 @@ esid(ugs_cluster_sensor) -> 24;
 esid(imaster_gmti) -> 25;
 esid(anzpy_1) -> 26;
 esid(vader) -> 27;
+esid(aar_57) -> 28;
+esid(ddr) -> 29;
 esid(no_statement) -> 255.
 
 -spec decode_sensor_id_model(binary()) -> string().

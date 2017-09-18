@@ -266,7 +266,7 @@ sensor_id_table() ->
      {4, rotary_wing_radar},
      {5, global_hawk_sensor},
      {6, horizon},
-     {7, apy_3},
+     {7, apy_7},
      {8, apy_6},
      {9, apy_8},
      {10, radarsat2},
@@ -276,7 +276,7 @@ sensor_id_table() ->
      {14, apg_77},
      {15, apg_79},
      {16, apg_81},
-     {17, apg_6v1},
+     {17, apy_6v1},
      {18, dpy_1},
      {19, sidm},
      {20, limit},
@@ -287,6 +287,8 @@ sensor_id_table() ->
      {25, imaster_gmti},
      {26, anzpy_1},
      {27, vader},
+     {28, aar_57},
+     {29, ddr},
      {255, no_statement}].
 
 %% Function to return a proplist with the radar mode mapping.
