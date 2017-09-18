@@ -3,7 +3,7 @@ Stanag 4607 library written in Erlang. Stanag 4607 is a NATO standard for sharin
 
 This software is still under development, but can now decode and encode the packet header, dwell, mission, hrr, job definition, free text and platform location segments. The test and status segment has been implemented but is not linked into the top levels of the library yet. Once complete, the focus will shift to improving the top level API and documentation to make the library more convenient to use.
 
-The metadata (platform types/radar modes etc.) are currently as defined in the specification (an update is planned). The up to date list is available at http://jitc.fhu.disa.mil/projects/mti/registers/metadata.aspx
+The metadata (platform types/radar modes etc.) is in the process of being updated to match the list available at http://jitc.fhu.disa.mil/projects/mti/registers/metadata.aspx
 
 The software has been released under an Apache free software license.
 ## Building
