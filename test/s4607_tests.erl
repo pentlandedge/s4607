@@ -227,7 +227,7 @@ job_def_packet_encode() ->
      ?_assertEqual("Heli 1", job_def:get_sensor_id_model(DEJD)),
      ?_assertEqual(no_filtering, job_def:get_target_filt_flag(DEJD)),
      ?_assertEqual(30, job_def:get_priority(DEJD)),
-     ?_assertEqual({monopulse_calibration, asars_aip}, job_def:get_radar_mode(DEJD)),
+     ?_assertEqual({monopulse_calibration, asars2a}, job_def:get_radar_mode(DEJD)),
      ?_assertEqual(65000, job_def:get_nom_rev_int(DEJD)),
      ?_assertEqual(no_statement, job_def:get_ns_pos_unc_along_track(DEJD)),
      ?_assertEqual(5000, job_def:get_ns_pos_unc_cross_track(DEJD)),
