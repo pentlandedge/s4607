@@ -160,7 +160,7 @@ decode_platform_type(32) -> alliance_ground_surveillance;
 decode_platform_type(33) -> stryker;
 decode_platform_type(34) -> ags_hale_uav;
 decode_platform_type(35) -> sidm;
-decode_platform_type(36) -> reaper;
+decode_platform_type(36) -> mq_9_reaper;
 decode_platform_type(37) -> warrior_a;
 decode_platform_type(38) -> warrior;
 decode_platform_type(39) -> twin_otter;

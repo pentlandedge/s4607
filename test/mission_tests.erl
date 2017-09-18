@@ -51,7 +51,7 @@ platform_type_checks() ->
     {ok, MS4} = mission:decode(B4),
     {ok, MS5} = mission:decode(B5),
     {ok, MS6} = mission:decode(B6),
-    [?_assertEqual(reaper, mission:get_platform_type(MS1)),
+    [?_assertEqual(mq_9_reaper, mission:get_platform_type(MS1)),
      ?_assertEqual(unidentified, mission:get_platform_type(MS2)),
      ?_assertEqual(future_use, mission:get_platform_type(MS4)),
      ?_assertEqual(predator, mission:get_platform_type(MS5)),
@@ -125,7 +125,7 @@ decode_platform_type_checks() ->
      ?_assertEqual(stryker, mission:decode_platform_type(33)),
      ?_assertEqual(ags_hale_uav, mission:decode_platform_type(34)),
      ?_assertEqual(sidm, mission:decode_platform_type(35)),
-     ?_assertEqual(reaper, mission:decode_platform_type(36)),
+     ?_assertEqual(mq_9_reaper, mission:decode_platform_type(36)),
      ?_assertEqual(warrior_a, mission:decode_platform_type(37)),
      ?_assertEqual(warrior, mission:decode_platform_type(38))].
 
