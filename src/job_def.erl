@@ -567,6 +567,10 @@ erm({wide_area_search_grca, joint_stars}) -> 18;
 erm({wide_area_search_rrca, joint_stars}) -> 19;
 erm({attack_plannning_with_tracking, joint_stars}) -> 20;
 erm({attack_control_with_tracking, joint_stars}) -> 21;
+erm({fast_scan, joint_stars}) -> 22;
+erm({dismounted_mti, joint_stars}) -> 23; 
+erm({maritime_mti_low_res, joint_stars}) -> 24;
+erm({maritime_mti_med_res, joint_stars}) -> 25;
 erm({wide_area_mti, asars2a}) -> 31;
 erm({coarse_res_search, asars2a}) -> 32;
 erm({med_res_search, asars2a}) -> 33;
@@ -608,7 +612,15 @@ erm({gmti_hrr, global_hawk}) -> 113;
 erm({small_area_gmti, vader}) -> 120;
 erm({wide_area_gmti, vader}) -> 121;
 erm({dismount_gmti, vader}) -> 122;
-erm({hrr_gmti, vader}) -> 123.
+erm({hrr_gmti, vader}) -> 123;
+erm({dismount_mti, ddr}) -> 124;
+erm({vehicle_mti, ddr}) -> 125;
+erm({clutter_mitigation_mti, ddr}) -> 126;
+erm({target_classification_mti, ddr}) -> 127;
+erm({hrr_1d_profile, ddr}) -> 128;
+erm({hrr_2d_chip, ddr}) -> 129;
+erm({hrr_range_doppler_map, ddr}) -> 130;
+erm({hrr_continuous, ddr}) -> 131.
 
 %% Function to decode the cross-range standard deviation parameter.
 decode_cross_range_std_dev(X) ->
