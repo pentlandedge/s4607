@@ -164,6 +164,20 @@ decode_platform_type(36) -> mq_9_reaper;
 decode_platform_type(37) -> warrior_a;
 decode_platform_type(38) -> warrior;
 decode_platform_type(39) -> twin_otter;
+decode_platform_type(40) -> lemv;
+decode_platform_type(41) -> p8a_poseidon;
+decode_platform_type(42) -> a160;
+decode_platform_type(43) -> mq_1c_gray_eagle;
+decode_platform_type(44) -> rq_7c_shadow;
+decode_platform_type(45) -> pgss;
+decode_platform_type(46) -> pdts;
+decode_platform_type(47) -> lras_3;
+decode_platform_type(48) -> raid_tower;
+decode_platform_type(49) -> heron;
+decode_platform_type(50) -> scan_eagle;
+decode_platform_type(51) -> fire_scout;
+decode_platform_type(52) -> f35_joint_strike_fighter;
+decode_platform_type(53) -> s_61_sea_king;
 decode_platform_type(255) -> other;
 decode_platform_type(_) -> future_use.
 
