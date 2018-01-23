@@ -78,8 +78,8 @@
     sensor_id_model,
     request_type}).
 
-decode(_Bin) ->
-    {ok, #job_req_segment{}}.
+decode(<<ReqID:10/binary,_Rest/binary>>) ->
+    {ok, #job_req_segment{requestor_id = binary_to_list(ReqID)}}.
 
 display(#job_req_segment{}) ->
     ok.

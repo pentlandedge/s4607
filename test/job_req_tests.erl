@@ -26,7 +26,8 @@ valid_checks() ->
     Bin = sample_job_request(),
     {ok, JR} = job_req:decode(Bin),
     job_req:display(JR),
-    [].
+    ReqID = job_req:get_requestor_id(JR),
+    [?_assertEqual("Job Req ID", ReqID)].
 
 sample_job_request() ->
     <<"Job Req ID","JReqTaskID">>.
