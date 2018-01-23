@@ -20,4 +20,13 @@
 
 %% Define a test generator for the Job Request segment functions. 
 job_req_test_() ->
+    [valid_checks()].
+
+valid_checks() ->
+    Bin = sample_job_request(),
+    {ok, JR} = job_req:decode(Bin),
+    job_req:display(JR),
     [].
+
+sample_job_request() ->
+    <<>>.
