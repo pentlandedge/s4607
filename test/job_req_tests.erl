@@ -28,9 +28,12 @@ valid_checks() ->
     job_req:display(JR),
     ReqID = job_req:get_requestor_id(JR),
     TaskID = job_req:get_requestor_task_id(JR),
+    Pri = job_req:get_requestor_priority(JR),
     [?_assertEqual("Job Req ID", ReqID),
-     ?_assertEqual("JReqTaskID", TaskID)].
+     ?_assertEqual("JReqTaskID", TaskID),
+     ?_assertEqual(default_priority, Pri)
+    ].
 
 sample_job_request() ->
-    <<"Job Req ID","JReqTaskID">>.
+    <<"Job Req ID","JReqTaskID",0>>.
 

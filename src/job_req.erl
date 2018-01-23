@@ -78,11 +78,15 @@
     sensor_id_model,
     request_type}).
 
-decode(<<ReqID:10/binary,TaskID:10/binary,_Rest/binary>>) ->
+decode(<<ReqID:10/binary,TaskID:10/binary,Pri,_Rest/binary>>) ->
     JRS = #job_req_segment{
         requestor_id = binary_to_list(ReqID),
-        requestor_task_id = binary_to_list(TaskID)},
+        requestor_task_id = binary_to_list(TaskID),
+        requestor_priority = decode_priority(Pri)},
     {ok, JRS}.
+
+decode_priority(0) -> default_priority;
+decode_priority(X) when X >= 0, X =< 99 -> X.
 
 display(#job_req_segment{}) ->
     ok.
