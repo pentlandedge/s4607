@@ -107,3 +107,5 @@ It is also possible to extract a filtered list of segments of specified types:
 12> FiltSegList = s4607:get_segments_by_type([dwell, mission], PacketList).
 ```
 
+## Online application.
+The [Hawkstream Stanag 4607 Viewer](http://www.hawkstream.net "Hawkstream Stanag 4607 Viewer Demo") uses this library to decode and display dwell segment data on a map.
