@@ -29,4 +29,5 @@ valid_checks() ->
     [].
 
 sample_job_request() ->
-    <<>>.
+    <<"Job Req ID","JReqTaskID">>.
+
