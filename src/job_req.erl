@@ -50,7 +50,7 @@
     get_sensor_id_model/1,
     get_request_type/1]).
 
--record(job_req_segment, {
+-record(job_req, {
     requestor_id,
     requestor_task_id,
     requestor_priority,
@@ -78,8 +78,16 @@
     sensor_id_model,
     request_type}).
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Type specifications.
+
+-opaque job_req() :: #job_req{}.
+
+-export_type([job_req/0]).
+
+-spec decode(Bin::binary()) -> {ok, job_req()}.
 decode(<<ReqID:10/binary,TaskID:10/binary,Pri,_Rest/binary>>) ->
-    JRS = #job_req_segment{
+    JRS = #job_req{
         requestor_id = binary_to_list(ReqID),
         requestor_task_id = binary_to_list(TaskID),
         requestor_priority = decode_priority(Pri)},
@@ -88,34 +96,34 @@ decode(<<ReqID:10/binary,TaskID:10/binary,Pri,_Rest/binary>>) ->
 decode_priority(0) -> default_priority;
 decode_priority(X) when X >= 0, X =< 99 -> X.
 
-display(#job_req_segment{}) ->
+display(#job_req{}) ->
     ok.
 
 %% Accessor functions.
-get_requestor_id(#job_req_segment{requestor_id = X}) -> X.
-get_requestor_task_id(#job_req_segment{requestor_task_id = X}) -> X.
-get_requestor_priority(#job_req_segment{requestor_priority = X}) -> X.
-get_bound_a_lat(#job_req_segment{bound_a_lat = X}) -> X.
-get_bound_a_lon(#job_req_segment{bound_a_lon = X}) -> X.
-get_bound_b_lat(#job_req_segment{bound_b_lat = X}) -> X.
-get_bound_b_lon(#job_req_segment{bound_b_lon = X}) -> X.
-get_bound_c_lat(#job_req_segment{bound_c_lat = X}) -> X.
-get_bound_c_lon(#job_req_segment{bound_c_lon = X}) -> X.
-get_bound_d_lat(#job_req_segment{bound_d_lat = X}) -> X.
-get_bound_d_lon(#job_req_segment{bound_d_lon = X}) -> X.
-get_radar_mode(#job_req_segment{radar_mode = X}) -> X.
-get_radar_range_res(#job_req_segment{radar_range_res = X}) -> X.
-get_radar_cross_range_res(#job_req_segment{radar_cross_range_res = X}) -> X.
-get_earliest_start_year(#job_req_segment{earliest_start_year = X}) -> X.
-get_earliest_start_month(#job_req_segment{earliest_start_month = X}) -> X.
-get_earliest_start_day(#job_req_segment{earliest_start_day = X}) -> X.
-get_earliest_start_hour(#job_req_segment{earliest_start_hour = X}) -> X.
-get_earliest_start_min(#job_req_segment{earliest_start_min = X}) -> X.
-get_earliest_start_sec(#job_req_segment{earliest_start_sec = X}) -> X.
-get_allowed_delay(#job_req_segment{allowed_delay = X}) -> X.
-get_duration(#job_req_segment{duration = X}) -> X.
-get_revisit_interval(#job_req_segment{revisit_interval = X}) -> X.
-get_sensor_id_type(#job_req_segment{sensor_id_type = X}) -> X.
-get_sensor_id_model(#job_req_segment{sensor_id_model = X}) -> X.
-get_request_type(#job_req_segment{request_type = X}) -> X.
+get_requestor_id(#job_req{requestor_id = X}) -> X.
+get_requestor_task_id(#job_req{requestor_task_id = X}) -> X.
+get_requestor_priority(#job_req{requestor_priority = X}) -> X.
+get_bound_a_lat(#job_req{bound_a_lat = X}) -> X.
+get_bound_a_lon(#job_req{bound_a_lon = X}) -> X.
+get_bound_b_lat(#job_req{bound_b_lat = X}) -> X.
+get_bound_b_lon(#job_req{bound_b_lon = X}) -> X.
+get_bound_c_lat(#job_req{bound_c_lat = X}) -> X.
+get_bound_c_lon(#job_req{bound_c_lon = X}) -> X.
+get_bound_d_lat(#job_req{bound_d_lat = X}) -> X.
+get_bound_d_lon(#job_req{bound_d_lon = X}) -> X.
+get_radar_mode(#job_req{radar_mode = X}) -> X.
+get_radar_range_res(#job_req{radar_range_res = X}) -> X.
+get_radar_cross_range_res(#job_req{radar_cross_range_res = X}) -> X.
+get_earliest_start_year(#job_req{earliest_start_year = X}) -> X.
+get_earliest_start_month(#job_req{earliest_start_month = X}) -> X.
+get_earliest_start_day(#job_req{earliest_start_day = X}) -> X.
+get_earliest_start_hour(#job_req{earliest_start_hour = X}) -> X.
+get_earliest_start_min(#job_req{earliest_start_min = X}) -> X.
+get_earliest_start_sec(#job_req{earliest_start_sec = X}) -> X.
+get_allowed_delay(#job_req{allowed_delay = X}) -> X.
+get_duration(#job_req{duration = X}) -> X.
+get_revisit_interval(#job_req{revisit_interval = X}) -> X.
+get_sensor_id_type(#job_req{sensor_id_type = X}) -> X.
+get_sensor_id_model(#job_req{sensor_id_model = X}) -> X.
+get_request_type(#job_req{request_type = X}) -> X.
 
