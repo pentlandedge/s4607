@@ -27,6 +27,7 @@
     to_csv_iolist/1,
     decode_platform_type/1,
     encode_platform_type/1,
+    set_date/2,
     get_mission_plan/1,
     get_flight_plan/1,
     get_platform_type/1,
@@ -245,6 +246,10 @@ ept(fire_scout) -> 51;
 ept(f35_joint_strike_fighter) -> 52;
 ept(s_61_sea_king) -> 53;
 ept(other) -> 255.
+
+%% @doc Patch the date field in a mission segment.
+set_date(MSeg, {Y, M, D}) ->
+    MSeg#mission_segment{year = Y, month = M, day = D}.
 
 %% @doc Display the contents of a decoded mission segment structure.
 -spec display(MSeg::mission_segment()) -> ok.
