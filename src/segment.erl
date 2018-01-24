@@ -23,6 +23,7 @@
     decode_segments/2,
     encode/1,
     new/2,
+    new0/2,
     display/1,
     display/2,
     to_csv_iolist/1,
