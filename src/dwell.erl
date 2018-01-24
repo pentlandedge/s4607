@@ -25,6 +25,7 @@
     to_dict/1,
     display/1,
     to_csv_iolist/1,
+    set_dwell_time/2,
     update_targets/2]).
 
 %% Accessor functions for accessing elements of the dwell segment.
@@ -653,6 +654,11 @@ to_csv_iolist(DS) ->
     %% multiple lines).
     %% Also add an empty field placeholder for the existence mask.
     ["DS,,"|DwellList] ++ io_lib:format("~n", []) ++ TgtIO.
+
+%% @doc Set the dwell time in an existing dwell segment record. Used for data 
+%% replay tasks.
+set_dwell_time(#dwell_segment{} = DS, DwellTimeMS) ->
+    DS#dwell_segment{dwell_time = DwellTimeMS}.
 
 %% @doc Update the targets in a dwell segment. Updates the target report count 
 %% in the dwell segment too.
