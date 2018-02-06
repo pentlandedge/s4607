@@ -35,5 +35,7 @@ valid_checks() ->
     ].
 
 sample_job_request() ->
-    <<"Job Req ID","JReqTaskID",0>>.
+    <<"Job Req ID","JReqTaskID",0,
+      64,0,0,0, 245,85,85,85, 64,0,0,0, 245,85,85,85, 64,0,0,0,
+      245,85,85,85, 64,0,0,0, 245,85,85,85>>.
 

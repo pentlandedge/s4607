@@ -26,14 +26,14 @@
     get_requestor_id/1,
     get_requestor_task_id/1,
     get_requestor_priority/1,
-    get_bound_a_lat/1,
-    get_bound_a_lon/1,
-    get_bound_b_lat/1,
-    get_bound_b_lon/1,
-    get_bound_c_lat/1,
-    get_bound_c_lon/1,
-    get_bound_d_lat/1,
-    get_bound_d_lon/1,
+    get_bounding_a_lat/1,
+    get_bounding_a_lon/1,
+    get_bounding_b_lat/1,
+    get_bounding_b_lon/1,
+    get_bounding_c_lat/1,
+    get_bounding_c_lon/1,
+    get_bounding_d_lat/1,
+    get_bounding_d_lon/1,
     get_radar_mode/1,
     get_radar_range_res/1,
     get_radar_cross_range_res/1,
@@ -54,14 +54,14 @@
     requestor_id,
     requestor_task_id,
     requestor_priority,
-    bound_a_lat,
-    bound_a_lon,
-    bound_b_lat,
-    bound_b_lon,
-    bound_c_lat,
-    bound_c_lon,
-    bound_d_lat,
-    bound_d_lon,
+    bounding_a_lat,
+    bounding_a_lon,
+    bounding_b_lat,
+    bounding_b_lon,
+    bounding_c_lat,
+    bounding_c_lon,
+    bounding_d_lat,
+    bounding_d_lon,
     radar_mode,
     radar_range_res,
     radar_cross_range_res,
@@ -86,11 +86,21 @@
 -export_type([job_req/0]).
 
 -spec decode(Bin::binary()) -> {ok, job_req()}.
-decode(<<ReqID:10/binary,TaskID:10/binary,Pri,_Rest/binary>>) ->
+decode(<<ReqID:10/binary,TaskID:10/binary,Pri,R4:4/binary,R5:4/binary,
+    R6:4/binary,R7:4/binary,R8:4/binary,R9:4/binary,R10:4/binary,
+    R11:4/binary,_Rest/binary>>) ->
     JRS = #job_req{
         requestor_id = binary_to_list(ReqID),
         requestor_task_id = binary_to_list(TaskID),
-        requestor_priority = decode_priority(Pri)},
+        requestor_priority = decode_priority(Pri),
+        bounding_a_lat = stanag_types:sa32_to_float(R4),
+        bounding_a_lon = stanag_types:ba32_to_float(R5),
+        bounding_b_lat = stanag_types:sa32_to_float(R6),
+        bounding_b_lon = stanag_types:ba32_to_float(R7),
+        bounding_c_lat = stanag_types:sa32_to_float(R8),
+        bounding_c_lon = stanag_types:ba32_to_float(R9),
+        bounding_d_lat = stanag_types:sa32_to_float(R10),
+        bounding_d_lon = stanag_types:ba32_to_float(R11)},
     {ok, JRS}.
 
 decode_priority(0) -> default_priority;
@@ -103,14 +113,14 @@ display(#job_req{}) ->
 get_requestor_id(#job_req{requestor_id = X}) -> X.
 get_requestor_task_id(#job_req{requestor_task_id = X}) -> X.
 get_requestor_priority(#job_req{requestor_priority = X}) -> X.
-get_bound_a_lat(#job_req{bound_a_lat = X}) -> X.
-get_bound_a_lon(#job_req{bound_a_lon = X}) -> X.
-get_bound_b_lat(#job_req{bound_b_lat = X}) -> X.
-get_bound_b_lon(#job_req{bound_b_lon = X}) -> X.
-get_bound_c_lat(#job_req{bound_c_lat = X}) -> X.
-get_bound_c_lon(#job_req{bound_c_lon = X}) -> X.
-get_bound_d_lat(#job_req{bound_d_lat = X}) -> X.
-get_bound_d_lon(#job_req{bound_d_lon = X}) -> X.
+get_bounding_a_lat(#job_req{bounding_a_lat = X}) -> X.
+get_bounding_a_lon(#job_req{bounding_a_lon = X}) -> X.
+get_bounding_b_lat(#job_req{bounding_b_lat = X}) -> X.
+get_bounding_b_lon(#job_req{bounding_b_lon = X}) -> X.
+get_bounding_c_lat(#job_req{bounding_c_lat = X}) -> X.
+get_bounding_c_lon(#job_req{bounding_c_lon = X}) -> X.
+get_bounding_d_lat(#job_req{bounding_d_lat = X}) -> X.
+get_bounding_d_lon(#job_req{bounding_d_lon = X}) -> X.
 get_radar_mode(#job_req{radar_mode = X}) -> X.
 get_radar_range_res(#job_req{radar_range_res = X}) -> X.
 get_radar_cross_range_res(#job_req{radar_cross_range_res = X}) -> X.
