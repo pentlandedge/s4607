@@ -13,9 +13,8 @@
 %% License for the specific language governing permissions and limitations
 %% under the License.
 %%
-%% @doc Stanag 4607 packets are comprised of segments of various types. This 
-%%      module contains generic segment handling functions. Code to handle 
-%%      each specific type of segment is delegated to separate modules.
+%% @doc Functions for manipulating job definition segments defined in the 
+%%      Stanag 4607 standard.
 
 -module(job_req).
 
