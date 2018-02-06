@@ -88,7 +88,7 @@
 -spec decode(Bin::binary()) -> {ok, job_req()}.
 decode(<<ReqID:10/binary,TaskID:10/binary,Pri,R4:4/binary,R5:4/binary,
     R6:4/binary,R7:4/binary,R8:4/binary,R9:4/binary,R10:4/binary,
-    R11:4/binary,Mode,_Rest/binary>>) ->
+    R11:4/binary,Mode,RangeRes:16,XRangeRes:16,_Rest/binary>>) ->
     JRS = #job_req{
         requestor_id = binary_to_list(ReqID),
         requestor_task_id = binary_to_list(TaskID),
@@ -101,7 +101,9 @@ decode(<<ReqID:10/binary,TaskID:10/binary,Pri,R4:4/binary,R5:4/binary,
         bounding_c_lon = stanag_types:ba32_to_float(R9),
         bounding_d_lat = stanag_types:sa32_to_float(R10),
         bounding_d_lon = stanag_types:ba32_to_float(R11),
-        radar_mode = job_def:decode_radar_mode(Mode)},
+        radar_mode = job_def:decode_radar_mode(Mode),
+        radar_range_res = RangeRes,
+        radar_cross_range_res = XRangeRes},
     {ok, JRS}.
 
 decode_priority(0) -> default_priority;
