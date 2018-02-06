@@ -32,7 +32,8 @@ valid_checks() ->
     [?_assertEqual("Job Req ID", ReqID),
      ?_assertEqual("JReqTaskID", TaskID),
      ?_assertEqual(default_priority, Pri),
-     ?_assert(almost_equal(45.0, job_req:get_bounding_a_lat(JR), 0.00001))
+     ?_assert(almost_equal(45.0, job_req:get_bounding_a_lat(JR), 0.00001)),
+     ?_assert(almost_equal(345.0, job_req:get_bounding_a_lon(JR), 0.00001))
     ].
 
 sample_job_request() ->
