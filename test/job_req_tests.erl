@@ -31,7 +31,8 @@ valid_checks() ->
     Pri = job_req:get_requestor_priority(JR),
     [?_assertEqual("Job Req ID", ReqID),
      ?_assertEqual("JReqTaskID", TaskID),
-     ?_assertEqual(default_priority, Pri)
+     ?_assertEqual(default_priority, Pri),
+     ?_assert(almost_equal(45.0, job_req:get_bounding_a_lat(JR), 0.00001))
     ].
 
 sample_job_request() ->
@@ -39,3 +40,7 @@ sample_job_request() ->
       64,0,0,0, 245,85,85,85, 64,0,0,0, 245,85,85,85, 64,0,0,0,
       245,85,85,85, 64,0,0,0, 245,85,85,85>>.
 
+%% Utility function to compare whether floating point values are within a
+%% specified range.
+almost_equal(V1, V2, Delta) ->
+    abs(V1 - V2) =< Delta.
