@@ -29,6 +29,7 @@ valid_checks() ->
     ReqID = job_req:get_requestor_id(JR),
     TaskID = job_req:get_requestor_task_id(JR),
     Pri = job_req:get_requestor_priority(JR),
+    Mode = job_req:get_radar_mode(JR),
     [?_assertEqual("Job Req ID", ReqID),
      ?_assertEqual("JReqTaskID", TaskID),
      ?_assertEqual(default_priority, Pri),
@@ -39,13 +40,14 @@ valid_checks() ->
      ?_assert(almost_equal(45.0, job_req:get_bounding_c_lat(JR), 0.00001)),
      ?_assert(almost_equal(345.0, job_req:get_bounding_c_lon(JR), 0.00001)),
      ?_assert(almost_equal(45.0, job_req:get_bounding_d_lat(JR), 0.00001)),
-     ?_assert(almost_equal(345.0, job_req:get_bounding_d_lon(JR), 0.00001))
+     ?_assert(almost_equal(345.0, job_req:get_bounding_d_lon(JR), 0.00001)),
+     ?_assertEqual({maritime_mti_low_res, joint_stars}, Mode)
     ].
 
 sample_job_request() ->
     <<"Job Req ID","JReqTaskID",0,
       64,0,0,0, 245,85,85,85, 64,0,0,0, 245,85,85,85, 64,0,0,0,
-      245,85,85,85, 64,0,0,0, 245,85,85,85>>.
+      245,85,85,85, 64,0,0,0, 245,85,85,85, 24>>.
 
 %% Utility function to compare whether floating point values are within a
 %% specified range.
