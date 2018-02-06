@@ -45,13 +45,13 @@ valid_checks() ->
      ?_assert(almost_equal(345.0, job_req:get_bounding_d_lon(JR), 0.00001)),
      ?_assertEqual({maritime_mti_low_res, joint_stars}, Mode),
      ?_assertEqual(300, RangeRes),
-     ?_assertEqual(500, XRangeRes)
+     ?_assertEqual(dont_care, XRangeRes)
     ].
 
 sample_job_request() ->
     <<"Job Req ID","JReqTaskID",0,
       64,0,0,0, 245,85,85,85, 64,0,0,0, 245,85,85,85, 64,0,0,0,
-      245,85,85,85, 64,0,0,0, 245,85,85,85, 24, 1,16#2C, 1,16#F4>>.
+      245,85,85,85, 64,0,0,0, 245,85,85,85, 24, 1,16#2C, 0,0>>.
 
 %% Utility function to compare whether floating point values are within a
 %% specified range.

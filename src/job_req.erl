@@ -102,12 +102,15 @@ decode(<<ReqID:10/binary,TaskID:10/binary,Pri,R4:4/binary,R5:4/binary,
         bounding_d_lat = stanag_types:sa32_to_float(R10),
         bounding_d_lon = stanag_types:ba32_to_float(R11),
         radar_mode = job_def:decode_radar_mode(Mode),
-        radar_range_res = RangeRes,
-        radar_cross_range_res = XRangeRes},
+        radar_range_res = decode_res(RangeRes),
+        radar_cross_range_res = decode_res(XRangeRes)},
     {ok, JRS}.
 
 decode_priority(0) -> default_priority;
 decode_priority(X) when X >= 0, X =< 99 -> X.
+
+decode_res(0) -> dont_care;
+decode_res(X) -> X.
 
 display(#job_req{}) ->
     ok.
