@@ -20,7 +20,7 @@
 
 %% Define a test generator for the Job Request segment functions. 
 job_req_test_() ->
-    [valid_checks()].
+    [valid_checks(), valid_checks2()].
 
 valid_checks() ->
     Bin = sample_job_request(),
@@ -72,11 +72,34 @@ valid_checks() ->
      ?_assertEqual(initial_request, ReqType)
     ].
 
+valid_checks2() ->
+    Bin = sample_job_request2(),
+    {ok, JR} = job_req:decode(Bin),
+    Duration = job_req:get_duration(JR),
+    RevInt = job_req:get_revisit_interval(JR),
+    SensorType = job_req:get_sensor_id_type(JR),
+    SensorModel = job_req:get_sensor_id_model(JR),
+    ReqType = job_req:get_request_type(JR),
+    [?_assertEqual(54321, Duration),
+     ?_assertEqual(21314, RevInt),
+     ?_assertEqual(global_hawk_sensor, SensorType),
+     ?_assertEqual("HawkV1", SensorModel),
+     ?_assertEqual(cancel_job, ReqType)
+    ].
+
+%% Return a binary job request segment to use as test data.
 sample_job_request() ->
     <<"Job Req ID","JReqTaskID",0,
       64,0,0,0, 245,85,85,85, 64,0,0,0, 245,85,85,85, 64,0,0,0,
       245,85,85,85, 64,0,0,0, 245,85,85,85, 24, 16#12C:16, 0:16,
       2018:16,5,23,10,11,50,65000:16,0:16,0:16,255,"None  ",0>>.
+
+%% Alternate test data: non defaults in the later parameters.
+sample_job_request2() ->
+    <<"Job Req ID","JReqTaskID",0,
+      64,0,0,0, 245,85,85,85, 64,0,0,0, 245,85,85,85, 64,0,0,0,
+      245,85,85,85, 64,0,0,0, 245,85,85,85, 24, 16#12C:16, 0:16,
+      2018:16,5,23,10,11,50,65000:16,54321:16,21314:16,5,"HawkV1",1>>.
 
 %% Utility function to compare whether floating point values are within a
 %% specified range.
