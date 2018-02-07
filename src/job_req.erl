@@ -88,7 +88,8 @@
 decode(<<ReqID:10/binary,TaskID:10/binary,Pri,R4:4/binary,R5:4/binary,
     R6:4/binary,R7:4/binary,R8:4/binary,R9:4/binary,R10:4/binary,
     R11:4/binary,Mode,RangeRes:16,XRangeRes:16,Yr:16,Mth,Day,Hr,Min,Sec,
-    Delay:16,_Rest/binary>>) ->
+    Delay:16,Dur:16,RevInt:16,SensorType,Model:6/binary,ReqType,
+    _Rest/binary>>) ->
     JRS = #job_req{
         requestor_id = binary_to_list(ReqID),
         requestor_task_id = binary_to_list(TaskID),
@@ -110,7 +111,12 @@ decode(<<ReqID:10/binary,TaskID:10/binary,Pri,R4:4/binary,R5:4/binary,
         earliest_start_hour = Hr,
         earliest_start_min = Min,
         earliest_start_sec = Sec,
-        allowed_delay = Delay},
+        allowed_delay = Delay,
+        duration = decode_duration(Dur),
+        revisit_interval = decode_revisit_interval(RevInt),
+        sensor_id_type = job_def:decode_sensor_id_type(SensorType),
+        sensor_id_model = decode_sensor_id_model(Model),
+        request_type = decode_request_type(ReqType)},
     {ok, JRS}.
 
 decode_priority(0) -> default_priority;
@@ -118,6 +124,20 @@ decode_priority(X) when X >= 0, X =< 99 -> X.
 
 decode_res(0) -> dont_care;
 decode_res(X) -> X.
+
+decode_duration(0) -> continuous;
+decode_duration(X) -> X.
+
+decode_revisit_interval(0) -> default_interval;
+decode_revisit_interval(X) -> X.
+
+decode_sensor_id_model(<<"None  ">>) -> 
+    no_statement;
+decode_sensor_id_model(<<Model:48/binary>>) -> 
+    binary_to_list(Model).
+
+decode_request_type(0) -> initial_request;
+decode_request_type(1) -> cancel_job.
 
 display(#job_req{}) ->
     ok.

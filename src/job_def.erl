@@ -27,6 +27,8 @@
     to_csv_iolist/1,
     decode_radar_mode/1,
     encode_radar_mode/1,
+    decode_sensor_id_type/1,
+    encode_sensor_id_type/1,
     get_radar_mode_str/1,
     get_job_id/1,
     get_sensor_id_type/1,
@@ -60,8 +62,6 @@
 %% Export of functions for unit testing.
 -ifdef(TEST).
 -export([
-    decode_sensor_id_type/1,
-    encode_sensor_id_type/1,
     decode_priority/1,
     decode_terrain_elev_model/1,
     encode_terrain_elev_model/1,

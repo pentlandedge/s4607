@@ -39,6 +39,11 @@ valid_checks() ->
     Min = job_req:get_earliest_start_min(JR),
     Sec = job_req:get_earliest_start_sec(JR),
     DelaySec = job_req:get_allowed_delay(JR),
+    Duration = job_req:get_duration(JR),
+    RevInt = job_req:get_revisit_interval(JR),
+    SensorType = job_req:get_sensor_id_type(JR),
+    SensorModel = job_req:get_sensor_id_model(JR),
+    ReqType = job_req:get_request_type(JR),
     [?_assertEqual("Job Req ID", ReqID),
      ?_assertEqual("JReqTaskID", TaskID),
      ?_assertEqual(default_priority, Pri),
@@ -59,14 +64,19 @@ valid_checks() ->
      ?_assertEqual(10, Hr),
      ?_assertEqual(11, Min),
      ?_assertEqual(50, Sec),
-     ?_assertEqual(65000, DelaySec)
+     ?_assertEqual(65000, DelaySec),
+     ?_assertEqual(continuous, Duration),
+     ?_assertEqual(default_interval, RevInt),
+     ?_assertEqual(no_statement, SensorType),
+     ?_assertEqual(no_statement, SensorModel),
+     ?_assertEqual(initial_request, ReqType)
     ].
 
 sample_job_request() ->
     <<"Job Req ID","JReqTaskID",0,
       64,0,0,0, 245,85,85,85, 64,0,0,0, 245,85,85,85, 64,0,0,0,
       245,85,85,85, 64,0,0,0, 245,85,85,85, 24, 16#12C:16, 0:16,
-      2018:16,5,23,10,11,50,65000:16>>.
+      2018:16,5,23,10,11,50,65000:16,0:16,0:16,255,"None  ",0>>.
 
 %% Utility function to compare whether floating point values are within a
 %% specified range.
