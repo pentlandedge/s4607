@@ -133,7 +133,7 @@ decode_revisit_interval(X) -> X.
 
 decode_sensor_id_model(<<"None  ">>) -> 
     no_statement;
-decode_sensor_id_model(<<Model:48/binary>>) -> 
+decode_sensor_id_model(<<Model:6/binary>>) -> 
     binary_to_list(Model).
 
 decode_request_type(0) -> initial_request;
