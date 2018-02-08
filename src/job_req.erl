@@ -139,8 +139,36 @@ decode_sensor_id_model(<<Model:6/binary>>) ->
 decode_request_type(0) -> initial_request;
 decode_request_type(1) -> cancel_job.
 
-display(#job_req{}) ->
-    ok.
+%% @doc Display the contents of a job request segment.
+display(#job_req{} = JR) ->
+    io:format("****************************************~n"),
+    io:format("** @job_req~n"),
+    io:format("Requestor ID: ~p~n", [get_requestor_id(JR)]),
+    io:format("Requestor task ID: ~p~n", [get_requestor_task_id(JR)]),
+    io:format("Requestor priority: ~p~n", [get_requestor_priority(JR)]),
+    io:format("Bounding A Lat: ~p~n", [get_bounding_a_lat(JR)]),
+    io:format("Bounding A Lon: ~p~n", [get_bounding_a_lon(JR)]),
+    io:format("Bounding B Lat: ~p~n", [get_bounding_b_lat(JR)]),
+    io:format("Bounding B Lon: ~p~n", [get_bounding_b_lon(JR)]),
+    io:format("Bounding C Lat: ~p~n", [get_bounding_c_lat(JR)]),
+    io:format("Bounding C Lon: ~p~n", [get_bounding_c_lon(JR)]),
+    io:format("Bounding D Lat: ~p~n", [get_bounding_d_lat(JR)]),
+    io:format("Bounding D Lon: ~p~n", [get_bounding_d_lon(JR)]),
+    io:format("Radar mode: ~p~n", [get_radar_mode(JR)]),
+    io:format("Radar range res: ~p~n",  [get_radar_range_res(JR)]),
+    io:format("Radar cross range res: ~p~n", [get_radar_cross_range_res(JR)]),
+    io:format("Earliest start year: ~p~n", [get_earliest_start_year(JR)]),
+    io:format("Earliest start month: ~p~n", [get_earliest_start_month(JR)]),
+    io:format("Earliest start day: ~p~n", [get_earliest_start_day(JR)]),
+    io:format("Earliest start hour: ~p~n",[get_earliest_start_hour(JR)]),
+    io:format("Earliest start min: ~p~n", [get_earliest_start_min(JR)]),
+    io:format("Earliest start sec: ~p~n", [get_earliest_start_sec(JR)]),
+    io:format("Allowed delay: ~p~n", [get_allowed_delay(JR)]),
+    io:format("Duration: ~p~n", [get_duration(JR)]),
+    io:format("Revisit interval: ~p~n", [get_revisit_interval(JR)]),
+    io:format("Sensor ID type: ~p~n", [get_sensor_id_type(JR)]),
+    io:format("Sensor ID model: ~p~n", [get_sensor_id_model(JR)]),
+    io:format("Request type: ~p~n", [get_request_type(JR)]).
 
 %% Accessor functions.
 get_requestor_id(#job_req{requestor_id = X}) -> X.
