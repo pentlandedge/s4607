@@ -137,9 +137,13 @@ decode_priority(X) when X >= 0, X =< 99 -> X.
 decode_res(0) -> dont_care;
 decode_res(X) -> X.
 
+%% @doc Decode the duration parameter.
+-spec decode_duration(non_neg_integer()) -> duration().
 decode_duration(0) -> continuous;
 decode_duration(X) -> X.
 
+%% @doc Decode the revisit interval parameter.
+-spec decode_revisit_interval(non_neg_integer()) -> revisit_interval().
 decode_revisit_interval(0) -> default_interval;
 decode_revisit_interval(X) -> X.
 
@@ -148,6 +152,8 @@ decode_sensor_id_model(<<"None  ">>) ->
 decode_sensor_id_model(<<Model:6/binary>>) -> 
     binary_to_list(Model).
 
+%% @doc Decode the request type parameter.
+-spec decode_request_type(0..1) -> request_type().
 decode_request_type(0) -> initial_request;
 decode_request_type(1) -> cancel_job.
 
@@ -204,9 +210,19 @@ get_earliest_start_hour(#job_req{earliest_start_hour = X}) -> X.
 get_earliest_start_min(#job_req{earliest_start_min = X}) -> X.
 get_earliest_start_sec(#job_req{earliest_start_sec = X}) -> X.
 get_allowed_delay(#job_req{allowed_delay = X}) -> X.
+
+%% @doc Get the duration from a decoded job request segment. 
+-spec get_duration(job_req()) -> duration().
 get_duration(#job_req{duration = X}) -> X.
+
+%% @doc Get the revisit interval from a decoded job request segment. 
+-spec get_revisit_interval(job_req()) -> revisit_interval().
 get_revisit_interval(#job_req{revisit_interval = X}) -> X.
+
 get_sensor_id_type(#job_req{sensor_id_type = X}) -> X.
 get_sensor_id_model(#job_req{sensor_id_model = X}) -> X.
+
+%% @doc Get the request type from a decoded job request segment. 
+-spec get_request_type(job_req()) -> request_type().
 get_request_type(#job_req{request_type = X}) -> X.
 
