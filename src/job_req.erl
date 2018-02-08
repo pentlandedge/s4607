@@ -85,7 +85,36 @@
 % Job request is 79 bytes long.
 -type job_req_bin() :: <<_:632>>.
 
--export_type([job_req/0, job_req_bin/0]).
+% Define the parameter fields in the job request segment.
+-type field() ::  
+    requestor_id |
+    requestor_task_id |
+    requestor_priority |
+    bounding_a_lat |
+    bounding_a_lon |
+    bounding_b_lat |
+    bounding_b_lon |
+    bounding_c_lat |
+    bounding_c_lon |
+    bounding_d_lat |
+    bounding_d_lon |
+    radar_mode |
+    radar_range_res |
+    radar_cross_range_res |
+    earliest_start_year |
+    earliest_start_month |
+    earliest_start_day |
+    earliest_start_hour |
+    earliest_start_min |
+    earliest_start_sec |
+    allowed_delay |
+    duration |
+    revisit_interval |
+    sensor_id_type |
+    sensor_id_model |
+    request_type.
+
+-export_type([job_req/0, job_req_bin/0, field/0]).
 
 -type priority() :: default_priority | 1..99.
 -type resolution() :: dont_care | 1..65535.
