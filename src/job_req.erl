@@ -87,6 +87,11 @@
 
 -export_type([job_req/0, job_req_bin/0]).
 
+-type priority() :: default_priority | 1..99.
+-type resolution() :: dont_care | 1..65535.
+
+-export_type([priority/0, resolution/0]).
+
 -type duration() :: continuous | 1..65535.
 -type revisit_interval() :: default_interval | 1..65535.
 -type request_type() :: initial_request | cancel_job.
@@ -131,11 +136,15 @@ decode(<<ReqID:10/binary,TaskID:10/binary,Pri,R4:4/binary,R5:4/binary,
         request_type = decode_request_type(ReqType)},
     {ok, JRS}.
 
+%% @doc Decode the priority parameter.
+-spec decode_priority(0..99) -> priority().
 decode_priority(0) -> default_priority;
-decode_priority(X) when X >= 0, X =< 99 -> X.
+decode_priority(X) when X > 0, X =< 99 -> X.
 
+%% @doc Decode the resolution parameter.
+-spec decode_res(0..65535) -> resolution().
 decode_res(0) -> dont_care;
-decode_res(X) -> X.
+decode_res(X) when X > 0, X =< 65535 -> X.
 
 %% @doc Decode the duration parameter.
 -spec decode_duration(non_neg_integer()) -> duration().
