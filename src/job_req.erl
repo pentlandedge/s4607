@@ -82,7 +82,19 @@
 
 -opaque job_req() :: #job_req{}.
 
--export_type([job_req/0]).
+% Job request is 79 bytes long.
+-type job_req_bin() :: <<_:632>>.
+
+-export_type([job_req/0, job_req_bin/0]).
+
+-type duration() :: continuous | 1..65535.
+-type revisit_interval() :: default_interval | 1..65535.
+-type request_type() :: initial_request | cancel_job.
+
+-export_type([duration/0, revisit_interval/0, request_type/0]).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Function declarations.
 
 -spec decode(Bin::binary()) -> {ok, job_req()}.
 decode(<<ReqID:10/binary,TaskID:10/binary,Pri,R4:4/binary,R5:4/binary,
