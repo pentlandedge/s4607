@@ -92,7 +92,9 @@ new_checks() ->
     ParamList = sample_params(),
     JR = job_req:new(ParamList),
     ReqId = job_req:get_requestor_id(JR),
-    [?_assertEqual("Hawkstream", ReqId)
+    TaskId = job_req:get_requestor_task_id(JR),
+    [?_assertEqual("Hawkstream", ReqId),
+     ?_assertEqual("Test Run 1", TaskId)
     ].
 
 %% Return a binary job request segment to use as test data.
@@ -136,7 +138,7 @@ sample_params() ->
      {revisit_interval, 0},
      {sensor_id_type, global_hawk_sensor},
      {sensor_id_model, "HawkV2"},
-     {request_type, initial_request }
+     {request_type, initial_request}
     ].
 
 %% Utility function to compare whether floating point values are within a

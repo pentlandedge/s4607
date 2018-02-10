@@ -178,7 +178,12 @@ new(ParamList) ->
             end
         end,
 
-    #job_req{requestor_id = F(requestor_id, ParamList, "          ")}.
+    % 10 spaces.
+    DefaultID = "          ",   
+
+    #job_req{
+        requestor_id = F(requestor_id, ParamList, DefaultID ),
+        requestor_task_id = F(requestor_task_id, ParamList, DefaultID)}.
 
 %% @doc Decode the priority parameter.
 -spec decode_priority(0..99) -> priority().
