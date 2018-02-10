@@ -18,7 +18,7 @@
 
 -module(job_req).
 
--export([decode/1, display/1]).
+-export([decode/1, new/1, display/1]).
 
 %% Accessor functions.
 -export([
@@ -164,6 +164,12 @@ decode(<<ReqID:10/binary,TaskID:10/binary,Pri,R4:4/binary,R5:4/binary,
         sensor_id_model = decode_sensor_id_model(Model),
         request_type = decode_request_type(ReqType)},
     {ok, JRS}.
+
+%% @doc Create a new job request segment from a supplied list of 
+%% {parameter, Value} tuples.
+-spec new(ParamList::list()) -> job_req().
+new(ParamList) ->
+    ok.
 
 %% @doc Decode the priority parameter.
 -spec decode_priority(0..99) -> priority().
