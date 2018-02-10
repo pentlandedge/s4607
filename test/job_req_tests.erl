@@ -89,7 +89,7 @@ valid_checks2() ->
 
 %% Test the construction of new job request segments.
 new_checks() ->
-    ParamList = [{requestor_id, "Hawkstream"}],
+    ParamList = sample_params(),
     JR = job_req:new(ParamList),
     ReqId = job_req:get_requestor_id(JR),
     [?_assertEqual("Hawkstream", ReqId)
@@ -108,6 +108,36 @@ sample_job_request2() ->
       64,0,0,0, 245,85,85,85, 64,0,0,0, 245,85,85,85, 64,0,0,0,
       245,85,85,85, 64,0,0,0, 245,85,85,85, 24, 16#12C:16, 0:16,
       2018:16,5,23,10,11,50,65000:16,54321:16,21314:16,5,"HawkV1",1>>.
+
+%% Define a sample parameter list to use with new/1.
+sample_params() ->
+    [{requestor_id, "Hawkstream"}, 
+     {requestor_task_id, "Test Run 1"},
+     {requestor_priority, 99},
+     {bounding_a_lat, 56.36061},
+     {bounding_a_lon, -2.82458},
+     {bounding_b_lat,  56.3607},
+     {bounding_b_lon, -2.81774},
+     {bounding_c_lat,  56.35773},
+     {bounding_c_lon, -2.81795},
+     {bounding_d_lat, 56.35769},
+     {bounding_d_lon, -2.82527},
+     {radar_mode, {attack_planning, joint_stars}},
+     {radar_range_res, 15},
+     {radar_cross_range_res, 42},
+     {earliest_start_year, 2018},
+     {earliest_start_month, 2},
+     {earliest_start_day, 10},
+     {earliest_start_hour, 21},
+     {earliest_start_min, 22},
+     {earliest_start_sec, 13},
+     {allowed_delay, 3600},
+     {duration, 30},
+     {revisit_interval, 0},
+     {sensor_id_type, global_hawk_sensor},
+     {sensor_id_model, "HawkV2"},
+     {request_type, initial_request }
+    ].
 
 %% Utility function to compare whether floating point values are within a
 %% specified range.
