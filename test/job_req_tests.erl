@@ -91,10 +91,17 @@ valid_checks2() ->
 new_checks() ->
     ParamList = sample_params(),
     JR = job_req:new(ParamList),
-    ReqId = job_req:get_requestor_id(JR),
-    TaskId = job_req:get_requestor_task_id(JR),
-    [?_assertEqual("Hawkstream", ReqId),
-     ?_assertEqual("Test Run 1", TaskId)
+    [?_assertEqual("Hawkstream", job_req:get_requestor_id(JR)),
+     ?_assertEqual("Test Run 1", job_req:get_requestor_task_id(JR)),
+     ?_assertEqual(99, job_req:get_requestor_priority(JR)),
+     ?_assert(almost_equal(56.36061, job_req:get_bounding_a_lat(JR), 0.00001)),
+     ?_assert(almost_equal(-2.82458, job_req:get_bounding_a_lon(JR), 0.00001)),
+     ?_assert(almost_equal(56.36070, job_req:get_bounding_b_lat(JR), 0.00001)),
+     ?_assert(almost_equal(-2.81774, job_req:get_bounding_b_lon(JR), 0.00001)),
+     ?_assert(almost_equal(56.35773, job_req:get_bounding_c_lat(JR), 0.00001)),
+     ?_assert(almost_equal(-2.81795, job_req:get_bounding_c_lon(JR), 0.00001)),
+     ?_assert(almost_equal(56.35769, job_req:get_bounding_d_lat(JR), 0.00001)),
+     ?_assert(almost_equal(-2.82527, job_req:get_bounding_d_lon(JR), 0.00001))
     ].
 
 %% Return a binary job request segment to use as test data.
@@ -118,9 +125,9 @@ sample_params() ->
      {requestor_priority, 99},
      {bounding_a_lat, 56.36061},
      {bounding_a_lon, -2.82458},
-     {bounding_b_lat,  56.3607},
+     {bounding_b_lat, 56.36070},
      {bounding_b_lon, -2.81774},
-     {bounding_c_lat,  56.35773},
+     {bounding_c_lat, 56.35773},
      {bounding_c_lon, -2.81795},
      {bounding_d_lat, 56.35769},
      {bounding_d_lon, -2.82527},

@@ -183,7 +183,17 @@ new(ParamList) ->
 
     #job_req{
         requestor_id = F(requestor_id, ParamList, DefaultID ),
-        requestor_task_id = F(requestor_task_id, ParamList, DefaultID)}.
+        requestor_task_id = F(requestor_task_id, ParamList, DefaultID),
+        requestor_priority = F(requestor_priority  , ParamList, DefaultID),
+        bounding_a_lat = F(bounding_a_lat, ParamList, 0.0),
+        bounding_a_lon = F(bounding_a_lon, ParamList, 0.0),
+        bounding_b_lat = F(bounding_b_lat, ParamList, 0.0),
+        bounding_b_lon = F(bounding_b_lon, ParamList, 0.0),
+        bounding_c_lat = F(bounding_c_lat, ParamList, 0.0),
+        bounding_c_lon = F(bounding_c_lon, ParamList, 0.0),
+        bounding_d_lat = F(bounding_d_lat, ParamList, 0.0),
+        bounding_d_lon = F(bounding_d_lon, ParamList, 0.0)
+    }.
 
 %% @doc Decode the priority parameter.
 -spec decode_priority(0..99) -> priority().
