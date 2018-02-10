@@ -169,7 +169,16 @@ decode(<<ReqID:10/binary,TaskID:10/binary,Pri,R4:4/binary,R5:4/binary,
 %% {parameter, Value} tuples.
 -spec new(ParamList::list()) -> job_req().
 new(ParamList) ->
-    ok.
+    % Local function to pull the parameter from the list or use a default
+    % value.
+    F = fun(P, L, D) ->
+            case lists:keyfind(P, 1, L) of
+                {P, V} -> V;
+                false  -> D 
+            end
+        end,
+
+    #job_req{requestor_id = F(requestor_id, ParamList, "          ")}.
 
 %% @doc Decode the priority parameter.
 -spec decode_priority(0..99) -> priority().

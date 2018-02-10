@@ -20,7 +20,7 @@
 
 %% Define a test generator for the Job Request segment functions. 
 job_req_test_() ->
-    [valid_checks(), valid_checks2()].
+    [valid_checks(), valid_checks2(), new_checks()].
 
 valid_checks() ->
     Bin = sample_job_request(),
@@ -85,6 +85,14 @@ valid_checks2() ->
      ?_assertEqual(global_hawk_sensor, SensorType),
      ?_assertEqual("HawkV1", SensorModel),
      ?_assertEqual(cancel_job, ReqType)
+    ].
+
+%% Test the construction of new job request segments.
+new_checks() ->
+    ParamList = [{requestor_id, "Hawkstream"}],
+    JR = job_req:new(ParamList),
+    ReqId = job_req:get_requestor_id(JR),
+    [?_assertEqual("Hawkstream", ReqId)
     ].
 
 %% Return a binary job request segment to use as test data.
