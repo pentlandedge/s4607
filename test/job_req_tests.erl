@@ -101,7 +101,22 @@ new_checks() ->
      ?_assert(almost_equal(56.35773, job_req:get_bounding_c_lat(JR), 0.00001)),
      ?_assert(almost_equal(-2.81795, job_req:get_bounding_c_lon(JR), 0.00001)),
      ?_assert(almost_equal(56.35769, job_req:get_bounding_d_lat(JR), 0.00001)),
-     ?_assert(almost_equal(-2.82527, job_req:get_bounding_d_lon(JR), 0.00001))
+     ?_assert(almost_equal(-2.82527, job_req:get_bounding_d_lon(JR), 0.00001)),
+     ?_assertEqual({attack_planning, joint_stars}, job_req:get_radar_mode(JR)),
+     ?_assertEqual(15, job_req:get_radar_range_res(JR)),
+     ?_assertEqual(42, job_req:get_radar_cross_range_res(JR)),
+     ?_assertEqual(2018, job_req:get_earliest_start_year(JR)),
+     ?_assertEqual(2, job_req:get_earliest_start_month(JR)),
+     ?_assertEqual(10, job_req:get_earliest_start_day(JR)),
+     ?_assertEqual(21, job_req:get_earliest_start_hour(JR)),
+     ?_assertEqual(22, job_req:get_earliest_start_min(JR)),
+     ?_assertEqual(13, job_req:get_earliest_start_sec(JR)),
+     ?_assertEqual(3600, job_req:get_allowed_delay(JR)),
+     ?_assertEqual(30, job_req:get_duration(JR)),
+     ?_assertEqual(0, job_req:get_revisit_interval(JR)),
+     ?_assertEqual(global_hawk_sensor, job_req:get_sensor_id_type(JR)),
+     ?_assertEqual("HawkV2", job_req:get_sensor_id_model(JR)),
+     ?_assertEqual(initial_request, job_req:get_request_type(JR))
     ].
 
 %% Return a binary job request segment to use as test data.

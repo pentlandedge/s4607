@@ -192,7 +192,22 @@ new(ParamList) ->
         bounding_c_lat = F(bounding_c_lat, ParamList, 0.0),
         bounding_c_lon = F(bounding_c_lon, ParamList, 0.0),
         bounding_d_lat = F(bounding_d_lat, ParamList, 0.0),
-        bounding_d_lon = F(bounding_d_lon, ParamList, 0.0)
+        bounding_d_lon = F(bounding_d_lon, ParamList, 0.0),
+        radar_mode = F(radar_mode, ParamList, {unspecified_mode, generic}),
+        radar_range_res = F(radar_range_res, ParamList, dont_care),
+        radar_cross_range_res = F(radar_cross_range_res, ParamList, dont_care),
+        earliest_start_year = F(earliest_start_year, ParamList, 2000),
+        earliest_start_month = F(earliest_start_month, ParamList, 1),
+        earliest_start_day = F(earliest_start_day, ParamList, 1),
+        earliest_start_hour = F(earliest_start_hour, ParamList, 0),
+        earliest_start_min = F(earliest_start_min, ParamList, 0),
+        earliest_start_sec = F(earliest_start_sec, ParamList, 0),
+        allowed_delay = F(allowed_delay, ParamList, 65535),
+        duration = F(duration, ParamList, 0),
+        revisit_interval = F(revisit_interval, ParamList, default_interval),
+        sensor_id_type = F(sensor_id_type, ParamList, no_statement),
+        sensor_id_model = F(sensor_id_model, ParamList, no_statement),
+        request_type = F(request_typ, ParamList, initial_request)
     }.
 
 %% @doc Decode the priority parameter.
