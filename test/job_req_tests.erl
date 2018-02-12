@@ -20,7 +20,7 @@
 
 %% Define a test generator for the Job Request segment functions. 
 job_req_test_() ->
-    [valid_checks(), valid_checks2(), new_checks()].
+    [valid_checks(), valid_checks2(), new_checks(), encode_checks()].
 
 valid_checks() ->
     Bin = sample_job_request(),
@@ -119,6 +119,14 @@ new_checks() ->
      ?_assertEqual(initial_request, job_req:get_request_type(JR))
     ].
 
+%% Test the ability to encode job request segments. Create a new segment with
+%% parameters that when encoded should match sample_job_request().
+encode_checks() ->
+    ParamList = sample_job_request_params(),
+    JR = job_req:new(ParamList),
+    _EJR = job_req:encode(JR),
+    [].
+
 %% Return a binary job request segment to use as test data.
 sample_job_request() ->
     <<"Job Req ID","JReqTaskID",0,
@@ -160,6 +168,37 @@ sample_params() ->
      {revisit_interval, 0},
      {sensor_id_type, global_hawk_sensor},
      {sensor_id_model, "HawkV2"},
+     {request_type, initial_request}
+    ].
+
+%% Define a sample parameter list to use with new/1. This should encode to 
+%% match the binary sample_job_request().
+sample_job_request_params() ->
+    [{requestor_id, "Job Req ID"}, 
+     {requestor_task_id, "JReqTaskID"},
+     {requestor_priority, 0},
+     {bounding_a_lat, 45.0},
+     {bounding_a_lon, 345.0},
+     {bounding_b_lat, 45.0},
+     {bounding_b_lon, 345.0},
+     {bounding_c_lat, 45.0},
+     {bounding_c_lon, 345.0},
+     {bounding_d_lat, 45.0},
+     {bounding_d_lon, 345.0},
+     {radar_mode, {maritime_mti_low_res, joint_stars}},
+     {radar_range_res, 300},
+     {radar_cross_range_res, dont_care},
+     {earliest_start_year, 2018},
+     {earliest_start_month, 5},
+     {earliest_start_day, 23},
+     {earliest_start_hour, 10},
+     {earliest_start_min, 11},
+     {earliest_start_sec, 50},
+     {allowed_delay, 65000},
+     {duration, continuous},
+     {revisit_interval, default_interval},
+     {sensor_id_type, no_statement},
+     {sensor_id_model, no_statement},
      {request_type, initial_request}
     ].
 
