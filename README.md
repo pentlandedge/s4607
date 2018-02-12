@@ -108,4 +108,4 @@ It is also possible to extract a filtered list of segments of specified types:
 ```
 
 ## Online application.
-The [Hawkstream Stanag 4607 Viewer](http://www.hawkstream.net "Hawkstream Stanag 4607 Viewer Demo") uses this library to decode and display dwell segment data on a map.
+The [Hawkstream Stanag 4607 Viewer](http://www.hawkstream.net "Hawkstream Stanag 4607 Viewer Demo") uses this library to decode and display dwell segment data on a map. This will be steadily updated to display more of the 4607 information."
