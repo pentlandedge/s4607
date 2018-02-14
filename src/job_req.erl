@@ -42,6 +42,7 @@
     get_earliest_start_hour/1,
     get_earliest_start_min/1,
     get_earliest_start_sec/1,
+    get_start_datetime/1,
     get_allowed_delay/1,
     get_duration/1,
     get_revisit_interval/1,
@@ -191,7 +192,8 @@ encode(JR) ->
          {fun get_bounding_d_lon/1, fun stanag_types:float_to_ba32/1},
          {fun get_radar_mode/1, fun job_def:encode_radar_mode/1},
          {fun get_radar_range_res/1, fun encode_res/1},
-         {fun get_radar_cross_range_res/1, fun encode_res/1}
+         {fun get_radar_cross_range_res/1, fun encode_res/1},
+         {fun get_start_datetime/1, fun encode_start_datetime/1}
          ],
 
     lists:foldl(F, <<>>, ParamList).
@@ -267,6 +269,11 @@ decode_res(X) when X > 0, X =< 65535 -> X.
 encode_res(dont_care) -> <<0>>;
 encode_res(X) when X > 0, X =< 65535 -> <<X>>.
 
+%% @doc Encode the start date/time fields.
+-spec encode_start_datetime(calendar:datetime()) -> binary().
+encode_start_datetime({{Y,Mth,D},{H,Min,S}}) ->
+    <<Y:16,Mth,D,H,Min,S>>.
+
 %% @doc Decode the duration parameter.
 -spec decode_duration(non_neg_integer()) -> duration().
 decode_duration(0) -> continuous;
@@ -333,12 +340,25 @@ get_bounding_d_lon(#job_req{bounding_d_lon = X}) -> X.
 get_radar_mode(#job_req{radar_mode = X}) -> X.
 get_radar_range_res(#job_req{radar_range_res = X}) -> X.
 get_radar_cross_range_res(#job_req{radar_cross_range_res = X}) -> X.
+
 get_earliest_start_year(#job_req{earliest_start_year = X}) -> X.
 get_earliest_start_month(#job_req{earliest_start_month = X}) -> X.
 get_earliest_start_day(#job_req{earliest_start_day = X}) -> X.
 get_earliest_start_hour(#job_req{earliest_start_hour = X}) -> X.
 get_earliest_start_min(#job_req{earliest_start_min = X}) -> X.
 get_earliest_start_sec(#job_req{earliest_start_sec = X}) -> X.
+
+%% @doc Convenience function to fetch all the start time fields as a single 
+%% datetime() object.
+-spec get_start_datetime(job_req()) -> calendar:datetime().
+get_start_datetime(#job_req{earliest_start_year = Y, 
+                            earliest_start_month = Mth,
+                            earliest_start_day = D,
+                            earliest_start_hour = H,
+                            earliest_start_min = Min,
+                            earliest_start_sec = S}) ->
+    {{Y,Mth,D},{H,Min,S}}.
+
 get_allowed_delay(#job_req{allowed_delay = X}) -> X.
 
 %% @doc Get the duration from a decoded job request segment. 
