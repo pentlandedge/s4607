@@ -180,7 +180,16 @@ encode(JR) ->
     ParamList = 
         [{fun get_requestor_id/1, fun encode_10_char/1}, 
          {fun get_requestor_task_id/1, fun encode_10_char/1},
-         {fun get_requestor_priority/1, fun encode_priority/1}],
+         {fun get_requestor_priority/1, fun encode_priority/1},
+         {fun get_bounding_a_lat/1, fun stanag_types:float_to_sa32/1},
+         {fun get_bounding_a_lon/1, fun stanag_types:float_to_ba32/1},
+         {fun get_bounding_b_lat/1, fun stanag_types:float_to_sa32/1},
+         {fun get_bounding_b_lon/1, fun stanag_types:float_to_ba32/1},
+         {fun get_bounding_c_lat/1, fun stanag_types:float_to_sa32/1},
+         {fun get_bounding_c_lon/1, fun stanag_types:float_to_ba32/1},
+         {fun get_bounding_d_lat/1, fun stanag_types:float_to_sa32/1},
+         {fun get_bounding_d_lon/1, fun stanag_types:float_to_ba32/1}
+         ],
 
     lists:foldl(F, <<>>, ParamList).
 
