@@ -188,7 +188,10 @@ encode(JR) ->
          {fun get_bounding_c_lat/1, fun stanag_types:float_to_sa32/1},
          {fun get_bounding_c_lon/1, fun stanag_types:float_to_ba32/1},
          {fun get_bounding_d_lat/1, fun stanag_types:float_to_sa32/1},
-         {fun get_bounding_d_lon/1, fun stanag_types:float_to_ba32/1}
+         {fun get_bounding_d_lon/1, fun stanag_types:float_to_ba32/1},
+         {fun get_radar_mode/1, fun job_def:encode_radar_mode/1},
+         {fun get_radar_range_res/1, fun encode_res/1},
+         {fun get_radar_cross_range_res/1, fun encode_res/1}
          ],
 
     lists:foldl(F, <<>>, ParamList).
@@ -258,6 +261,11 @@ encode_priority(X) when X > 0, X =< 99 -> <<X>>.
 -spec decode_res(0..65535) -> resolution().
 decode_res(0) -> dont_care;
 decode_res(X) when X > 0, X =< 65535 -> X.
+
+%% @doc Encode the resolution parameter.
+-spec encode_res(resolution()) -> binary().
+encode_res(dont_care) -> <<0>>;
+encode_res(X) when X > 0, X =< 65535 -> <<X>>.
 
 %% @doc Decode the duration parameter.
 -spec decode_duration(non_neg_integer()) -> duration().
