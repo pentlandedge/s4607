@@ -176,7 +176,7 @@ sample_params() ->
 sample_job_request_params() ->
     [{requestor_id, "Job Req ID"}, 
      {requestor_task_id, "JReqTaskID"},
-     {requestor_priority, 0},
+     {requestor_priority, default_priority},
      {bounding_a_lat, 45.0},
      {bounding_a_lon, 345.0},
      {bounding_b_lat, 45.0},

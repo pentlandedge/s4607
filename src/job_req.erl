@@ -168,7 +168,21 @@ decode(<<ReqID:10/binary,TaskID:10/binary,Pri,R4:4/binary,R5:4/binary,
 %% @doc Produce a binary encoded job request segment.
 -spec encode(JobReq::job_req()) -> job_req_bin().
 encode(JR) ->
-    <<>>.
+    % Function to encode each parameter in the list and append to an 
+    % accumulated binary.
+    F = fun({GetFun, EncFun}, Acc) ->
+            P = GetFun(JR),
+            Bin = EncFun(P),
+            <<Acc/binary,Bin/binary>>
+        end,
+
+    % List of parameters in the how to fetch/encode.
+    ParamList = 
+        [{fun get_requestor_id/1, fun encode_10_char/1}, 
+         {fun get_requestor_task_id/1, fun encode_10_char/1},
+         {fun get_requestor_priority/1, fun encode_priority/1}],
+
+    lists:foldl(F, <<>>, ParamList).
 
 %% @doc Create a new job request segment from a supplied list of 
 %% {parameter, Value} tuples.
@@ -215,10 +229,21 @@ new(ParamList) ->
         request_type = F(request_typ, ParamList, initial_request)
     }.
 
+%% Pad strings to 10 characters and convert to binary.
+-spec encode_10_char(string()) -> binary().
+encode_10_char(Str) when is_list(Str) ->
+    Pad = sutils:add_trailing_spaces(Str, 10),
+    list_to_binary(Pad).
+
 %% @doc Decode the priority parameter.
 -spec decode_priority(0..99) -> priority().
 decode_priority(0) -> default_priority;
 decode_priority(X) when X > 0, X =< 99 -> X.
+
+%% @doc Encode the priority parameters.
+-spec encode_priority(priority()) -> binary().
+encode_priority(default_priority) -> <<0>>;
+encode_priority(X) when X > 0, X =< 99 -> <<X>>.
 
 %% @doc Decode the resolution parameter.
 -spec decode_res(0..65535) -> resolution().
