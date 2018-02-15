@@ -193,7 +193,9 @@ encode(JR) ->
          {fun get_radar_mode/1, fun job_def:encode_radar_mode/1},
          {fun get_radar_range_res/1, fun encode_res/1},
          {fun get_radar_cross_range_res/1, fun encode_res/1},
-         {fun get_start_datetime/1, fun encode_start_datetime/1}
+         {fun get_start_datetime/1, fun encode_start_datetime/1},
+         {fun get_duration/1, fun encode_duration/1},
+         {fun get_revisit_interval/1, fun encode_revisit_interval/1}
          ],
 
     lists:map(F, ParamList).
@@ -279,10 +281,24 @@ encode_start_datetime({{Y,Mth,D},{H,Min,S}}) ->
 decode_duration(0) -> continuous;
 decode_duration(X) -> X.
 
+%% @doc Encode the duration parameter.
+-spec encode_duration(duration()) -> binary().
+encode_duration(continuous) -> 
+    <<0>>;
+encode_duration(X) when X > 0, X =< 65535 -> 
+    <<X>>.
+
 %% @doc Decode the revisit interval parameter.
 -spec decode_revisit_interval(non_neg_integer()) -> revisit_interval().
 decode_revisit_interval(0) -> default_interval;
 decode_revisit_interval(X) -> X.
+
+%% @doc Encode the revisit interval parameter.
+-spec encode_revisit_interval(revisit_interval()) -> binary().
+encode_revisit_interval(default_interval) -> 
+    <<0>>;
+encode_revisit_interval(X) when X > 0, X =< 65535 -> 
+    <<X>>.
 
 decode_sensor_id_model(<<"None  ">>) -> 
     no_statement;
