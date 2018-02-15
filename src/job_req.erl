@@ -200,7 +200,9 @@ encode(JR) ->
          {fun get_start_datetime/1, fun encode_start_datetime/1},
          {fun get_duration/1, fun encode_duration/1},
          {fun get_revisit_interval/1, fun encode_revisit_interval/1},
-         {fun get_sensor_id_model/1, fun encode_sensor_id_model/1}
+         {fun get_sensor_id_type/1, fun job_def:encode_sensor_id_type/1},
+         {fun get_sensor_id_model/1, fun encode_sensor_id_model/1},
+         {fun get_request_type/1, fun encode_request_type/1}
          ],
 
     lists:map(F, ParamList).
@@ -323,6 +325,11 @@ encode_sensor_id_model(Str) when is_list(Str) ->
 -spec decode_request_type(0..1) -> request_type().
 decode_request_type(0) -> initial_request;
 decode_request_type(1) -> cancel_job.
+
+%% @doc Encode the request type parameter.
+-spec encode_request_type(request_type()) -> 0..1.
+encode_request_type(initial_request) -> 0;
+encode_request_type(cancel_job) -> 1.
 
 %% @doc Display the contents of a job request segment.
 display(#job_req{} = JR) ->
