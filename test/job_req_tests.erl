@@ -18,6 +18,8 @@
 
 -include_lib("eunit/include/eunit.hrl").
 
+-export([sample_params/0, sample_job_request/0, sample_job_request_params/0]).
+
 %% Define a test generator for the Job Request segment functions. 
 job_req_test_() ->
     [valid_checks(), valid_checks2(), new_checks(), encode_checks()].
@@ -113,7 +115,7 @@ new_checks() ->
      ?_assertEqual(13, job_req:get_earliest_start_sec(JR)),
      ?_assertEqual(3600, job_req:get_allowed_delay(JR)),
      ?_assertEqual(30, job_req:get_duration(JR)),
-     ?_assertEqual(0, job_req:get_revisit_interval(JR)),
+     ?_assertEqual(default_interval, job_req:get_revisit_interval(JR)),
      ?_assertEqual(global_hawk_sensor, job_req:get_sensor_id_type(JR)),
      ?_assertEqual("HawkV2", job_req:get_sensor_id_model(JR)),
      ?_assertEqual(initial_request, job_req:get_request_type(JR))
@@ -124,8 +126,9 @@ new_checks() ->
 encode_checks() ->
     ParamList = sample_job_request_params(),
     JR = job_req:new(ParamList),
-    _EJR = job_req:encode(JR),
-    [].
+    EJR = job_req:encode(JR),
+    Bin = iolist_to_binary(EJR),
+    [?_assertEqual(Bin, sample_job_request())].
 
 %% Return a binary job request segment to use as test data.
 sample_job_request() ->
@@ -165,7 +168,7 @@ sample_params() ->
      {earliest_start_sec, 13},
      {allowed_delay, 3600},
      {duration, 30},
-     {revisit_interval, 0},
+     {revisit_interval, default_interval},
      {sensor_id_type, global_hawk_sensor},
      {sensor_id_model, "HawkV2"},
      {request_type, initial_request}

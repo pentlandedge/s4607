@@ -198,6 +198,7 @@ encode(JR) ->
          {fun get_radar_range_res/1, fun encode_res/1},
          {fun get_radar_cross_range_res/1, fun encode_res/1},
          {fun get_start_datetime/1, fun encode_start_datetime/1},
+         {fun get_allowed_delay/1, fun encode_allowed_delay/1},
          {fun get_duration/1, fun encode_duration/1},
          {fun get_revisit_interval/1, fun encode_revisit_interval/1},
          {fun get_sensor_id_type/1, fun job_def:encode_sensor_id_type/1},
@@ -275,13 +276,17 @@ decode_res(X) when X > 0, X =< 65535 -> X.
 
 %% @doc Encode the resolution parameter.
 -spec encode_res(resolution()) -> binary().
-encode_res(dont_care) -> <<0>>;
-encode_res(X) when X > 0, X =< 65535 -> <<X>>.
+encode_res(dont_care) -> <<0:16>>;
+encode_res(X) when X > 0, X =< 65535 -> <<X:16>>.
 
 %% @doc Encode the start date/time fields.
 -spec encode_start_datetime(calendar:datetime()) -> binary().
 encode_start_datetime({{Y,Mth,D},{H,Min,S}}) ->
     <<Y:16,Mth,D,H,Min,S>>.
+
+%% @doc Encode the allowed delay
+-spec encode_allowed_delay(0..65535) -> binary().
+encode_allowed_delay(X) -> <<X:16>>.
 
 %% @doc Decode the duration parameter.
 -spec decode_duration(non_neg_integer()) -> duration().
@@ -291,9 +296,9 @@ decode_duration(X) -> X.
 %% @doc Encode the duration parameter.
 -spec encode_duration(duration()) -> binary().
 encode_duration(continuous) -> 
-    <<0>>;
+    <<0:16>>;
 encode_duration(X) when X > 0, X =< 65535 -> 
-    <<X>>.
+    <<X:16>>.
 
 %% @doc Decode the revisit interval parameter.
 -spec decode_revisit_interval(non_neg_integer()) -> revisit_interval().
@@ -303,9 +308,9 @@ decode_revisit_interval(X) -> X.
 %% @doc Encode the revisit interval parameter.
 -spec encode_revisit_interval(revisit_interval()) -> binary().
 encode_revisit_interval(default_interval) -> 
-    <<0>>;
+    <<0:16>>;
 encode_revisit_interval(X) when X > 0, X =< 65535 -> 
-    <<X>>.
+    <<X:16>>.
 
 %% @doc Decode the sensor ID model.
 -spec decode_sensor_id_model(binary()) -> sensor_id_model().
