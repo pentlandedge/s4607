@@ -128,6 +128,10 @@
 
 -export_type([duration/0, revisit_interval/0, request_type/0]).
 
+-type sensor_id_model() :: no_statement | list().
+
+-export_type([sensor_id_model/0]).
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Function declarations.
 
@@ -195,7 +199,8 @@ encode(JR) ->
          {fun get_radar_cross_range_res/1, fun encode_res/1},
          {fun get_start_datetime/1, fun encode_start_datetime/1},
          {fun get_duration/1, fun encode_duration/1},
-         {fun get_revisit_interval/1, fun encode_revisit_interval/1}
+         {fun get_revisit_interval/1, fun encode_revisit_interval/1},
+         {fun get_sensor_id_model/1, fun encode_sensor_id_model/1}
          ],
 
     lists:map(F, ParamList).
@@ -300,10 +305,19 @@ encode_revisit_interval(default_interval) ->
 encode_revisit_interval(X) when X > 0, X =< 65535 -> 
     <<X>>.
 
+%% @doc Decode the sensor ID model.
+-spec decode_sensor_id_model(binary()) -> sensor_id_model().
 decode_sensor_id_model(<<"None  ">>) -> 
     no_statement;
 decode_sensor_id_model(<<Model:6/binary>>) -> 
     binary_to_list(Model).
+
+%% @doc Encode the sensor ID model as a binary. 
+-spec encode_sensor_id_model(sensor_id_model()) -> binary().
+encode_sensor_id_model(no_statement) -> <<"None  ">>;
+encode_sensor_id_model(Str) when is_list(Str) -> 
+    Pad = sutils:add_trailing_spaces(Str, 6),
+    list_to_binary(Pad).
 
 %% @doc Decode the request type parameter.
 -spec decode_request_type(0..1) -> request_type().
