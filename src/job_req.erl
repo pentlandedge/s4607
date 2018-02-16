@@ -18,7 +18,7 @@
 
 -module(job_req).
 
--export([decode/1, encode/1, new/1, display/1]).
+-export([decode/1, encode/1, new/1, payload_size/1, display/1]).
 
 %% Accessor functions.
 -export([
@@ -227,7 +227,7 @@ new(ParamList) ->
     #job_req{
         requestor_id = F(requestor_id, ParamList, DefaultID ),
         requestor_task_id = F(requestor_task_id, ParamList, DefaultID),
-        requestor_priority = F(requestor_priority  , ParamList, DefaultID),
+        requestor_priority = F(requestor_priority  , ParamList, default_priority),
         bounding_a_lat = F(bounding_a_lat, ParamList, 0.0),
         bounding_a_lon = F(bounding_a_lon, ParamList, 0.0),
         bounding_b_lat = F(bounding_b_lat, ParamList, 0.0),
@@ -246,12 +246,19 @@ new(ParamList) ->
         earliest_start_min = F(earliest_start_min, ParamList, 0),
         earliest_start_sec = F(earliest_start_sec, ParamList, 0),
         allowed_delay = F(allowed_delay, ParamList, 65535),
-        duration = F(duration, ParamList, 0),
+        duration = F(duration, ParamList, continuous),
         revisit_interval = F(revisit_interval, ParamList, default_interval),
         sensor_id_type = F(sensor_id_type, ParamList, no_statement),
         sensor_id_model = F(sensor_id_model, ParamList, no_statement),
         request_type = F(request_typ, ParamList, initial_request)
     }.
+
+%% @doc Return the expected size of the job request segment payload in 
+%% bytes. Since the payload size is fixed for job request, the argument is
+%% ignored but retained in order to have a consistent API with the other 
+%% segments.
+-spec payload_size(any()) -> non_neg_integer().
+payload_size(_) -> 79.
 
 %% Pad strings to 10 characters and convert to binary.
 -spec encode_10_char(string()) -> binary().
