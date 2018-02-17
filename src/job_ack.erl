@@ -75,8 +75,31 @@
     start_sec,
     requestor_nationality}).
 
+-type radar_priority() :: 1..99.
+
+-type request_status() :: request | approved | approved_with_modification | 
+    denied_line_of_sight | denied_timeline | denied_orbit | denied_priority | 
+    denied_area_of_interest | denied_illegal_request | 
+    denied_function_inoperative | denied_other.
+
+-export_type([radar_priority/0, request_status/0]).
+
 decode(_) ->
     {ok, #job_ack{}}.
+
+%% @doc Decode the request status parameter.
+-spec decode_request_status(0..10) -> request_status().
+decode_request_status(0)  -> request;
+decode_request_status(1)  -> approved;
+decode_request_status(2)  -> approved_with_modification;
+decode_request_status(3)  -> denied_line_of_sight;
+decode_request_status(4)  -> denied_timeline;
+decode_request_status(5)  -> denied_orbit;
+decode_request_status(6)  -> denied_priority;
+decode_request_status(7)  -> denied_area_of_interest;
+decode_request_status(8)  -> denied_illegal_request;
+decode_request_status(9)  -> denied_function_inoperative;
+decode_request_status(10) -> denied_other.
 
 %% Field accessor functions.
 
