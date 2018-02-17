@@ -13,7 +13,7 @@
 %% License for the specific language governing permissions and limitations
 %% under the License.
 %%
-%% @doc Functions for manipulating job definition segments defined in the 
+%% @doc Functions for manipulating job request segments defined in the 
 %%      Stanag 4607 standard.
 
 -module(job_req).
