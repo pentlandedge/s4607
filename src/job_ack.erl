@@ -20,7 +20,32 @@
 
 -export([decode/1]).
 
--record(job_ack, {}).
+-record(job_ack, {
+    job_id,
+    requestor_id,
+    requestor_task_id,
+    sensor_id_type,
+    sensor_id_model,
+    radar_priority,
+    bounding_a_lat,
+    bounding_a_lon,
+    bounding_b_lat,
+    bounding_b_lon,
+    bounding_c_lat,
+    bounding_c_lon,
+    bounding_d_lat,
+    bounding_d_lon,
+    radar_mode,
+    duration,
+    revisit_interval,
+    request_status,
+    start_year,
+    start_month,
+    start_day,
+    start_hour,
+    start_min,
+    start_sec,
+    requestor_nationality}).
 
 decode(_) ->
     {ok, #job_ack{}}.
