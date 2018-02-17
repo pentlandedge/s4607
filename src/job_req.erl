@@ -20,6 +20,11 @@
 
 -export([decode/1, encode/1, new/1, payload_size/1, display/1]).
 
+-export([
+    decode_sensor_id_model/1, 
+    decode_revisit_interval/1, 
+    decode_duration/1]).
+
 %% Accessor functions.
 -export([
     get_requestor_id/1,

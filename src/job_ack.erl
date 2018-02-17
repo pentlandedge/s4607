@@ -84,8 +84,43 @@
 
 -export_type([radar_priority/0, request_status/0]).
 
-decode(_) ->
-    {ok, #job_ack{}}.
+decode(<<JobID:32,ReqID:10/binary,TaskID:10/binary,SensorType,Model:6/binary,
+    RadPri,A7:4/binary,A8:4/binary,A9:4/binary,A10:4/binary,A11:4/binary,
+    A12:4/binary,A13:4/binary,A14:4/binary,Mode,Dur:16,RevInt:16,Status,Yr:16,
+    Mth,Day,Hr,Min,Sec,Nat:2/binary>>) ->
+
+    JA = #job_ack{
+        job_id = JobID,
+        requestor_id = binary_to_list(ReqID),
+        requestor_task_id = binary_to_list(TaskID),
+        sensor_id_type = job_def:decode_sensor_id_type(SensorType),
+        sensor_id_model = job_req:decode_sensor_id_model(Model),
+        radar_priority = decode_radar_priority(RadPri),
+        bounding_a_lat = stanag_types:sa32_to_float(A7),
+        bounding_a_lon = stanag_types:ba32_to_float(A8),
+        bounding_b_lat = stanag_types:sa32_to_float(A9),
+        bounding_b_lon = stanag_types:ba32_to_float(A10),
+        bounding_c_lat = stanag_types:sa32_to_float(A11),
+        bounding_c_lon = stanag_types:ba32_to_float(A12),
+        bounding_d_lat = stanag_types:sa32_to_float(A13),
+        bounding_d_lon = stanag_types:ba32_to_float(A14),
+        radar_mode = job_def:decode_radar_mode(Mode),
+        duration = job_req:decode_duration(Dur),
+        revisit_interval = job_req:decode_revisit_interval(RevInt),
+        request_status = decode_request_status(Status),
+        start_year = Yr,
+        start_month = Mth,
+        start_day = Day,
+        start_hour = Hr,
+        start_min = Min,
+        start_sec = Sec,
+        requestor_nationality = binary_to_list(Nat)},
+
+    {ok, JA}.
+
+%% @doc Decode the radar priority
+-spec decode_radar_priority(1..99) -> radar_priority().
+decode_radar_priority(X) when X >= 1, X =< 99 -> X.
 
 %% @doc Decode the request status parameter.
 -spec decode_request_status(0..10) -> request_status().
