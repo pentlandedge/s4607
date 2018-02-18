@@ -18,7 +18,7 @@
 
 -module(job_ack).
 
--export([decode/1]).
+-export([decode/1, payload_size/1]).
 
 %% Export the field accessor functions.
 -export([
@@ -75,6 +75,15 @@
     start_sec,
     requestor_nationality}).
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Type specifications.
+
+-opaque job_ack() :: #job_ack{}.
+
+-type job_ack_bin() :: <<_:632>>.
+
+-export_type([job_ack/0, job_ack_bin/0]).
+
 -type radar_priority() :: 1..99.
 
 -type request_status() :: request | approved | approved_with_modification | 
@@ -84,6 +93,8 @@
 
 -export_type([radar_priority/0, request_status/0]).
 
+%% @doc Decode a binary encoded job acknowledge segment.
+-spec decode(Bin::job_ack_bin()) -> {ok, job_ack()}.
 decode(<<JobID:32,ReqID:10/binary,TaskID:10/binary,SensorType,Model:6/binary,
     RadPri,A7:4/binary,A8:4/binary,A9:4/binary,A10:4/binary,A11:4/binary,
     A12:4/binary,A13:4/binary,A14:4/binary,Mode,Dur:16,RevInt:16,Status,Yr:16,
@@ -117,6 +128,14 @@ decode(<<JobID:32,ReqID:10/binary,TaskID:10/binary,SensorType,Model:6/binary,
         requestor_nationality = binary_to_list(Nat)},
 
     {ok, JA}.
+
+
+%% @doc Return the expected size of the job acknowledge segment payload in 
+%% bytes. Since the payload size is fixed for job acknowledge, the argument 
+%% is ignored but retained in order to have a consistent API with the other 
+%% segments.
+-spec payload_size(any()) -> non_neg_integer().
+payload_size(_) -> 79.
 
 %% @doc Decode the radar priority
 -spec decode_radar_priority(1..99) -> radar_priority().
