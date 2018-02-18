@@ -22,9 +22,20 @@
 job_ack_test_() ->
     Bin = sample_job_ack(),
     {ok, JA} = job_ack:decode(Bin),
-    [
-     ?_assertEqual(16#12345678, job_ack:get_job_id(JA)),
-     ?_assertEqual("Job Ack ID", job_ack:get_requestor_id(JA))
+    [?_assertEqual(16#12345678, job_ack:get_job_id(JA)),
+     ?_assertEqual("Job Ack ID", job_ack:get_requestor_id(JA)),
+     ?_assertEqual("JAckTaskID", job_ack:get_requestor_task_id(JA)),
+     ?_assertEqual(vader, job_ack:get_sensor_id_type(JA)),
+     ?_assertEqual("Darth ", job_ack:get_sensor_id_model(JA)),
+     ?_assertEqual(99, job_ack:get_radar_priority(JA)),
+     ?_assert(almost_equal(45.0, job_ack:get_bounding_a_lat(JA), 0.00001)),
+     ?_assert(almost_equal(345.0, job_ack:get_bounding_a_lon(JA), 0.00001)),
+     ?_assert(almost_equal(45.0, job_ack:get_bounding_b_lat(JA), 0.00001)),
+     ?_assert(almost_equal(345.0, job_ack:get_bounding_b_lon(JA), 0.00001)),
+     ?_assert(almost_equal(45.0, job_ack:get_bounding_c_lat(JA), 0.00001)),
+     ?_assert(almost_equal(345.0, job_ack:get_bounding_c_lon(JA), 0.00001)),
+     ?_assert(almost_equal(45.0, job_ack:get_bounding_d_lat(JA), 0.00001)),
+     ?_assert(almost_equal(345.0, job_ack:get_bounding_d_lon(JA), 0.00001))
     ].
 
 %% Return a binary job acknowledge segment to use as test data.
@@ -43,4 +54,9 @@ sample_job_ack() ->
       2,
       2018:16,5,23,10,11,50,
       "XN">>.
+
+%% Utility function to compare whether floating point values are within a
+%% specified range.
+almost_equal(V1, V2, Delta) ->
+    abs(V1 - V2) =< Delta.
 

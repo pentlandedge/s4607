@@ -209,3 +209,4 @@ sample_job_request_params() ->
 %% specified range.
 almost_equal(V1, V2, Delta) ->
     abs(V1 - V2) =< Delta.
+
