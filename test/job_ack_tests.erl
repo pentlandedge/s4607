@@ -20,4 +20,24 @@
 
 %% Define a test generator for the Job Acknowledge segment functions. 
 job_ack_test_() ->
+    Bin = sample_job_ack(),
+    {ok, _JA} = job_ack:decode(Bin),
     [].
+
+%% Return a binary job acknowledge segment to use as test data.
+sample_job_ack() ->
+    <<16#12345678:32,
+      "Job Ack ID",
+      "JAckTaskID",
+      27,
+      "Darth ",
+      99,
+      64,0,0,0, 245,85,85,85, 64,0,0,0, 245,85,85,85, 
+      64,0,0,0, 245,85,85,85, 64,0,0,0, 245,85,85,85, 
+      21, 
+      16#123:16, 
+      16#1234:16,
+      2,
+      2018:16,5,23,10,11,50,
+      "XN">>.
+
