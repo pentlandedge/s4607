@@ -22,6 +22,7 @@
 job_ack_test_() ->
     Bin = sample_job_ack(),
     {ok, JA} = job_ack:decode(Bin),
+    ExpectedMode = {attack_control_with_tracking, joint_stars},
     [?_assertEqual(16#12345678, job_ack:get_job_id(JA)),
      ?_assertEqual("Job Ack ID", job_ack:get_requestor_id(JA)),
      ?_assertEqual("JAckTaskID", job_ack:get_requestor_task_id(JA)),
@@ -35,7 +36,10 @@ job_ack_test_() ->
      ?_assert(almost_equal(45.0, job_ack:get_bounding_c_lat(JA), 0.00001)),
      ?_assert(almost_equal(345.0, job_ack:get_bounding_c_lon(JA), 0.00001)),
      ?_assert(almost_equal(45.0, job_ack:get_bounding_d_lat(JA), 0.00001)),
-     ?_assert(almost_equal(345.0, job_ack:get_bounding_d_lon(JA), 0.00001))
+     ?_assert(almost_equal(345.0, job_ack:get_bounding_d_lon(JA), 0.00001)),
+     ?_assertEqual(ExpectedMode, job_ack:get_radar_mode(JA)),
+     ?_assertEqual(16#123, job_ack:get_duration(JA)),
+     ?_assertEqual(16#1234, job_ack:get_revisit_interval(JA))
     ].
 
 %% Return a binary job acknowledge segment to use as test data.
