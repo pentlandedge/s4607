@@ -39,7 +39,15 @@ job_ack_test_() ->
      ?_assert(almost_equal(345.0, job_ack:get_bounding_d_lon(JA), 0.00001)),
      ?_assertEqual(ExpectedMode, job_ack:get_radar_mode(JA)),
      ?_assertEqual(16#123, job_ack:get_duration(JA)),
-     ?_assertEqual(16#1234, job_ack:get_revisit_interval(JA))
+     ?_assertEqual(16#1234, job_ack:get_revisit_interval(JA)),
+     ?_assertEqual(approved_with_modification, job_ack:get_request_status(JA)),
+     ?_assertEqual(2018, job_ack:get_start_year(JA)),
+     ?_assertEqual(5, job_ack:get_start_month(JA)),
+     ?_assertEqual(23, job_ack:get_start_day(JA)),
+     ?_assertEqual(10, job_ack:get_start_hour(JA)),
+     ?_assertEqual(11, job_ack:get_start_min(JA)),
+     ?_assertEqual(50, job_ack:get_start_sec(JA)),
+     ?_assertEqual("XN", job_ack:get_requestor_nationality(JA))
     ].
 
 %% Return a binary job acknowledge segment to use as test data.
