@@ -18,7 +18,7 @@
 
 -module(job_ack).
 
--export([decode/1, payload_size/1]).
+-export([decode/1, new/1, payload_size/1]).
 
 %% Export the field accessor functions.
 -export([
@@ -129,6 +129,49 @@ decode(<<JobID:32,ReqID:10/binary,TaskID:10/binary,SensorType,Model:6/binary,
 
     {ok, JA}.
 
+%% @doc Create a new job acknowledge segment from a supplied list of 
+%% {parameter, Value} tuples.
+-spec new(ParamList::list()) -> job_ack().
+new(ParamList) ->
+    % Local function to pull the parameter from the list or use a default
+    % value.
+    F = fun(P, L, D) ->
+            case lists:keyfind(P, 1, L) of
+                {P, V} -> V;
+                false  -> D 
+            end
+        end,
+
+    % 10 spaces.
+    DefaultID = "          ",   
+
+    #job_ack{
+        job_id = F(job_id, ParamList, 1),
+        requestor_id = F(requestor_id, ParamList, DefaultID),
+        requestor_task_id = F(requestor_task_id, ParamList, DefaultID),
+        sensor_id_type = F(sensor_id_type, ParamList, no_statement),
+        sensor_id_model = F(sensor_id_model, ParamList, no_statement),
+        radar_priority = F(radar_priority, ParamList, 99),
+        bounding_a_lat = F(bounding_a_lat, ParamList, 0.0),
+        bounding_a_lon = F(bounding_a_lon, ParamList, 0.0),
+        bounding_b_lat = F(bounding_b_lat, ParamList, 0.0),
+        bounding_b_lon = F(bounding_b_lon, ParamList, 0.0),
+        bounding_c_lat = F(bounding_c_lat, ParamList, 0.0),
+        bounding_c_lon = F(bounding_c_lon, ParamList, 0.0),
+        bounding_d_lat = F(bounding_d_lat, ParamList, 0.0),
+        bounding_d_lon = F(bounding_d_lon, ParamList, 0.0),
+        radar_mode = F(radar_mode, ParamList, {unspecified_mode, generic}),
+        duration = F(duration, ParamList, continuous),
+        revisit_interval = F(revisit_interval, ParamList, default_interval),
+        request_status = F(request_status, ParamList, approved),
+        start_year = F(start_year, ParamList, 2000),
+        start_month = F(start_month, ParamList, 1),
+        start_day = F(start_day, ParamList, 1),
+        start_hour = F(start_hour, ParamList, 0),
+        start_min = F(start_min, ParamList, 0),
+        start_sec = F(start_sec, ParamList, 0),
+        requestor_nationality = F(requestor_nationality, ParamList, "XN")
+    }.
 
 %% @doc Return the expected size of the job acknowledge segment payload in 
 %% bytes. Since the payload size is fixed for job acknowledge, the argument 
