@@ -217,14 +217,8 @@ encode(JR) ->
 %% {parameter, Value} tuples.
 -spec new(ParamList::list()) -> job_req().
 new(ParamList) ->
-    % Local function to pull the parameter from the list or use a default
-    % value.
-    F = fun(P, L, D) ->
-            case lists:keyfind(P, 1, L) of
-                {P, V} -> V;
-                false  -> D 
-            end
-        end,
+    % Shorthand.
+    F = fun sutils:extract_param_or_default/3,
 
     % 10 spaces.
     DefaultID = "          ",   

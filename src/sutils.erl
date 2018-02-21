@@ -25,7 +25,8 @@
     conditional_display/3,
     conditional_format/3,
     extract_data/2,
-    extract_conv_data/3]).
+    extract_conv_data/3,
+    extract_param_or_default/3]).
 
 -type mask_bit() :: 0..1.
 -export_type[mask_bit/0].
@@ -124,4 +125,16 @@ extract_conv_data(Bin, Len, ConvFn) ->
     Data = binary:part(Bin, 0, Len),
     Rem = binary:part(Bin, Len, (byte_size(Bin) - Len)),
     {ok, ConvFn(Data), Rem}.
+
+%% @doc Extract a parameter from the list or use a default.
+-spec extract_param_or_default(Param, ParamList, Default) -> any()
+    when Param::atom(), ParamList::list(), Default::any().
+
+extract_param_or_default(Param, ParamList, Default) 
+    when is_atom(Param), is_list(ParamList) ->
+
+    case lists:keyfind(Param, 1, ParamList) of
+        {Param, V} -> V;
+        false  -> Default
+    end.
 
