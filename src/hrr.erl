@@ -375,14 +375,8 @@ encode_scatterer_records(RepCount, RepList, EM, MagBytes, PhaseBytes, InitBin)
 
 %% Create a new HRR segment structure from the specified fields.
 new(Fields) ->
-    % Local function to pull the parameter from the list or supply a default
-    % value.
-    F = fun(P, L, Default) ->
-            case lists:keyfind(P, 1, L) of
-                {P, V} -> V;
-                false  -> Default
-            end
-        end,
+    % Shorthand.
+    F = fun sutils:extract_param_or_default/3,
 
     #hrr_segment{
         existence_mask = F(existence_mask, Fields, 0),
