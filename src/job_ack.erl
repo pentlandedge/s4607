@@ -132,18 +132,11 @@ decode(<<JobID:32,ReqID:10/binary,TaskID:10/binary,SensorType,Model:6/binary,
 %% @doc Produce a binary encoded job acknowledge segment. Left as an iolist().
 -spec encode(JobAck::job_ack()) -> iolist().
 encode(JA) ->
-    % Function to encode each parameter in the list. Does not stitch together
-    % into a single binary: just return an iolist which can be flattened by 
-    % the caller if required.
-    F = fun({GetFun, EncFun}) ->
-            P = GetFun(JA),
-            EncFun(P)
-        end,
 
     % List of parameters in the how to fetch/encode.
     ParamList = [],
 
-    lists:map(F, ParamList).
+    sutils:encode_param_list(JA, ParamList).
 
 %% @doc Create a new job acknowledge segment from a supplied list of 
 %% {parameter, Value} tuples.
