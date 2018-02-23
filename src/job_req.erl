@@ -25,6 +25,13 @@
     decode_revisit_interval/1, 
     decode_duration/1]).
 
+-export([
+    encode_10_char/1,
+    encode_priority/1,
+    encode_duration/1,
+    encode_revisit_interval/1,
+    encode_start_datetime/1]).
+
 %% Accessor functions.
 -export([
     get_requestor_id/1,
@@ -201,8 +208,7 @@ encode(JR) ->
          {fun get_revisit_interval/1, fun encode_revisit_interval/1},
          {fun get_sensor_id_type/1, fun job_def:encode_sensor_id_type/1},
          {fun get_sensor_id_model/1, fun encode_sensor_id_model/1},
-         {fun get_request_type/1, fun encode_request_type/1}
-         ],
+         {fun get_request_type/1, fun encode_request_type/1}],
 
     sutils:encode_param_list(JR, ParamList).
 

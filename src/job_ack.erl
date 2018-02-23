@@ -134,7 +134,27 @@ decode(<<JobID:32,ReqID:10/binary,TaskID:10/binary,SensorType,Model:6/binary,
 encode(JA) ->
 
     % List of parameters in the how to fetch/encode.
-    ParamList = [],
+    ParamList = 
+        [{fun get_job_id/1, fun stanag_types:integer_to_i32/1},
+         {fun get_requestor_id/1, fun job_req:encode_10_char/1},
+         {fun get_requestor_task_id/1, fun job_req:encode_10_char/1},
+         {fun get_sensor_id_type/1, fun job_def:encode_sensor_id_type/1},
+         {fun get_sensor_id_model/1, fun job_def:encode_sensor_id_model/1},
+         {fun get_radar_priority/1, fun job_req:encode_priority/1},
+         {fun get_bounding_a_lat/1, fun stanag_types:float_to_sa32/1},
+         {fun get_bounding_a_lon/1, fun stanag_types:float_to_ba32/1},
+         {fun get_bounding_b_lat/1, fun stanag_types:float_to_sa32/1},
+         {fun get_bounding_b_lon/1, fun stanag_types:float_to_ba32/1},
+         {fun get_bounding_c_lat/1, fun stanag_types:float_to_sa32/1},
+         {fun get_bounding_c_lon/1, fun stanag_types:float_to_ba32/1},
+         {fun get_bounding_d_lat/1, fun stanag_types:float_to_sa32/1},
+         {fun get_bounding_d_lon/1, fun stanag_types:float_to_ba32/1},
+         {fun get_radar_mode/1, fun job_def:encode_radar_mode/1},
+         {fun get_duration/1, fun job_req:encode_duration/1},
+         {fun get_revisit_interval/1, fun job_req:encode_revisit_interval/1},
+         {fun get_request_status/1, fun encode_request_status/1},
+         {fun get_start_datetime/1, fun job_req:encode_start_datetime/1},
+         {fun get_requestor_nationality/1, fun list_to_binary/1}],
 
     sutils:encode_param_list(JA, ParamList).
 
@@ -201,6 +221,20 @@ decode_request_status(8)  -> denied_illegal_request;
 decode_request_status(9)  -> denied_function_inoperative;
 decode_request_status(10) -> denied_other.
 
+%% @doc Encode the request status parameter.
+-spec encode_request_status(request_status()) -> 0..10.
+encode_request_status(request)                      -> 0;
+encode_request_status(approved)                     -> 1;
+encode_request_status(approved_with_modification)   -> 2;
+encode_request_status(denied_line_of_sight)         -> 3;
+encode_request_status(denied_timeline)              -> 4;
+encode_request_status(denied_orbit)                 -> 5;
+encode_request_status(denied_priority)              -> 6;
+encode_request_status(denied_area_of_interest)      -> 7;
+encode_request_status(denied_illegal_request)       -> 8;
+encode_request_status(denied_function_inoperative)  -> 9;
+encode_request_status(denied_other)                 -> 10. 
+
 %% Field accessor functions.
 
 get_job_id(#job_ack{job_id = X}) -> X.
@@ -227,5 +261,17 @@ get_start_day(#job_ack{start_day = X}) -> X.
 get_start_hour(#job_ack{start_hour = X}) -> X.
 get_start_min(#job_ack{start_min = X}) -> X.
 get_start_sec(#job_ack{start_sec = X}) -> X.
+
+%% @doc Convenience function to fetch all the start time fields as a single 
+%% datetime() object.
+-spec get_start_datetime(job_ack()) -> calendar:datetime().
+get_start_datetime(#job_ack{start_year = Y, 
+                            start_month = Mth,
+                            start_day = D,
+                            start_hour = H,
+                            start_min = Min,
+                            start_sec = S}) ->
+    {{Y,Mth,D},{H,Min,S}}.
+
 get_requestor_nationality(#job_ack{requestor_nationality = X}) -> X.
 
