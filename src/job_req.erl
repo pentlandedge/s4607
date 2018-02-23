@@ -178,13 +178,6 @@ decode(<<ReqID:10/binary,TaskID:10/binary,Pri,R4:4/binary,R5:4/binary,
 %% @doc Produce a binary encoded job request segment. Left as an iolist().
 -spec encode(JobReq::job_req()) -> iolist().
 encode(JR) ->
-    % Function to encode each parameter in the list. Does not stitch together
-    % into a single binary: just return an iolist which can be flattened by 
-    % the caller if required.
-    F = fun({GetFun, EncFun}) ->
-            P = GetFun(JR),
-            EncFun(P)
-        end,
 
     % List of parameters in the how to fetch/encode.
     ParamList = 
@@ -211,7 +204,7 @@ encode(JR) ->
          {fun get_request_type/1, fun encode_request_type/1}
          ],
 
-    lists:map(F, ParamList).
+    sutils:encode_param_list(JR, ParamList).
 
 %% @doc Create a new job request segment from a supplied list of 
 %% {parameter, Value} tuples.

@@ -26,7 +26,8 @@
     conditional_format/3,
     extract_data/2,
     extract_conv_data/3,
-    extract_param_or_default/3]).
+    extract_param_or_default/3,
+    encode_param_list/2]).
 
 -type mask_bit() :: 0..1.
 -export_type[mask_bit/0].
@@ -137,4 +138,18 @@ extract_param_or_default(Param, ParamList, Default)
         {Param, V} -> V;
         false  -> Default
     end.
+
+%% @doc Encode a list of parameters as an iolist.
+%% Each entry in ParamList should be a {GetFun, EncFun} tuple. The GetFun and
+%% EncFun parameters must accept a Rec argument."
+encode_param_list(Rec, ParamList) when is_list(ParamList) ->
+    % Function to encode each parameter in the list. Does not stitch together
+    % into a single binary: just return an iolist which can be flattened by 
+    % the caller if required.
+    F = fun({GetFun, EncFun}) ->
+            P = GetFun(Rec),
+            EncFun(P)
+        end,
+
+    lists:map(F, ParamList).
 
