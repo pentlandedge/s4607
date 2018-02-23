@@ -18,7 +18,7 @@
 
 -module(job_ack).
 
--export([decode/1, new/1, payload_size/1]).
+-export([decode/1, encode/1, new/1, payload_size/1]).
 
 %% Export the field accessor functions.
 -export([
@@ -128,6 +128,22 @@ decode(<<JobID:32,ReqID:10/binary,TaskID:10/binary,SensorType,Model:6/binary,
         requestor_nationality = binary_to_list(Nat)},
 
     {ok, JA}.
+
+%% @doc Produce a binary encoded job acknowledge segment. Left as an iolist().
+-spec encode(JobAck::job_ack()) -> iolist().
+encode(JA) ->
+    % Function to encode each parameter in the list. Does not stitch together
+    % into a single binary: just return an iolist which can be flattened by 
+    % the caller if required.
+    F = fun({GetFun, EncFun}) ->
+            P = GetFun(JA),
+            EncFun(P)
+        end,
+
+    % List of parameters in the how to fetch/encode.
+    ParamList = [],
+
+    lists:map(F, ParamList).
 
 %% @doc Create a new job acknowledge segment from a supplied list of 
 %% {parameter, Value} tuples.
