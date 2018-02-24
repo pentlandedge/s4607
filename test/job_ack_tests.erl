@@ -115,7 +115,8 @@ encode_decode_checks() ->
      ?_assertEqual(0, job_ack:get_start_hour(DEJA)),
      ?_assertEqual(0, job_ack:get_start_min(DEJA)),
      ?_assertEqual(0, job_ack:get_start_sec(DEJA)),
-     ?_assertEqual("XN", job_ack:get_requestor_nationality(DEJA))
+     ?_assertEqual("XN", job_ack:get_requestor_nationality(DEJA)),
+     ?_assertEqual(job_ack:payload_size(JA), byte_size(FEJA))
     ].
 
 request_status_checks() ->
