@@ -20,7 +20,8 @@
 
 %% Define a test generator for the Job Acknowledge segment functions. 
 job_ack_test_() ->
-    [decode_checks(), new_default_checks(), encode_decode_checks()].
+    [decode_checks(), new_default_checks(), encode_decode_checks(),
+     request_status_checks()].
 
 decode_checks() ->
     Bin = sample_job_ack(),
@@ -115,6 +116,31 @@ encode_decode_checks() ->
      ?_assertEqual(0, job_ack:get_start_min(DEJA)),
      ?_assertEqual(0, job_ack:get_start_sec(DEJA)),
      ?_assertEqual("XN", job_ack:get_requestor_nationality(DEJA))
+    ].
+
+request_status_checks() ->
+    [?_assertEqual(request, job_ack:decode_request_status(0)),
+     ?_assertEqual(approved, job_ack:decode_request_status(1)),
+     ?_assertEqual(approved_with_modification, job_ack:decode_request_status(2)),
+     ?_assertEqual(denied_line_of_sight, job_ack:decode_request_status(3)),
+     ?_assertEqual(denied_timeline, job_ack:decode_request_status(4)),
+     ?_assertEqual(denied_orbit, job_ack:decode_request_status(5)),
+     ?_assertEqual(denied_priority, job_ack:decode_request_status(6)),
+     ?_assertEqual(denied_area_of_interest, job_ack:decode_request_status(7)),
+     ?_assertEqual(denied_illegal_request, job_ack:decode_request_status(8)),
+     ?_assertEqual(denied_function_inoperative, job_ack:decode_request_status(9)),
+     ?_assertEqual(denied_other, job_ack:decode_request_status(10)),
+     ?_assertEqual(0, job_ack:encode_request_status(request)),
+     ?_assertEqual(1, job_ack:encode_request_status(approved)),
+     ?_assertEqual(2, job_ack:encode_request_status(approved_with_modification)),
+     ?_assertEqual(3, job_ack:encode_request_status(denied_line_of_sight)),
+     ?_assertEqual(4, job_ack:encode_request_status(denied_timeline)),
+     ?_assertEqual(5, job_ack:encode_request_status(denied_orbit)), 
+     ?_assertEqual(6, job_ack:encode_request_status(denied_priority)),
+     ?_assertEqual(7, job_ack:encode_request_status(denied_area_of_interest)),
+     ?_assertEqual(8, job_ack:encode_request_status(denied_illegal_request)),
+     ?_assertEqual(9, job_ack:encode_request_status(denied_function_inoperative)),
+     ?_assertEqual(10, job_ack:encode_request_status(denied_other))
     ].
 
 %% Return a binary job acknowledge segment to use as test data.

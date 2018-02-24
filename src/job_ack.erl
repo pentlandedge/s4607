@@ -48,6 +48,11 @@
     get_start_sec/1,
     get_requestor_nationality/1]).
 
+%% Export of functions for unit testing.
+-ifdef(TEST).
+-export([decode_request_status/1, encode_request_status/1]).
+-endif.
+
 -record(job_ack, {
     job_id,
     requestor_id,
