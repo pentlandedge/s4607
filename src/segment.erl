@@ -176,5 +176,6 @@ seg_type_to_module(job_definition)  -> {ok, job_def};
 seg_type_to_module(free_text)       -> {ok, free_text};
 seg_type_to_module(platform_loc)    -> {ok, platform_loc};
 seg_type_to_module(job_request)     -> {ok, job_req};
+seg_type_to_module(job_acknowledge) -> {ok, job_ack};
 seg_type_to_module(_)               -> {error, unsupported_segment_type}.
 
