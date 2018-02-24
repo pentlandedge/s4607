@@ -20,6 +20,9 @@
 
 %% Define a test generator for the Job Acknowledge segment functions. 
 job_ack_test_() ->
+    [decode_checks(), new_checks()].
+
+decode_checks() ->
     Bin = sample_job_ack(),
     {ok, JA} = job_ack:decode(Bin),
     ExpectedMode = {attack_control_with_tracking, joint_stars},
@@ -49,6 +52,9 @@ job_ack_test_() ->
      ?_assertEqual(50, job_ack:get_start_sec(JA)),
      ?_assertEqual("XN", job_ack:get_requestor_nationality(JA))
     ].
+
+new_checks() ->
+    [].
 
 %% Return a binary job acknowledge segment to use as test data.
 sample_job_ack() ->
