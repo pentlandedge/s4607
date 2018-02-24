@@ -75,6 +75,8 @@
     start_sec,
     requestor_nationality}).
 
+-define(SPACES_10, "          ").
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Type specifications.
 
@@ -165,13 +167,10 @@ new(ParamList) ->
     % Shorthand.
     F = fun sutils:extract_param_or_default/3,
 
-    % 10 spaces.
-    DefaultID = "          ",   
-
     #job_ack{
         job_id = F(job_id, ParamList, 1),
-        requestor_id = F(requestor_id, ParamList, DefaultID),
-        requestor_task_id = F(requestor_task_id, ParamList, DefaultID),
+        requestor_id = F(requestor_id, ParamList, ?SPACES_10),
+        requestor_task_id = F(requestor_task_id, ParamList, ?SPACES_10),
         sensor_id_type = F(sensor_id_type, ParamList, no_statement),
         sensor_id_model = F(sensor_id_model, ParamList, no_statement),
         radar_priority = F(radar_priority, ParamList, 99),

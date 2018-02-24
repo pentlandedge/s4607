@@ -91,6 +91,8 @@
     sensor_id_model,
     request_type}).
 
+-define(SPACES_10, "          ").
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Type specifications.
 
@@ -220,12 +222,9 @@ new(ParamList) ->
     % Shorthand.
     F = fun sutils:extract_param_or_default/3,
 
-    % 10 spaces.
-    DefaultID = "          ",   
-
     #job_req{
-        requestor_id = F(requestor_id, ParamList, DefaultID ),
-        requestor_task_id = F(requestor_task_id, ParamList, DefaultID),
+        requestor_id = F(requestor_id, ParamList, ?SPACES_10),
+        requestor_task_id = F(requestor_task_id, ParamList, ?SPACES_10),
         requestor_priority = F(requestor_priority  , ParamList, default_priority),
         bounding_a_lat = F(bounding_a_lat, ParamList, 0.0),
         bounding_a_lon = F(bounding_a_lon, ParamList, 0.0),
