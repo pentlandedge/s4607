@@ -20,7 +20,7 @@
 
 %% Define a test generator for the Job Acknowledge segment functions. 
 job_ack_test_() ->
-    [decode_checks(), new_checks()].
+    [decode_checks(), new_default_checks()].
 
 decode_checks() ->
     Bin = sample_job_ack(),
@@ -53,8 +53,34 @@ decode_checks() ->
      ?_assertEqual("XN", job_ack:get_requestor_nationality(JA))
     ].
 
-new_checks() ->
-    [].
+new_default_checks() ->
+    JA = job_ack:new([]),
+    [?_assertEqual(1, job_ack:get_job_id(JA)),
+     ?_assertEqual("          ", job_ack:get_requestor_id(JA)),
+     ?_assertEqual("          ", job_ack:get_requestor_task_id(JA)),
+     ?_assertEqual(no_statement, job_ack:get_sensor_id_type(JA)),
+     ?_assertEqual(no_statement, job_ack:get_sensor_id_model(JA)),
+     ?_assertEqual(99, job_ack:get_radar_priority(JA)),
+     ?_assert(almost_equal(0.0, job_ack:get_bounding_a_lat(JA), 0.00001)),
+     ?_assert(almost_equal(0.0, job_ack:get_bounding_a_lon(JA), 0.00001)),
+     ?_assert(almost_equal(0.0, job_ack:get_bounding_b_lat(JA), 0.00001)),
+     ?_assert(almost_equal(0.0, job_ack:get_bounding_b_lon(JA), 0.00001)),
+     ?_assert(almost_equal(0.0, job_ack:get_bounding_c_lat(JA), 0.00001)),
+     ?_assert(almost_equal(0.0, job_ack:get_bounding_c_lon(JA), 0.00001)),
+     ?_assert(almost_equal(0.0, job_ack:get_bounding_d_lat(JA), 0.00001)),
+     ?_assert(almost_equal(0.0, job_ack:get_bounding_d_lon(JA), 0.00001)),
+     ?_assertEqual({unspecified_mode, generic}, job_ack:get_radar_mode(JA)),
+     ?_assertEqual(continuous, job_ack:get_duration(JA)),
+     ?_assertEqual(default_interval, job_ack:get_revisit_interval(JA)),
+     ?_assertEqual(approved, job_ack:get_request_status(JA)),
+     ?_assertEqual(2000, job_ack:get_start_year(JA)),
+     ?_assertEqual(1, job_ack:get_start_month(JA)),
+     ?_assertEqual(1, job_ack:get_start_day(JA)),
+     ?_assertEqual(0, job_ack:get_start_hour(JA)),
+     ?_assertEqual(0, job_ack:get_start_min(JA)),
+     ?_assertEqual(0, job_ack:get_start_sec(JA)),
+     ?_assertEqual("XN", job_ack:get_requestor_nationality(JA))
+    ].
 
 %% Return a binary job acknowledge segment to use as test data.
 sample_job_ack() ->
