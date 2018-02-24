@@ -27,6 +27,7 @@
 
 -export([
     encode_10_char/1,
+    encode_sensor_id_model/1,
     encode_priority/1,
     encode_duration/1,
     encode_revisit_interval/1,

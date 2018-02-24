@@ -139,7 +139,7 @@ encode(JA) ->
          {fun get_requestor_id/1, fun job_req:encode_10_char/1},
          {fun get_requestor_task_id/1, fun job_req:encode_10_char/1},
          {fun get_sensor_id_type/1, fun job_def:encode_sensor_id_type/1},
-         {fun get_sensor_id_model/1, fun job_def:encode_sensor_id_model/1},
+         {fun get_sensor_id_model/1, fun job_req:encode_sensor_id_model/1},
          {fun get_radar_priority/1, fun job_req:encode_priority/1},
          {fun get_bounding_a_lat/1, fun stanag_types:float_to_sa32/1},
          {fun get_bounding_a_lon/1, fun stanag_types:float_to_ba32/1},
