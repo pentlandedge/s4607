@@ -20,7 +20,7 @@
 
 %% Define a test generator for the Job Acknowledge segment functions. 
 job_ack_test_() ->
-    [decode_checks(), new_default_checks()].
+    [decode_checks(), new_default_checks(), encode_decode_checks()].
 
 decode_checks() ->
     Bin = sample_job_ack(),
@@ -80,6 +80,41 @@ new_default_checks() ->
      ?_assertEqual(0, job_ack:get_start_min(JA)),
      ?_assertEqual(0, job_ack:get_start_sec(JA)),
      ?_assertEqual("XN", job_ack:get_requestor_nationality(JA))
+    ].
+
+%% Create a new segment, encode then decode it and check that the resulting 
+%% record matches the expected values.
+encode_decode_checks() ->
+    JA = job_ack:new([]),
+    EJA = job_ack:encode(JA),
+    FEJA = iolist_to_binary(EJA),
+    {ok, DEJA} = job_ack:decode(FEJA),
+
+    [?_assertEqual(1, job_ack:get_job_id(DEJA)),
+     ?_assertEqual("          ", job_ack:get_requestor_id(DEJA)),
+     ?_assertEqual("          ", job_ack:get_requestor_task_id(DEJA)),
+     ?_assertEqual(no_statement, job_ack:get_sensor_id_type(DEJA)),
+     ?_assertEqual(no_statement, job_ack:get_sensor_id_model(DEJA)),
+     ?_assertEqual(99, job_ack:get_radar_priority(DEJA)),
+     ?_assert(almost_equal(0.0, job_ack:get_bounding_a_lat(DEJA), 0.00001)),
+     ?_assert(almost_equal(0.0, job_ack:get_bounding_a_lon(DEJA), 0.00001)),
+     ?_assert(almost_equal(0.0, job_ack:get_bounding_b_lat(DEJA), 0.00001)),
+     ?_assert(almost_equal(0.0, job_ack:get_bounding_b_lon(DEJA), 0.00001)),
+     ?_assert(almost_equal(0.0, job_ack:get_bounding_c_lat(DEJA), 0.00001)),
+     ?_assert(almost_equal(0.0, job_ack:get_bounding_c_lon(DEJA), 0.00001)),
+     ?_assert(almost_equal(0.0, job_ack:get_bounding_d_lat(DEJA), 0.00001)),
+     ?_assert(almost_equal(0.0, job_ack:get_bounding_d_lon(DEJA), 0.00001)),
+     ?_assertEqual({unspecified_mode, generic}, job_ack:get_radar_mode(DEJA)),
+     ?_assertEqual(continuous, job_ack:get_duration(DEJA)),
+     ?_assertEqual(default_interval, job_ack:get_revisit_interval(DEJA)),
+     ?_assertEqual(approved, job_ack:get_request_status(DEJA)),
+     ?_assertEqual(2000, job_ack:get_start_year(DEJA)),
+     ?_assertEqual(1, job_ack:get_start_month(DEJA)),
+     ?_assertEqual(1, job_ack:get_start_day(DEJA)),
+     ?_assertEqual(0, job_ack:get_start_hour(DEJA)),
+     ?_assertEqual(0, job_ack:get_start_min(DEJA)),
+     ?_assertEqual(0, job_ack:get_start_sec(DEJA)),
+     ?_assertEqual("XN", job_ack:get_requestor_nationality(DEJA))
     ].
 
 %% Return a binary job acknowledge segment to use as test data.
