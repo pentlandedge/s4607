@@ -18,7 +18,7 @@
 
 -module(job_ack).
 
--export([decode/1, encode/1, new/1, payload_size/1]).
+-export([decode/1, encode/1, new/1, payload_size/1, display/1]).
 
 %% Export the field accessor functions.
 -export([
@@ -238,6 +238,36 @@ encode_request_status(denied_area_of_interest)      -> 7;
 encode_request_status(denied_illegal_request)       -> 8;
 encode_request_status(denied_function_inoperative)  -> 9;
 encode_request_status(denied_other)                 -> 10. 
+
+%% @doc Display the contents of a job acknowledge segment.
+display(#job_ack{} = JA) ->
+    io:format("****************************************~n"),
+    io:format("** @job_ack~n"),
+    io:format("Job ID: ~p~n", [get_job_id(JA)]),
+    io:format("Requestor ID: ~p~n", [get_requestor_id(JA)]),
+    io:format("Requestor task ID: ~p~n", [get_requestor_task_id(JA)]),
+    io:format("Sensor ID type: ~p~n", [get_sensor_id_type(JA)]),
+    io:format("Sensor ID model: ~p~n", [get_sensor_id_model(JA)]),
+    io:format("Radar priority: ~p~n", [get_radar_priority(JA)]),
+    io:format("Bounding A Lat: ~p~n", [get_bounding_a_lat(JA)]),
+    io:format("Bounding A Lon: ~p~n", [get_bounding_a_lon(JA)]),
+    io:format("Bounding B Lat: ~p~n", [get_bounding_b_lat(JA)]),
+    io:format("Bounding B Lon: ~p~n", [get_bounding_b_lon(JA)]),
+    io:format("Bounding C Lat: ~p~n", [get_bounding_c_lat(JA)]),
+    io:format("Bounding C Lon: ~p~n", [get_bounding_c_lon(JA)]),
+    io:format("Bounding D Lat: ~p~n", [get_bounding_d_lat(JA)]),
+    io:format("Bounding D Lon: ~p~n", [get_bounding_d_lon(JA)]),
+    io:format("Radar mode: ~p~n", [get_radar_mode(JA)]),
+    io:format("Duration: ~p~n", [get_duration(JA)]),
+    io:format("Revisit interval: ~p~n", [get_revisit_interval(JA)]),
+    io:format("Request status: ~p~n", [get_request_status(JA)]),
+    io:format("Start year: ~p~n", [get_start_year(JA)]),
+    io:format("Start month: ~p~n", [get_start_month(JA)]),
+    io:format("Start day: ~p~n", [get_start_day(JA)]),
+    io:format("Start hour: ~p~n", [get_start_hour(JA)]),
+    io:format("Start min: ~p~n", [get_start_min(JA)]),
+    io:format("Start sec: ~p~n", [get_start_sec(JA)]),
+    io:format("Requestor nat. ID: ~p~n", [get_requestor_nationality(JA)]).
 
 %% Field accessor functions.
 

@@ -56,6 +56,7 @@ decode_checks() ->
 
 new_default_checks() ->
     JA = job_ack:new([]),
+    job_ack:display(JA),
     [?_assertEqual(1, job_ack:get_job_id(JA)),
      ?_assertEqual("          ", job_ack:get_requestor_id(JA)),
      ?_assertEqual("          ", job_ack:get_requestor_task_id(JA)),
