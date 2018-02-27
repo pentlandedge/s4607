@@ -204,7 +204,7 @@ get_segments(PacketList) when is_list(PacketList) ->
     % Flatten the list.
     lists:flatten(NestSegs).
 
-%% Function to extract a list of segment types present in a file.
+%% Function to extract a list of segment types present in a list of packets.
 get_segment_types(PacketList) ->
 
     % Get a list of segments. If necessary, this step could be eliminated.
