@@ -35,6 +35,7 @@
     update_properties/2,
     packet_generator/1,
     get_segments/1,
+    get_segment_types/1,
     get_segments_by_type/2,
     update_segments_in_packet/2,
     is_4607/1]).
@@ -202,6 +203,22 @@ get_segments(PacketList) when is_list(PacketList) ->
     NestSegs = lists:map(F, PacketList),
     % Flatten the list.
     lists:flatten(NestSegs).
+
+%% Function to extract a list of segment types present in a file.
+get_segment_types(PacketList) ->
+
+    % Get a list of segments. If necessary, this step could be eliminated.
+    SegList = get_segments(PacketList),
+
+    % Extract the segment type and add it to a set. 
+    F = fun(Seg, Set) ->
+            SH = segment:get_header(Seg),
+            T = seg_header:get_segment_type(SH),
+            sets:add_element(T, Set)
+        end,
+
+    TypeSet = lists:foldl(F, sets:new(), SegList),
+    sets:to_list(TypeSet).
 
 %% Function to extract a list of segments of specified types from a list of
 %% packets.
