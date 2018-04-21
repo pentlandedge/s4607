@@ -161,6 +161,9 @@ target_classification_table() ->
      {11, animal_live_target},
      {12, large_multiple_return_live_land_target},
      {13, large_multiple_return_live_maritime_target},
+     {14, clutter_live_target},
+     {15, phantom_live},
+     {16, ground_rotator_live},
      {126, other_live_target},
      {127, unknown_live_target},
      {128, no_information_simulated_target},
@@ -178,6 +181,9 @@ target_classification_table() ->
      {140, large_multiple_return_simulated_land_target},
      {141, large_multiple_return_simulated_maritime_target},
      {142, tagging_device},
+     {144, clutter_simulated_target},
+     {145, phantom_simulated},
+     {146, ground_rotator_simulated},
      {254, other_simulated_target},
      {255, unknown_simulated_target}].
 
