@@ -289,6 +289,11 @@ sensor_id_table() ->
      {27, vader},
      {28, aar_57},
      {29, ddr},
+     {30, seaspray},
+     {31, merlin_crowsnest},
+     {32, searchwater_2000},
+     {33, osprey},
+     {34, picosar},
      {255, no_statement}].
 
 %% Function to return a proplist with the radar mode mapping.
