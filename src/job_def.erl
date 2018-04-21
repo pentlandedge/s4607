@@ -349,6 +349,11 @@ decode_sensor_id_type(26) -> anzpy_1;
 decode_sensor_id_type(27) -> vader;
 decode_sensor_id_type(28) -> aar_57;
 decode_sensor_id_type(29) -> ddr;
+decode_sensor_id_type(30) -> seaspray;
+decode_sensor_id_type(31) -> merlin_crowsnest;
+decode_sensor_id_type(32) -> searchwater_2000;
+decode_sensor_id_type(33) -> osprey;
+decode_sensor_id_type(34) -> picosar;
 decode_sensor_id_type(255) -> no_statement.
 
 %% @doc Encode the sensor ID type as a binary.
@@ -388,6 +393,11 @@ esid(anzpy_1) -> 26;
 esid(vader) -> 27;
 esid(aar_57) -> 28;
 esid(ddr) -> 29;
+esid(seaspray) -> 30;
+esid(merlin_crowsnest) -> 31;
+esid(searchwater_2000) -> 32;
+esid(osprey) -> 33;
+esid(picosar) -> 34;
 esid(no_statement) -> 255.
 
 -spec decode_sensor_id_model(binary()) -> string().
