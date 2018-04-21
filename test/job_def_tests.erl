@@ -272,7 +272,7 @@ sensor_id_table() ->
      {10, radarsat2},
      {11, asars_2a},
      {12, tesar},
-     {13, mp_rtip},
+     {13, anzpy_2},
      {14, apg_77},
      {15, apg_79},
      {16, apg_81},
