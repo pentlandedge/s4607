@@ -127,7 +127,24 @@ decode_platform_type_checks() ->
      ?_assertEqual(sidm, mission:decode_platform_type(35)),
      ?_assertEqual(mq_9_reaper, mission:decode_platform_type(36)),
      ?_assertEqual(warrior_a, mission:decode_platform_type(37)),
-     ?_assertEqual(warrior, mission:decode_platform_type(38))].
+     ?_assertEqual(warrior, mission:decode_platform_type(38)),
+     ?_assertEqual(twin_otter, mission:decode_platform_type(39)),
+     ?_assertEqual(lemv , mission:decode_platform_type(40)),
+     ?_assertEqual(p8a_poseidon, mission:decode_platform_type(41)),
+     ?_assertEqual(a160, mission:decode_platform_type(42)),
+     ?_assertEqual(mq_1c_gray_eagle, mission:decode_platform_type(43)),
+     ?_assertEqual(rq_7c_shadow , mission:decode_platform_type(44)),
+     ?_assertEqual(pgss, mission:decode_platform_type(45)),
+     ?_assertEqual(pdts, mission:decode_platform_type(46)),
+     ?_assertEqual(lras_3, mission:decode_platform_type(47)),
+     ?_assertEqual(raid_tower, mission:decode_platform_type(48)),
+     ?_assertEqual(heron, mission:decode_platform_type(49)),
+     ?_assertEqual(scan_eagle, mission:decode_platform_type(50)),
+     ?_assertEqual(fire_scout, mission:decode_platform_type(51)),
+     ?_assertEqual(f35_joint_strike_fighter, mission:decode_platform_type(52)),
+     ?_assertEqual(s_61_sea_king, mission:decode_platform_type(53)),
+     ?_assertEqual(lynx_wildcat, mission:decode_platform_type(54)),
+     ?_assertEqual(merlin, mission:decode_platform_type(55))].
 
 encode_platform_type_checks() ->
     [?_assertEqual(<<0>>, mission:encode_platform_type(unidentified)),
