@@ -186,7 +186,23 @@ encode_platform_type_checks() ->
      ?_assertEqual(<<36>>, mission:encode_platform_type(mq_9_reaper)),
      ?_assertEqual(<<37>>, mission:encode_platform_type(warrior_a)),
      ?_assertEqual(<<38>>, mission:encode_platform_type(warrior)),
-     ?_assertEqual(<<39>>, mission:encode_platform_type(twin_otter))].
+     ?_assertEqual(<<39>>, mission:encode_platform_type(twin_otter)),
+     ?_assertEqual(<<40>>, mission:encode_platform_type(lemv)),
+     ?_assertEqual(<<41>>, mission:encode_platform_type(p8a_poseidon)),
+     ?_assertEqual(<<42>>, mission:encode_platform_type(a160)),
+     ?_assertEqual(<<43>>, mission:encode_platform_type(mq_1c_gray_eagle)),
+     ?_assertEqual(<<44>>, mission:encode_platform_type(rq_7c_shadow)),
+     ?_assertEqual(<<45>>, mission:encode_platform_type(pgss)),
+     ?_assertEqual(<<46>>, mission:encode_platform_type(pdts)),
+     ?_assertEqual(<<47>>, mission:encode_platform_type(lras_3)),
+     ?_assertEqual(<<48>>, mission:encode_platform_type(raid_tower)),
+     ?_assertEqual(<<49>>, mission:encode_platform_type(heron)),
+     ?_assertEqual(<<50>>, mission:encode_platform_type(scan_eagle)),
+     ?_assertEqual(<<51>>, mission:encode_platform_type(fire_scout)),
+     ?_assertEqual(<<52>>, mission:encode_platform_type(f35_joint_strike_fighter)),
+     ?_assertEqual(<<53>>, mission:encode_platform_type(s_61_sea_king)),
+     ?_assertEqual(<<54>>, mission:encode_platform_type(lynx_wildcat)),
+     ?_assertEqual(<<55>>, mission:encode_platform_type(merlin))].
 
 sample_mission_seg1() ->
     <<"Global Domin","Fly By      ",36,"Skynet v12",16#07, 16#DF, 12, 31>>.
