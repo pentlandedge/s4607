@@ -5,6 +5,8 @@ This software is still under development, but can now decode and encode the pack
 
 The metadata (platform types/radar modes etc.) is in the process of being updated to match the list available at http://jitc.fhu.disa.mil/projects/mti/registers/metadata.aspx
 
+Errata sheet E3 has also recently appeared. It defines some new platforms, sensors and modes. These are also in the process of being incorporated.
+
 The software has been released under an Apache free software license.
 ## Building
 It is necessary to have Erlang installed, and the compiler erlc available on the path. The rebar tool is used to control the build process, so it is also necessary to have a copy of rebar available on the path. The software can be built (on a Linux platform) using rebar:
