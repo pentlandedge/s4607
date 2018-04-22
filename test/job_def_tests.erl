@@ -356,7 +356,17 @@ radar_mode_table() ->
      {120, {small_area_gmti, vader}},
      {121, {wide_area_gmti, vader}},
      {122, {dismount_gmti, vader}},
-     {123, {hrr_gmti, vader}}].
+     {123, {hrr_gmti, vader}},
+     {135, {mti, osprey}},
+     {136, {mti_ss, osprey}},
+     {137, {e_mti, osprey}},
+     {138, {e_mti_hi_bw, osprey}},
+     {139, {mti, picosar}},
+     {140, {e_mti, picosar}},
+     {141, {e_mti_hi_bw, picosar}},
+     {142, {maritime_search, picosar}},
+     {143, {mti, seaspray}},
+     {144, {mti_ss, seaspray}}].
 
 %% Utility function to compare whether floating point values are within a
 %% specified range.

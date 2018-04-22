@@ -540,6 +540,16 @@ decode_radar_mode(128) -> {hrr_1d_profile, ddr};
 decode_radar_mode(129) -> {hrr_2d_chip, ddr};
 decode_radar_mode(130) -> {hrr_range_doppler_map, ddr};
 decode_radar_mode(131) -> {hrr_continuous, ddr};
+decode_radar_mode(135) -> {mti, osprey};
+decode_radar_mode(136) -> {mti_ss, osprey};
+decode_radar_mode(137) -> {e_mti, osprey};
+decode_radar_mode(138) -> {e_mti_hi_bw, osprey};
+decode_radar_mode(139) -> {mti, picosar};
+decode_radar_mode(140) -> {e_mti, picosar};
+decode_radar_mode(141) -> {e_mti_hi_bw, picosar};
+decode_radar_mode(142) -> {maritime_search, picosar};
+decode_radar_mode(143) -> {mti, seaspray};
+decode_radar_mode(144) -> {mti_ss, seaspray};
 decode_radar_mode(_)   -> {available_for_future_use, reserved}.
 
 -spec radar_mode_to_str(RadarMode::radar_mode()) -> string().
@@ -624,7 +634,17 @@ erm({target_classification_mti, ddr}) -> 127;
 erm({hrr_1d_profile, ddr}) -> 128;
 erm({hrr_2d_chip, ddr}) -> 129;
 erm({hrr_range_doppler_map, ddr}) -> 130;
-erm({hrr_continuous, ddr}) -> 131.
+erm({hrr_continuous, ddr}) -> 131;
+erm({mti, osprey}) -> 135;
+erm({mti_ss, osprey}) -> 136;
+erm({e_mti, osprey}) -> 137;
+erm({e_mti_hi_bw, osprey}) -> 138;
+erm({mti, picosar}) -> 139;
+erm({e_mti, picosar}) -> 140;
+erm({e_mti_hi_bw, picosar}) -> 141;
+erm({maritime_search, picosar}) -> 142;
+erm({mti, seaspray}) -> 143;
+erm({mti_ss, seaspray}) -> 144.
 
 %% Function to decode the cross-range standard deviation parameter.
 decode_cross_range_std_dev(X) ->
