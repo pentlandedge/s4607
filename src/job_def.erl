@@ -158,10 +158,12 @@
     {hrr_mti_spot_scan, lynx_i_ii} | {hrr_mti_arc_scan, lynx_i_ii} | 
     {grca, global_hawk} | {rrca, global_hawk} | {gmti_hrr, global_hawk} | 
     {small_area_gmti, vader} | {wide_area_gmti, vader} | 
-    {dismount_gmti, vader} | {hrr_gmti, vader} |{mti, osprey} | 
-    {mti_ss, osprey} | {e_mti, osprey} | {e_mti_hi_bw, osprey} | 
-    {mti, picosar} | {e_mti, picosar} | {e_mti_hi_bw, picosar} | 
-    {maritime_search, picosar} | {mti, seaspray} | {mti_ss, seaspray}.
+    {dismount_gmti, vader} | {hrr_gmti, vader} | {spotlight_scan, i_master} |
+    {sector_scan, i_master} | {ground_stabilised_sector_scan, i_master} | 
+    {mti, osprey} | {mti_ss, osprey} | {e_mti, osprey} | 
+    {e_mti_hi_bw, osprey} | {mti, picosar} | {e_mti, picosar} | 
+    {e_mti_hi_bw, picosar} | {maritime_search, picosar} | {mti, seaspray} | 
+    {mti_ss, seaspray}.
 
 -export_type([sensor_id_type/0, radar_mode/0]).
 
