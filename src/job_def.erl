@@ -121,11 +121,12 @@
 -export_type([job_id/0, geoid_model/0, elev_model/0]).
 
 -type sensor_id_type() :: unidentified | other | hisar | astor | 
-    rotary_wing_radar | global_hawk_sensor | horizon | apy_3 | apy_6 | 
-    apy_8 | radarsat2 | asars_2a | tesar | mp_rtip | apg_77 | apg_79 | 
+    rotary_wing_radar | global_hawk_sensor | horizon | apy_7 | apy_6 | 
+    apy_8 | radarsat2 | asars_2a | tesar | anzpy_2 | apg_77 | apg_79 | 
     apg_81 | apg_6v1 | dpy_1 | sidm | limit | tcar | lsrs | 
     ugs_single_sensor | ugs_cluster_sensor | imaster_gmti | anzpy_1 | 
-    vader | no_statement.
+    vader | aar_57 | ddr | seaspray | merlin_crowsnest | searchwater_2000 | 
+    osprey | picosar | no_statement.
 
 -type radar_mode() :: {unspecified_mode, generic} | {mti, generic} | 
     {hrr, generic} | {uhrr, generic} | {hur, generic} | {fti, generic} | 
