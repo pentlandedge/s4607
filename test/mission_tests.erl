@@ -144,7 +144,8 @@ decode_platform_type_checks() ->
      ?_assertEqual(f35_joint_strike_fighter, mission:decode_platform_type(52)),
      ?_assertEqual(s_61_sea_king, mission:decode_platform_type(53)),
      ?_assertEqual(lynx_wildcat, mission:decode_platform_type(54)),
-     ?_assertEqual(merlin, mission:decode_platform_type(55))].
+     ?_assertEqual(merlin, mission:decode_platform_type(55)),
+     ?_assertEqual(sdt, mission:decode_platform_type(56))].
 
 encode_platform_type_checks() ->
     [?_assertEqual(<<0>>, mission:encode_platform_type(unidentified)),
@@ -202,7 +203,8 @@ encode_platform_type_checks() ->
      ?_assertEqual(<<52>>, mission:encode_platform_type(f35_joint_strike_fighter)),
      ?_assertEqual(<<53>>, mission:encode_platform_type(s_61_sea_king)),
      ?_assertEqual(<<54>>, mission:encode_platform_type(lynx_wildcat)),
-     ?_assertEqual(<<55>>, mission:encode_platform_type(merlin))].
+     ?_assertEqual(<<55>>, mission:encode_platform_type(merlin)),
+     ?_assertEqual(<<56>>, mission:encode_platform_type(sdt))].
 
 sample_mission_seg1() ->
     <<"Global Domin","Fly By      ",36,"Skynet v12",16#07, 16#DF, 12, 31>>.

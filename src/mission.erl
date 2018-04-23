@@ -183,6 +183,7 @@ decode_platform_type(52) -> f35_joint_strike_fighter;
 decode_platform_type(53) -> s_61_sea_king;
 decode_platform_type(54) -> lynx_wildcat;
 decode_platform_type(55) -> merlin;
+decode_platform_type(56) -> sdt;
 decode_platform_type(255) -> other;
 decode_platform_type(_) -> future_use.
 
@@ -251,6 +252,7 @@ ept(f35_joint_strike_fighter) -> 52;
 ept(s_61_sea_king) -> 53;
 ept(lynx_wildcat) -> 54;
 ept(merlin) -> 55;
+ept(sdt) -> 56;
 ept(other) -> 255.
 
 %% @doc Patch the date field in a mission segment.
