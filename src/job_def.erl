@@ -151,8 +151,9 @@
     {sector_search, reserved} | {horizon_basic, horizon} | 
     {horizon_high_sensitivity, horizon} | {horizon_burn_through, horizon} | 
     {creso_acquisition, creso} | {creso_count, creso} | 
-    {was_mti_exo, astor} | {was_mti_endo_exo, astor} | {ss_mti_exo, astor} | 
-    {ss_mti_endo_exo, astor} | {test_status_mode, reserved} | 
+    {was_mti_exo, sentinel} | {was_mti_endo_exo, sentinel} | 
+    {ss_mti_exo, sentinel} | {rwas_mti_endo_exo, sentinel} | 
+    {ss_mti_endo_exo, sentinel} | {test_status_mode, reserved} | 
     {mti_spot_scan, lynx_i_ii} | {mti_arc_scan, lynx_i_ii} | 
     {hrr_mti_spot_scan, lynx_i_ii} | {hrr_mti_arc_scan, lynx_i_ii} | 
     {grca, global_hawk} | {rrca, global_hawk} | {gmti_hrr, global_hawk} | 
