@@ -74,21 +74,25 @@ decode_packets(<<>>, Acc) ->
 decode_packets(Bin, Acc) ->
     {ok, Hdr, R1} = extract_packet_header(Bin),
     {ok, H1} = pheader:decode(Hdr),
-    
+   
     % The size in the header includes the header itself.
     PayloadSize = pheader:get_packet_size(H1) - byte_size(Hdr),
-    
+   
     % Get the packet data payload.
-    {ok, PktData, R2} = extract_packet_data(R1, PayloadSize),
+    case extract_packet_data(R1, PayloadSize) of
+        {ok, PktData, R2} ->
+            % Loop through all the segments in the packet.
+            SegRecList = segment:decode_segments(PktData, []),
 
-    % Loop through all the segments in the packet.
-    SegRecList = segment:decode_segments(PktData, []),
+            % Build the packet structure.
+            Pkt = #packet{header = H1, segments = SegRecList}, 
 
-    % Build the packet structure.
-    Pkt = #packet{header = H1, segments = SegRecList}, 
-
-    % Loop over any remaining packets, adding each to the list. 
-    decode_packets(R2, [Pkt|Acc]).
+            % Loop over any remaining packets, adding each to the list. 
+            decode_packets(R2, [Pkt|Acc]);
+        {error, _} ->
+            io:format("Error: insufficient data in packet. Terminating decode.~n"),
+            lists:reverse(Acc)
+    end.
 
 %% Function to encode a list of packets. Returns a list of binaries, does
 %% not flatten them.
@@ -153,8 +157,10 @@ extract_packet_header(<<Hdr:32/binary,Rest/binary>>) ->
 
 %% Extracts the data payload from a packet from the supplied binary
 %% (which should have had the header removed already).
-extract_packet_data(Bin, Len) ->
-    sutils:extract_data(Bin, Len).
+extract_packet_data(Bin, Len) when byte_size(Bin) >= Len ->
+    sutils:extract_data(Bin, Len);
+extract_packet_data(_, _) ->
+    {error, insufficient_data}.
 
 %% Accessor functions for pulling out the fields of the packet.
 get_packet_header(#packet{header = X}) -> X.
