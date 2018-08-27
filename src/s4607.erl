@@ -19,6 +19,7 @@
     read_file/1,
     write_file/2,
     decode/1,
+    decode/2,
     encode_packets/1,
     encode_packet/1,
     new_packet/2,
@@ -48,6 +49,12 @@
 %-record(decode_status, {status, error_list}).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Type definitions.
+
+-type decode_option() :: strict | permissive | stop_on_error | continue_on_error.
+-export_type([decode_option/0]).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% File handling functions.
 
 %% Function to read a file in Stanag 4607 format.
@@ -69,15 +76,21 @@ decode(Bin) ->
         _:_ -> {error, failed_decode}
     end.
 
+%% @doc Extended decode interface to allow both strict and permissive 
+%% decoding strategies.
+decode(Bin, Options) when is_list(Options) ->
+    % Just remap to decode/1 at the moment.
+    decode(Bin).
+
 decode_packets(<<>>, Acc) ->
     lists:reverse(Acc);
 decode_packets(Bin, Acc) ->
     {ok, Hdr, R1} = extract_packet_header(Bin),
     {ok, H1} = pheader:decode(Hdr),
-   
+
     % The size in the header includes the header itself.
     PayloadSize = pheader:get_packet_size(H1) - byte_size(Hdr),
-   
+
     % Get the packet data payload.
     case extract_packet_data(R1, PayloadSize) of
         {ok, PktData, R2} ->
