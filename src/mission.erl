@@ -73,7 +73,8 @@
 %% Mission segment decoding/encoding functions.
 
 %% @doc Decode a binary mission segment.
--spec decode(Bin::mission_segment_bin())-> {ok, mission_segment()}.
+-spec decode(Bin::mission_segment_bin())-> 
+    {ok, mission_segment()} | {error, Reason::atom()}.
 decode(<<M1:12/binary, M2:12/binary, M3, M4:10/binary, 
     Year:16/integer-unsigned-big, Month, Day>>) ->
 
@@ -84,7 +85,9 @@ decode(<<M1:12/binary, M2:12/binary, M3, M4:10/binary,
 
     {ok, #mission_segment{mission_plan = Mission, flight_plan = Flight, 
         platform_type = Type, platform_config = Config, year = Year,
-        month = Month, day = Day}}.
+        month = Month, day = Day}};
+decode(_) ->
+    {error, mission_segment_mismatch}.
 
 %% @doc Convert a mission segment to an encoded binary form.
 -spec encode(MS::mission_segment()) -> mission_segment_bin().
