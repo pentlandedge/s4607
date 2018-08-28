@@ -171,7 +171,8 @@
 %% Function declarations.
 
 %% @doc Decode a binary encoded job definition segment.
--spec decode(Bin::job_def_bin()) -> {ok, job_def()}.
+-spec decode(Bin::job_def_bin()) -> {ok, job_def()} | {error, Reason} when
+    Reason :: atom().
 decode(<<JobID:32,SIDT,SIDM:6/binary,TFF:1/binary,Pri,
     J6:4/binary,J7:4/binary,J8:4/binary,J9:4/binary,J10:4/binary,J11:4/binary,
     J12:4/binary,J13:4/binary,J14,NRI:16,J16:16,J17:16,J18:16,J19,J20:16,
@@ -216,7 +217,9 @@ decode(<<JobID:32,SIDT,SIDM:6/binary,TFF:1/binary,Pri,
         ns_val_det_prob = decode_range_ns(J25, 0, 100, 255),
         ns_val_false_alarm_density = decode_range_ns(J26, 0, 254, 255),
         terr_elev_model = decode_terrain_elev_model(J27),
-        geoid_model = decode_geoid_model(J28)}}.
+        geoid_model = decode_geoid_model(J28)}};
+decode(_) ->
+    {error, job_def_mismatch}.
 
 %% @doc Produce a binary encoded job definition segment.
 -spec encode(JobDef::job_def()) -> job_def_bin().
