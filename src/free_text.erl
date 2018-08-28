@@ -41,13 +41,16 @@
 -type free_text() :: #free_text{}.
 
 %% @doc Decode a binary free text segment.
--spec decode(Bin::binary()) -> {ok, free_text()}.
+-spec decode(Bin::binary()) -> {ok, free_text()} | {error, Reason} when
+    Reason :: atom().
 decode(<<Orig:?ORIGINATOR_LENGTH/binary,Recip:?RECIPIENT_LENGTH/binary,
          Text/binary>>) ->
     {ok, #free_text{
         originator = binary_to_list(Orig), 
         recipient = binary_to_list(Recip), 
-        text = binary_to_list(Text)}}. 
+        text = binary_to_list(Text)}};
+decode(_) ->
+    {error, free_text_segment_mismatch}. 
 
 %% @doc Encode a free text record as a binary.
 -spec encode(FT::free_text()) -> binary().
