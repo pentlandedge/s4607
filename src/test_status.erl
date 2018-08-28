@@ -66,7 +66,8 @@
     outwith_operational_limit.
     
 %% @doc Decode a test and status segment.
--spec decode(Bin::binary()) -> {ok, test_and_status()}.
+-spec decode(Bin::binary()) -> {ok, test_and_status()} | {error, Reason} when
+    Reason :: atom().
 decode(<<JobID:32,RI:16,DI:16,DT:32,HS:1/binary,MS:1/binary>>) ->
     {ok, #test_and_status{
         job_id = JobID,
@@ -74,7 +75,9 @@ decode(<<JobID:32,RI:16,DI:16,DT:32,HS:1/binary,MS:1/binary>>) ->
         dwell_index = DI,
         dwell_time = DT,
         hardware_status = decode_hardware_status(HS),
-        mode_status = decode_mode_list(MS)}}.
+        mode_status = decode_mode_list(MS)}};
+decode(_) -> 
+    {error, test_and_status_mismatch}.
 
 %% @doc Encode a test and status segment
 -spec encode(test_and_status()) -> binary().
