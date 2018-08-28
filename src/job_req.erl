@@ -150,7 +150,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Function declarations.
 
--spec decode(Bin::binary()) -> {ok, job_req()}.
+-spec decode(Bin::binary()) -> {ok, job_req()} | {error, Reason::atom()}.
 decode(<<ReqID:10/binary,TaskID:10/binary,Pri,R4:4/binary,R5:4/binary,
     R6:4/binary,R7:4/binary,R8:4/binary,R9:4/binary,R10:4/binary,
     R11:4/binary,Mode,RangeRes:16,XRangeRes:16,Yr:16,Mth,Day,Hr,Min,Sec,
@@ -183,7 +183,9 @@ decode(<<ReqID:10/binary,TaskID:10/binary,Pri,R4:4/binary,R5:4/binary,
         sensor_id_type = job_def:decode_sensor_id_type(SensorType),
         sensor_id_model = decode_sensor_id_model(Model),
         request_type = decode_request_type(ReqType)},
-    {ok, JRS}.
+    {ok, JRS};
+decode(_) ->
+    {error, job_request_mismatch}.
 
 %% @doc Produce a binary encoded job request segment. Left as an iolist().
 -spec encode(JobReq::job_req()) -> iolist().

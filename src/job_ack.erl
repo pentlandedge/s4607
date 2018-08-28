@@ -101,7 +101,8 @@
 -export_type([radar_priority/0, request_status/0]).
 
 %% @doc Decode a binary encoded job acknowledge segment.
--spec decode(Bin::job_ack_bin()) -> {ok, job_ack()}.
+-spec decode(Bin::job_ack_bin()) -> {ok, job_ack()} | {error, Reason} when
+    Reason :: atom().
 decode(<<JobID:32,ReqID:10/binary,TaskID:10/binary,SensorType,Model:6/binary,
     RadPri,A7:4/binary,A8:4/binary,A9:4/binary,A10:4/binary,A11:4/binary,
     A12:4/binary,A13:4/binary,A14:4/binary,Mode,Dur:16,RevInt:16,Status,Yr:16,
@@ -134,7 +135,9 @@ decode(<<JobID:32,ReqID:10/binary,TaskID:10/binary,SensorType,Model:6/binary,
         start_sec = Sec,
         requestor_nationality = binary_to_list(Nat)},
 
-    {ok, JA}.
+    {ok, JA};
+decode(_) ->
+    {error, job_acknowledge_mismatch}.
 
 %% @doc Produce a binary encoded job acknowledge segment. Left as an iolist().
 -spec encode(JobAck::job_ack()) -> iolist().
