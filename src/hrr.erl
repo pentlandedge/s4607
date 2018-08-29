@@ -281,7 +281,9 @@ decode(<<EM:5/binary, RI:16/integer-unsigned-big,
         index_of_zero_velocity = IndexOfZeroVelocity,
         target_radial_electrical_length = TargetRadialElectricalLength,
         electrical_length_uncertainty = ElectricalLengthUncertainty,
-        hrr_scatter_records = HrrScatterRecords}}.
+        hrr_scatter_records = HrrScatterRecords}};
+decode(_) ->
+    {error, hrr_mismatch}.
 
 encode(HRR) ->
     % Extract the existence mask from the incoming HRR segment.

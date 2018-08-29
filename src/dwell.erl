@@ -303,7 +303,9 @@ decode(<<EM:8/binary,RI:16/integer-unsigned-big,
         sensor_pitch = SensorPitch,
         sensor_roll = SensorRoll,
         mdv = MDV,
-        targets = TgtRepList}}.
+        targets = TgtRepList}};
+decode(_) ->
+    {error, dwell_mismatch}.
 
 %% Function to encode a dwell segment record in its binary form.
 encode(DS) ->

@@ -52,7 +52,9 @@ decode(<<L1:32/integer-unsigned-big, L2:4/binary, L3:4/binary, L4:4/binary,
         alt = stanag_types:s32_to_integer(L4),
         platform_track = stanag_types:ba16_to_float(L5),
         platform_speed = L6,
-        platform_vertical_velocity = L7}}.
+        platform_vertical_velocity = L7}};
+decode(_) ->
+    {error, platform_loc_mismatch}.
 
 %% Function takes a platform location segment and returns an encoded binary form.
 encode(#platform_loc_segment{location_time = LocationTime, lat = Lat,
