@@ -79,8 +79,13 @@ decode(Bin) ->
 %% @doc Extended decode interface to allow both strict and permissive 
 %% decoding strategies.
 decode(Bin, Options) when is_list(Options) ->
-    % Just remap to decode/1 at the moment.
-    decode(Bin).
+    case decode_options:valid_option_list(Options) of
+        true ->
+            % Just remap to decode/1 at the moment.
+            decode(Bin);
+        false ->
+            {error, invalid_options}
+    end.
 
 decode_packets(<<>>, Acc) ->
     lists:reverse(Acc);
