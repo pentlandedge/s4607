@@ -50,7 +50,7 @@ all_valid_options(Options) ->
     lists:all(fun valid_option/1, Options).
 
 %% @doc Check that the set of options is valid.
--spec valid_option_list(Options) -> boolean when
+-spec valid_option_list(Options) -> boolean() when
     Options :: [atom()].
 valid_option_list(Options) when is_list(Options) ->
     all_valid_options(Options) and 

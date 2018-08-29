@@ -20,7 +20,7 @@
 
 %% Define a test generator.
 decode_option_test_() ->
-    [valid_option_checks(), invalid_option_checks()].
+    [valid_option_checks(), invalid_option_checks(), combination_checks()].
 
 valid_option_checks() ->
     [?_assert(decode_options:valid_option(strict)), 
@@ -32,3 +32,11 @@ valid_option_checks() ->
 invalid_option_checks() ->
     [?_assert(not decode_options:valid_option(anything_goes))].
 
+combination_checks() ->
+    [?_assert(decode_options:valid_option_list([strict, stop_on_error])), 
+     ?_assert(decode_options:valid_option_list([strict, continue_on_error])), 
+     ?_assert(decode_options:valid_option_list([permissive, stop_on_error])), 
+     ?_assert(decode_options:valid_option_list([permissive, continue_on_error])), 
+     ?_assert(not decode_options:valid_option_list([strict, permissive])), 
+     ?_assert(not decode_options:valid_option_list([stop_on_error, continue_on_error]))
+    ].
