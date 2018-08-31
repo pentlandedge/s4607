@@ -21,6 +21,7 @@
 
 -export([
     decode_segments/2,
+    decode_segment/1,
     encode/1,
     new/2,
     new0/2,
@@ -68,6 +69,15 @@ decode_segments(Bin, Acc) ->
 
     % Loop over any remaining segments contained in this packet.
     decode_segments(SRem2, [Seg|Acc]).
+
+%% Decode a single segment. Returns any left over binary data.
+-spec decode_segment(Bin::binary()) -> Ret when
+    _SecRec :: segment(),
+    Ret :: {ok, _SegRec, Rem} | {error, Reason, Rem},
+    Rem :: binary(),
+    Reason :: atom().
+decode_segment(Bin) -> 
+    {error, not_implemented, Bin}.
 
 %% @doc Create a binary encoded segment from a segment record.
 -spec encode(Seg::segment()) -> 

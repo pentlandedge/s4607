@@ -71,25 +71,24 @@ write_file(File, BinList) ->
 %% a structured representation i.e. a list of packets with nested segments
 %% as appropriate.
 decode(Bin) ->
-    try decode_packets(Bin, [])
-    catch
-        _:_ -> {error, failed_decode}
-    end.
+    decode(Bin, []).
 
 %% @doc Extended decode interface to allow both strict and permissive 
 %% decoding strategies.
 decode(Bin, Options) when is_list(Options) ->
     case decode_options:valid_option_list(Options) of
         true ->
-            % Just remap to decode/1 at the moment.
-            decode(Bin);
+            try decode_packets(Bin, [], Options)
+            catch
+                _:_ -> {error, failed_decode}
+            end;
         false ->
             {error, invalid_options}
     end.
 
-decode_packets(<<>>, Acc) ->
+decode_packets(<<>>, Acc, _) ->
     lists:reverse(Acc);
-decode_packets(Bin, Acc) ->
+decode_packets(Bin, Acc, Options) ->
     {ok, Hdr, R1} = extract_packet_header(Bin),
     {ok, H1} = pheader:decode(Hdr),
 
@@ -106,7 +105,7 @@ decode_packets(Bin, Acc) ->
             Pkt = #packet{header = H1, segments = SegRecList}, 
 
             % Loop over any remaining packets, adding each to the list. 
-            decode_packets(R2, [Pkt|Acc]);
+            decode_packets(R2, [Pkt|Acc], Options);
         {error, _} ->
             io:format("Error: insufficient data in packet. Terminating decode.~n"),
             lists:reverse(Acc)
