@@ -45,30 +45,13 @@
 decode_segments(<<>>, Acc) ->
     lists:reverse(Acc);
 decode_segments(Bin, Acc) ->
-    % Get the segment header.
-    {ok, SegHdr, SRem} = extract_segment_header(Bin),
-    {ok, SH} = seg_header:decode(SegHdr),
-
-    % The size in the header includes the header itself.
-    PayloadSize = seg_header:get_segment_size(SH) - byte_size(SegHdr),
-
-    % Get the packet data payload.
-    {ok, SegData, SRem2} = extract_segment_data(SRem, PayloadSize),
-
-    % Extract the type and see if we know how to process it.
-    SegType = seg_header:get_segment_type(SH),
-    case seg_type_to_module(SegType) of
-        {ok, ModName} ->
-            {ok, SegRec} = ModName:decode(SegData),
-            Seg = #segment{header = SH, data = SegRec};
-        _ ->
-            % Leave the data in binary form if we don't know how to decode it.
-            Seg = #segment{header = SH, data = SegData}
-
-    end,
-
-    % Loop over any remaining segments contained in this packet.
-    decode_segments(SRem2, [Seg|Acc]).
+    case decode_segment(Bin) of
+        {ok, Seg, Rem} ->
+            decode_segments(Rem, [Seg|Acc]);
+        {error, _, Rem} ->
+            % Skip over failed segments
+            decode_segments(Rem, Acc)
+    end.
 
 %% Decode a single segment. Returns any left over binary data.
 -spec decode_segment(Bin::binary()) -> Ret when
@@ -97,7 +80,10 @@ decode_segment(Bin) ->
             Seg = #segment{header = SH, data = SegRec},
             {ok, Seg, SRem2};
         _ ->
-            {error, {seg_type_not_supported, SegType}, SRem2}
+            % Leave the segment data in binary form if we don't know how
+            % to decode it.
+            Seg = #segment{header = SH, data = SegData},
+            {error, {seg_type_not_supported, Seg}, SRem2}
     end.
 
 %% @doc Create a binary encoded segment from a segment record.

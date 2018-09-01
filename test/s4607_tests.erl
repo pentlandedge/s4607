@@ -459,8 +459,7 @@ display_unsupported_seg() ->
     Ret = segment:display(Seg),
     [?_assertEqual({error, unsupported_segment_type}, Ret)]. 
 
-%% Checks that an attempt to decode an unrecognised segment type returns an 
-%% error and the original binary.
+%% Checks that an attempt to decode an unrecognised segment type is skipped.
 decode_unrecognised_seg() ->
     %% Create a binary segment header with an invalid segment type.
     %% Set type = 200, seg size = 9 (hdr = 5, payload = 4).
@@ -468,11 +467,7 @@ decode_unrecognised_seg() ->
     SegDataBin = <<1,2,3,4>>,
     SegBin = <<SegHdrBin/binary, SegDataBin/binary>>,
     Ret = segment:decode_segments(SegBin, []),
-    [SegRec] = Ret,
-    SegHdr = segment:get_header(SegRec),
-    SegData = segment:get_data(SegRec),
-    [?_assertEqual(reserved, seg_header:get_segment_type(SegHdr)),
-     ?_assertEqual(SegDataBin, SegData)]. 
+    [?_assertEqual([], Ret)].
 
 %% Check that an attempt to encode an unrecognised segment type fails
 %% gracefully.
