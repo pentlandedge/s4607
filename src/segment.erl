@@ -76,9 +76,13 @@ decode_segment(Bin) ->
     SegType = seg_header:get_segment_type(SH),
     case seg_type_to_module(SegType) of
         {ok, ModName} ->
-            {ok, SegRec} = ModName:decode(SegData),
-            Seg = #segment{header = SH, data = SegRec},
-            {ok, Seg, SRem2};
+            case ModName:decode(SegData) of
+                {ok, SegRec} ->
+                    Seg = #segment{header = SH, data = SegRec},
+                    {ok, Seg, SRem2};
+                {error, Reason} ->
+                    {error, Reason, SRem2}
+            end;
         _ ->
             % Leave the segment data in binary form if we don't know how
             % to decode it.
