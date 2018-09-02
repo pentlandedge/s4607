@@ -99,7 +99,7 @@ decode(<<16#7:3,
     H31:1,1:1,H32_2:1,H32_3:1,H32_4:1,
     _Spare:6>>) ->
 
-    #hrr_exist_mask{
+    {ok, #hrr_exist_mask{
         revisit_index = 1,
         dwell_index = 1,
         last_dwell_of_revisit = 1,
@@ -133,7 +133,9 @@ decode(<<16#7:3,
         scatterer_magnitude =1,
         scatterer_phase = H32_2,
         range_index = H32_3,
-        doppler_index = H32_4}.
+        doppler_index = H32_4}};
+decode(_) ->
+    {error, hrr_exist_mask_mismatch}.
 
 %% Function to take an existence mask record and return a binary encoding of
 %% the fields.
