@@ -81,6 +81,8 @@ decode_segment(Bin) ->
                     Seg = #segment{header = SH, data = SegRec},
                     {ok, Seg, SRem2};
                 {error, Reason} ->
+                    %io:format("Segment decode error ~p~n", [SegType]),
+                    %io:format("Seg data ~p~n", [SegData]),
                     {error, Reason, SRem2}
             end;
         _ ->
@@ -196,6 +198,7 @@ seg_type_to_module(hrr)             -> {ok, hrr};
 seg_type_to_module(job_definition)  -> {ok, job_def};
 seg_type_to_module(free_text)       -> {ok, free_text};
 seg_type_to_module(platform_loc)    -> {ok, platform_loc};
+seg_type_to_module(test_and_status) -> {ok, test_status};
 seg_type_to_module(job_request)     -> {ok, job_req};
 seg_type_to_module(job_acknowledge) -> {ok, job_ack};
 seg_type_to_module(_)               -> {error, unsupported_segment_type}.
