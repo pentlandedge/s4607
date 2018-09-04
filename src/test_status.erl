@@ -22,6 +22,7 @@
     decode/1,
     encode/1,
     new/6,
+    display/1,
     get_job_id/1,
     get_revisit_index/1,
     get_dwell_index/1,
@@ -199,6 +200,18 @@ mode_proplist(Faults) when is_list(Faults) ->
         end,
     lists:foldl(F, [], FlagSet).
 
+%% @doc Display the test and status segment
+-spec display(TS :: test_and_status()) -> ok.
+display(#test_and_status{} = TS) ->
+    io:format("****************************************~n"),
+    io:format("** @test_and_status~n"),
+    io:format("Job ID: ~p~n", [get_job_id(TS)]),
+    io:format("Revisit index: ~p~n", [get_revisit_index(TS)]),
+    io:format("Dwell index: ~p~n", [get_dwell_index(TS)]),
+    io:format("Dwell time: ~p~n", [get_dwell_time(TS)]),
+    io:format("Hardware status: ~p~n", [get_hardware_status(TS)]),
+    io:format("Mode status: ~p~n", [get_mode_status(TS)]).
+
 %% @doc Accessor for the job ID field.
 -spec get_job_id(TS :: test_and_status()) -> job_id().
 get_job_id(#test_and_status{job_id = X}) -> X.
@@ -216,6 +229,10 @@ get_dwell_index(#test_and_status{dwell_index = X}) -> X.
 get_dwell_time(#test_and_status{dwell_time = X}) -> X.
 
 %% Functions to extract the hardware status flags.
+
+%% @doc Get all of the hardware status flags.
+-spec get_hardware_status(TS :: test_and_status()) -> HS :: list().
+get_hardware_status(#test_and_status{hardware_status = HS}) -> HS.
 
 %% @doc Extract the antenna status.
 -spec get_antenna_status(TS :: test_and_status()) -> hw_status_flag(). 
@@ -243,6 +260,10 @@ get_calibration_mode_status(#test_and_status{hardware_status = HS}) ->
     get_status_flag_from_proplist(calibration_mode, HS).
 
 %% Functions to extract the mode status flags.
+
+%% @doc Get all of the hardware status flags.
+-spec get_mode_status(TS :: test_and_status()) -> MS :: list().
+get_mode_status(#test_and_status{mode_status = MS}) -> MS.
 
 %% @doc Extract the range limit status
 -spec get_range_limit_status(TS :: test_and_status()) -> mode_status_flag().
