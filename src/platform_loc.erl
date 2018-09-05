@@ -40,6 +40,13 @@
     platform_vertical_velocity}).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Type specifications.
+
+-opaque platform_loc() :: #platform_loc_segment{}.
+
+-export_type([platform_loc/0]).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Platform Location segment decoding/encoding functions.
 
 decode(<<L1:32/integer-unsigned-big, L2:4/binary, L3:4/binary, L4:4/binary,
