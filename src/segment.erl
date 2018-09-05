@@ -37,7 +37,15 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Type specifications.
 
--type segment() :: #segment{}. 
+-opaque segment() :: #segment{}. 
+
+-type segment_type() :: mission | dwell | hrr | job_definition | free_text | 
+    platform_loc | test_and_status | job_request | job_acknowledge. 
+
+-export_type([segment/0, segment_type/0]).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Function declarations.
 
 %% @doc Decode a binary encoded list of segments contained within the payload 
 %% of a packet.
@@ -192,6 +200,8 @@ get_data(#segment{data = D}) -> D.
 %% functions. Before adding a segment to this list, please ensure that it
 %% supports the functions used above, i.e.
 %% decode/1, encode/1, payload_size/1, display/1.
+-spec seg_type_to_module(segment_type()) -> Ret when 
+    Ret :: {ok, atom()} | {error, unsupported_segment_type}.
 seg_type_to_module(mission)         -> {ok, mission};
 seg_type_to_module(dwell)           -> {ok, dwell};
 seg_type_to_module(hrr)             -> {ok, hrr};
