@@ -50,6 +50,9 @@
     encode_class_system/1]).
 -endif.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Record definitiions. 
+
 -record(pheader, {
     version, 
     packet_size,
@@ -61,6 +64,13 @@
     platform_id, 
     mission_id, 
     job_id}).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Type specifications. 
+
+-opaque pheader() :: #pheader{}.
+
+-export_type([pheader/0]).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Packet header decoding functions.
