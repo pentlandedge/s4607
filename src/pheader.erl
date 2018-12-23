@@ -313,35 +313,35 @@ update_size(#pheader{} = Hdr, NewSize) ->
 version_id_to_float_str({Maj,Min}) -> 
     io_lib:format("~p.~p", [Maj, Min]).
 
-%% Get the version ID from a packet header
+%% @doc Get the version ID from a packet header
 get_version_id(#pheader{version = V}) -> V.
 
 %% @doc Get the packet size from the header. 
 -spec get_packet_size(pheader()) -> non_neg_integer().
 get_packet_size(#pheader{packet_size = S}) -> S.
 
-%% Get the nationality from a header structure.
+%% @doc Get the nationality from a header structure.
 get_nationality(#pheader{nationality = N}) -> N.
 
-%% Get the classification level
+%% @doc Get the classification level
 get_classification(#pheader{classification = C}) -> C.
 
-%% Get the classification system from the header. 
+%% @doc Get the classification system from the header. 
 get_class_system(#pheader{class_system = X}) -> X.
 
-%% Get the packet security code from the header.
+%% @doc Get the packet security code from the header.
 get_packet_code(#pheader{packet_code = X}) -> X.
 
-%% Get the exercise indicator from the header structure.
+%% @doc Get the exercise indicator from the header structure.
 get_exercise_indicator(#pheader{exercise_ind = X}) -> X.
 
-%% Get the platform ID from the header structure.
+%% @doc Get the platform ID from the header structure.
 get_platform_id(#pheader{platform_id = X}) -> X.
 
-%% Get the mission ID from the header structure.
+%% @doc Get the mission ID from the header structure.
 get_mission_id(#pheader{mission_id = X}) -> X.
 
-%% Get the job ID from the header structure.
+%% @doc Get the job ID from the header structure.
 get_job_id(#pheader{job_id = X}) -> X.
 
 
