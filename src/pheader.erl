@@ -75,7 +75,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Packet header decoding functions.
 
-%% Function to decode a Stanag 4607 packet header. 
+%% @doc Decode a Stanag 4607 packet header. 
+-spec decode(binary()) -> {ok, pheader()}. 
 decode(<<P1:2/binary, PktSize:32/integer-unsigned-big, 
     P3:2/binary, P4, P5:2/binary, P6:16/integer-unsigned-big, P7, 
     P8:10/binary, P9:4/binary, P10:4/binary>>) ->
@@ -315,7 +316,8 @@ version_id_to_float_str({Maj,Min}) ->
 %% Get the version ID from a packet header
 get_version_id(#pheader{version = V}) -> V.
 
-%% Get the packet size from the header. 
+%% @doc Get the packet size from the header. 
+-spec get_packet_size(pheader()) -> non_neg_integer().
 get_packet_size(#pheader{packet_size = S}) -> S.
 
 %% Get the nationality from a header structure.
