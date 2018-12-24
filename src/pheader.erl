@@ -72,6 +72,9 @@
 
 -export_type([pheader/0]).
 
+-type version() :: {non_neg_integer(), non_neg_integer()}.
+-export_type([version/0]).
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Packet header decoding functions.
 
@@ -156,6 +159,8 @@ new(ParamList) ->
 %% Function to return the size of the packet header.
 header_size() -> 32.
 
+%% @doc Decode the version string.
+-spec decode_version(binary()) -> version().
 decode_version(<<M,N>>) ->
     {M - $0, N - $0}.
 
