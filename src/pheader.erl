@@ -196,10 +196,15 @@ decode_classification(5) -> {ok, unclassified};
 decode_classification(6) -> {ok, no_classification};
 decode_classification(X) when X > 0 -> {unknown_classification, X}.
 
-encode_classification(C) ->
-    Val = enc_class(C),
+%% @doc Encode the classification field in its binary form.
+-spec encode_classification(Class::classification()) -> binary().
+encode_classification(Class) ->
+    Val = enc_class(Class),
     <<Val>>.
 
+%% @doc Map the classification value from the symbolic type to its numeric 
+%% values.
+-spec enc_class(Class::classification()) -> pos_integer().
 enc_class(top_secret) -> 1;
 enc_class(secret) -> 2;
 enc_class(confidential) -> 3;
