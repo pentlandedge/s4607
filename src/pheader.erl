@@ -75,6 +75,11 @@
 -type version() :: {non_neg_integer(), non_neg_integer()}.
 -export_type([version/0]).
 
+-type classification() :: top_secret | secret | confidential | restricted | 
+        unclassified | no_classification.
+
+-export_type([classification/0]).
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Packet header decoding functions.
 
@@ -179,13 +184,17 @@ decode_nationality(<<X:2/binary>>) ->
 encode_nationality(Nat) when length(Nat) =:= 2 ->
     list_to_binary(Nat).
 
+%% @doc Decode the classification field
+-spec decode_classification(X::non_neg_integer()) -> Res when
+    Res :: {ok, classification()} | 
+           {unknown_classification, non_neg_integer()}.
 decode_classification(1) -> {ok, top_secret};
 decode_classification(2) -> {ok, secret};
 decode_classification(3) -> {ok, confidential};
 decode_classification(4) -> {ok, restricted};
 decode_classification(5) -> {ok, unclassified};
 decode_classification(6) -> {ok, no_classification};
-decode_classification(X) -> {unknown_classification, X}.
+decode_classification(X) when X > 0 -> {unknown_classification, X}.
 
 encode_classification(C) ->
     Val = enc_class(C),
