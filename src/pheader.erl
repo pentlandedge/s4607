@@ -203,7 +203,7 @@ encode_classification(Class) ->
     <<Val>>.
 
 %% @doc Map the classification value from the symbolic type to its numeric 
-%% values.
+%% value.
 -spec enc_class(Class::classification()) -> pos_integer().
 enc_class(top_secret) -> 1;
 enc_class(secret) -> 2;
@@ -213,15 +213,23 @@ enc_class(unclassified) -> 5;
 % This version is not in edition 3, but often seen in older files.
 enc_class(no_classification) -> 6.
 
+%% @doc Decode the class system string (two character codes).
+-spec decode_class_system(Bin::binary()) -> Res when
+    Res :: {ok, none} | {ok, string()}.
 decode_class_system(<<"  ">>) ->
     {ok, none};
 decode_class_system(<<X:2/binary>>) ->
     {ok, binary_to_list(X)}.
 
+%% @doc Encode the class system in its binary representation.
+-spec encode_class_system(CS :: none | string()) -> binary().
 encode_class_system(CS) ->
     Val = enc_class_sys(CS),
     list_to_binary(Val).
 
+%% @doc Convert the classification system value to a string. Strings must be
+%% two byte values.
+-spec enc_class_sys(CS :: none | string()) -> string().
 enc_class_sys(none) -> "  ";
 enc_class_sys(L) when length(L) =:= 2 -> L.
 
