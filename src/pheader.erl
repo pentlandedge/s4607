@@ -169,9 +169,13 @@ encode_version({M,N}) ->
     V2 = N + $0,
     <<V1,V2>>.
 
+%% @doc Convert the binary representation of nationality to a string.
+-spec decode_nationality(Bin::binary()) -> string().
 decode_nationality(<<X:2/binary>>) ->
     binary_to_list(X).
 
+%% @doc Encode the two character nationality string as a binary element.
+-spec encode_nationality(Nat::string()) -> binary().
 encode_nationality(Nat) when length(Nat) =:= 2 ->
     list_to_binary(Nat).
 
