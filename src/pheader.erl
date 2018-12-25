@@ -262,6 +262,8 @@ decode_us_packet_code(16#4000) -> {ok, rel_4_eyes};
 decode_us_packet_code(16#8000) -> {ok, rel_9_eyes};
 decode_us_packet_code(_) -> {error, unknown_packet_code}.
 
+%% @doc Encode the US packet code in its binary form.
+-spec encode_us_packet_code(PC::us_packet_code()) -> <<_:16>>.
 encode_us_packet_code(none) -> 
     <<16#0000:16>>;
 encode_us_packet_code(nocontract) -> 
