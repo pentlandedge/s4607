@@ -80,6 +80,13 @@
 
 -export_type([classification/0]).
 
+-type us_packet_code() :: none | nocontract | orcon | propin | wnintel | 
+    national_only | limdis | fouo | efto | lim_off_use | noncompartment | 
+    special_control | special_intel | warning_notice | rel_nato | rel_4_eyes | 
+    rel_9_eyes.
+
+-export_type([us_packet_code/0]).
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Packet header decoding functions.
 
@@ -233,6 +240,9 @@ encode_class_system(CS) ->
 enc_class_sys(none) -> "  ";
 enc_class_sys(L) when length(L) =:= 2 -> L.
 
+%% @doc Decode the US packet code.
+-spec decode_us_packet_code(non_neg_integer()) -> Ret when
+    Ret :: {ok, us_packet_code()} | {error, unknown_packet_code}.
 decode_us_packet_code(16#0000) -> {ok, none};
 decode_us_packet_code(16#0001) -> {ok, nocontract};
 decode_us_packet_code(16#0002) -> {ok, orcon};
