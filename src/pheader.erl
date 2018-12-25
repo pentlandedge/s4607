@@ -305,6 +305,9 @@ encode_us_packet_code(rel_4_eyes) ->
 encode_us_packet_code(rel_9_eyes) -> 
     <<16#8000:16>>.
 
+%% @doc Decode the exercise indicator field. 
+-spec decode_exercise_indicator(non_neg_integer()) -> Ret when
+    Ret :: {ok, exercise_indicator()} | {error, reserved}.
 decode_exercise_indicator(0) -> {ok, operation_real};
 decode_exercise_indicator(1) -> {ok, operation_simulated};
 decode_exercise_indicator(2) -> {ok, operation_synthesized};
@@ -313,6 +316,8 @@ decode_exercise_indicator(129) -> {ok, exercise_simulated};
 decode_exercise_indicator(130) -> {ok, exercise_synthesized};
 decode_exercise_indicator(_) -> {error, reserved}.
 
+%% @doc Encode the exercise indicator field.
+-spec encode_exercise_indicator(Ind::exercise_indicator()) -> <<_:8>>.
 encode_exercise_indicator(operation_real) -> <<0>>;
 encode_exercise_indicator(operation_simulated) -> <<1>>;
 encode_exercise_indicator(operation_synthesized) -> <<2>>;
