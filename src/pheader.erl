@@ -87,6 +87,12 @@
 
 -export_type([us_packet_code/0]).
 
+-type exercise_indicator() :: operation_real | operation_simulated | 
+    operation_synthesized | exercise_real | exercise_simulated | 
+    exercise_synthesized.
+
+-export_type([exercise_indicator/0]).
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Packet header decoding functions.
 
