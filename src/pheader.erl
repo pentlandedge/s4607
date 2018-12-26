@@ -325,13 +325,21 @@ encode_exercise_indicator(exercise_real) -> <<128>>;
 encode_exercise_indicator(exercise_simulated) -> <<129>>;
 encode_exercise_indicator(exercise_synthesized) -> <<130>>.
 
+%% @doc Decode the platform ID field. This simply strips trailing spaces from
+%% the binary and returns a string.
+-spec decode_platform_id(binary()) -> string().
 decode_platform_id(<<X:10/binary>>) ->
     sutils:trim_trailing_spaces(binary_to_list(X)).
 
+%% @doc Encode the platform ID field. This pads the string with spaces and
+%% returns a binary of the correct length.
+-spec encode_platform_id(PlatID::string()) -> binary().
 encode_platform_id(PlatID) when is_list(PlatID), length(PlatID) =< 10 ->
     Pad = sutils:add_trailing_spaces(PlatID, 10),
     list_to_binary(Pad).
 
+%% @doc Display the contents of a decoded packet header.
+-spec display(PktHdr::pheader()) -> ok.
 display(PktHdr) ->
     io:format("****************************************~n"),
     io:format("** @pheader~n"),
