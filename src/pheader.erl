@@ -72,6 +72,12 @@
 
 -export_type([pheader/0]).
 
+-type pheader_key() :: version | packet_size | nationality | classification | 
+    class_system | packet_code | exercise_ind | platform_id | mission_id | 
+    job_id.
+
+-export_type([pheader_key/0]).
+
 -type version() :: {non_neg_integer(), non_neg_integer()}.
 -export_type([version/0]).
 
@@ -123,7 +129,8 @@ decode(<<P1:2/binary, PktSize:32/integer-unsigned-big,
         exercise_ind = Ex, platform_id = PlatId, mission_id = MissId, 
         job_id = JobId}}.
 
-%% Function to encode a packet header in its binary form.
+%% @doc Encode a packet header in its binary form.
+-spec encode(PH::pheader()) -> binary().
 encode(PH) ->
 
     % Function to encode each parameter in the list and append to an 
@@ -150,8 +157,10 @@ encode(PH) ->
     % Encode all of the parameters
     lists:foldl(F, <<>>, ParamList).
 
-%% Function to create a new packet header from the list of parameters 
-%% supplied as {key, Value} pairs.
+%% @doc Create a new packet header from the list of parameters supplied as 
+%% {Key, Value} pairs.
+-spec new(ParamList::[{Key,Value}]) -> pheader() when 
+    Key :: pheader_key(), Value::any().
 new(ParamList) ->
     % Local function to pull the parameter from the list or use a default
     % value.
