@@ -363,6 +363,8 @@ display(PktHdr) ->
     io:format("Mission ID: ~p~n", [get_mission_id(PktHdr)]),
     io:format("Job ID: ~p~n", [get_job_id(PktHdr)]).
 
+%% @doc Convert to CSV form as an iolist for output to file.
+-spec to_csv_iolist(PktHdr::pheader()) -> iolist().
 to_csv_iolist(PktHdr) ->
     Args = [version_id_to_float_str(get_version_id(PktHdr)),
             get_packet_size(PktHdr),
@@ -377,7 +379,8 @@ to_csv_iolist(PktHdr) ->
     io_lib:format("PH,~s,~p,~s,~p,~s,~p,~p,~s,~p,~p~n", Args). 
 
 %% @doc Update the size field in a packet header.
-update_size(#pheader{} = Hdr, NewSize) ->
+-spec update_size(Hdr::pheader(), NewSize::non_neg_integer()) -> pheader().
+update_size(#pheader{} = Hdr, NewSize) when NewSize >= 0 ->
     Hdr#pheader{packet_size = NewSize}.
 
 %% @doc Convert the version ID tuple to a string showing a float.
