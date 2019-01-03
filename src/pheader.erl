@@ -183,7 +183,8 @@ new(ParamList) ->
         mission_id = F(mission_id, ParamList, 0), 
         job_id = F(job_id, ParamList, 0)}. 
 
-%% Function to return the size of the packet header.
+%% @doc return the size of the packet header.
+-spec header_size() -> non_neg_integer().
 header_size() -> 32.
 
 %% @doc Decode the version string.
