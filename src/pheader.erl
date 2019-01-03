@@ -393,6 +393,7 @@ version_id_to_float_str({Maj,Min}) ->
     io_lib:format("~p.~p", [Maj, Min]).
 
 %% @doc Get the version ID from a packet header
+-spec get_version_id(PH::pheader()) -> version().
 get_version_id(#pheader{version = V}) -> V.
 
 %% @doc Get the packet size from the header. 
@@ -400,9 +401,11 @@ get_version_id(#pheader{version = V}) -> V.
 get_packet_size(#pheader{packet_size = S}) -> S.
 
 %% @doc Get the nationality from a header structure.
+-spec get_nationality(PH::pheader()) -> string().
 get_nationality(#pheader{nationality = N}) -> N.
 
 %% @doc Get the classification level
+-spec get_classification(PH::pheader()) -> classification().
 get_classification(#pheader{classification = C}) -> C.
 
 %% @doc Get the classification system from the header. 
