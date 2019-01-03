@@ -86,6 +86,10 @@
 
 -export_type([classification/0]).
 
+-type class_system() :: none | string().
+
+-export_type([class_system/0]).
+
 -type us_packet_code() :: none | nocontract | orcon | propin | wnintel | 
     national_only | limdis | fouo | efto | lim_off_use | noncompartment | 
     special_control | special_intel | warning_notice | rel_nato | rel_4_eyes | 
@@ -238,7 +242,7 @@ enc_class(no_classification) -> 6.
 
 %% @doc Decode the class system string (two character codes).
 -spec decode_class_system(Bin::binary()) -> Res when
-    Res :: {ok, none} | {ok, string()}.
+    Res :: {ok, class_system()}.
 decode_class_system(<<"  ">>) ->
     {ok, none};
 decode_class_system(<<X:2/binary>>) ->
@@ -392,7 +396,7 @@ version_id_to_float_str({Maj,Min}) ->
 get_version_id(#pheader{version = V}) -> V.
 
 %% @doc Get the packet size from the header. 
--spec get_packet_size(pheader()) -> non_neg_integer().
+-spec get_packet_size(PH::pheader()) -> non_neg_integer().
 get_packet_size(#pheader{packet_size = S}) -> S.
 
 %% @doc Get the nationality from a header structure.
@@ -402,6 +406,7 @@ get_nationality(#pheader{nationality = N}) -> N.
 get_classification(#pheader{classification = C}) -> C.
 
 %% @doc Get the classification system from the header. 
+-spec get_class_system(PH::pheader()) -> class_system().
 get_class_system(#pheader{class_system = X}) -> X.
 
 %% @doc Get the packet security code from the header.
