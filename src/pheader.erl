@@ -192,10 +192,14 @@ new(ParamList) ->
 header_size() -> 32.
 
 %% @doc Decode the version string.
--spec decode_version(binary()) -> version().
+-spec decode_version(<<_:16>>) -> version().
 decode_version(<<M,N>>) ->
     {M - $0, N - $0}.
 
+%% @doc Encode the version tuple as a binary.
+-spec encode_version({M,N}) -> <<_:16>> when
+    M :: 0..255,
+    N :: 0..255.
 encode_version({M,N}) ->
     V1 = M + $0,
     V2 = N + $0,
