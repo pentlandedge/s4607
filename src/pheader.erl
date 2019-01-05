@@ -421,12 +421,15 @@ get_packet_code(#pheader{packet_code = X}) -> X.
 get_exercise_indicator(#pheader{exercise_ind = X}) -> X.
 
 %% @doc Get the platform ID from the header structure.
+-spec get_platform_id(PH::pheader()) -> string().
 get_platform_id(#pheader{platform_id = X}) -> X.
 
 %% @doc Get the mission ID from the header structure.
+-spec get_mission_id(PH::pheader()) -> non_neg_integer().
 get_mission_id(#pheader{mission_id = X}) -> X.
 
 %% @doc Get the job ID from the header structure.
+-spec get_job_id(PH::pheader()) -> non_neg_integer().
 get_job_id(#pheader{job_id = X}) -> X.
 
 
