@@ -389,6 +389,8 @@ update_size(#pheader{} = Hdr, NewSize) when NewSize >= 0 ->
     Hdr#pheader{packet_size = NewSize}.
 
 %% @doc Convert the version ID tuple to a string showing a float.
+-spec version_id_to_float_str({Maj,Min}) -> string() when
+    Maj :: non_neg_integer(), Min :: non_neg_integer().
 version_id_to_float_str({Maj,Min}) -> 
     io_lib:format("~p.~p", [Maj, Min]).
 
