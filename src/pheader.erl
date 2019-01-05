@@ -415,6 +415,7 @@ get_classification(#pheader{classification = C}) -> C.
 get_class_system(#pheader{class_system = X}) -> X.
 
 %% @doc Get the packet security code from the header.
+-spec get_packet_code(PH::pheader()) -> us_packet_code().
 get_packet_code(#pheader{packet_code = X}) -> X.
 
 %% @doc Get the exercise indicator from the header structure.
