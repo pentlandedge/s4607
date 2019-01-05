@@ -419,6 +419,7 @@ get_class_system(#pheader{class_system = X}) -> X.
 get_packet_code(#pheader{packet_code = X}) -> X.
 
 %% @doc Get the exercise indicator from the header structure.
+-spec get_exercise_indicator(PH::pheader()) -> exercise_indicator().
 get_exercise_indicator(#pheader{exercise_ind = X}) -> X.
 
 %% @doc Get the platform ID from the header structure.
