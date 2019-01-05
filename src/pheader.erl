@@ -211,7 +211,7 @@ decode_nationality(<<X:2/binary>>) ->
     binary_to_list(X).
 
 %% @doc Encode the two character nationality string as a binary element.
--spec encode_nationality(Nat::string()) -> binary().
+-spec encode_nationality(Nat::string()) -> <<_:16>>. 
 encode_nationality(Nat) when length(Nat) =:= 2 ->
     list_to_binary(Nat).
 
@@ -228,7 +228,7 @@ decode_classification(6) -> {ok, no_classification};
 decode_classification(X) when X > 0 -> {unknown_classification, X}.
 
 %% @doc Encode the classification field in its binary form.
--spec encode_classification(Class::classification()) -> binary().
+-spec encode_classification(Class::classification()) -> <<_:8>>. 
 encode_classification(Class) ->
     Val = enc_class(Class),
     <<Val>>.
