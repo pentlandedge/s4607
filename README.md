@@ -24,7 +24,7 @@ The simplest way to build the software, run the unit tests, perform static analy
 ```
 The makefile has rules for each of these steps which can be run separately if preferred. It uses rebar3 to do the real work.
 
-The software can be compiled (on a Linux platform) using rebar3:
+Alternatively, the software can be compiled (on a Linux platform) directly using rebar3:
 ```
 # rebar3 compile
 ```
