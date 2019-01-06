@@ -9,14 +9,14 @@ Errata sheet E3 has also recently appeared. It defines some new platforms, senso
 
 The software has been released under an Apache free software license.
 ## Building
-It is necessary to have Erlang installed, and the compiler erlc available on the path. The rebar tool is used to control the build process, so it is also necessary to have a copy of rebar available on the path. The software can be built (on a Linux platform) using rebar:
+It is necessary to have Erlang installed, and the compiler erlc available on the path. The rebar3 tool is used to control the build process, so it is also necessary to have a copy of rebar3 available on the path. The software can be built (on a Linux platform) using rebar3:
 ```
-# rebar compile
+# rebar3 compile
 ```
 ## Decoding a Stanag 4607 file
 From the root directory, the Erlang shell can be started as follows:
 ```
-# erl -pa ebin
+# rebar3 shell 
 ```
 From the Erlang prompt, open a file in Stanag 4607 format and display its contents in the following manner:
 ```
@@ -37,9 +37,9 @@ The script can then be run, and the results written to a file as follows:
 ```
 
 ## Running the regression tests
-The project uses Erlang's eunit test system, controlled from rebar.
+The project uses Erlang's eunit test system, controlled from rebar3.
 ```
-# rebar compile eunit
+# rebar3 eunit
 ```
 This will rebuild the project including the eunit tests and then execute all of the tests.
 ## Generating a code coverage report
@@ -49,22 +49,24 @@ To generate a code coverage report, first open the rebar.config file and enable 
 ```
 Then recompile the project and run the unit tests:
 ```
-# rebar clean
-# rebar compile eunit
+# rebar3 clean
+# rebar3 compile 
+# rebar3 eunit
+# rebar3 cover
 ```
-Once this completes, the code coverage report should be available in at .eunit/index.html
+Once this completes, the code coverage report should be available at _build/test/cover/index.html 
 
 ## Running the static analysis tool.
 
-Erlang provides the Dialyzer, which performs static type checking of the code. Rebar can be used to run the dialyzer on all of the source files in the repository. This should always be clean (no errors or warnings) for code in the repository. To run it, from the root directory type:
+Erlang provides the Dialyzer, which performs static type checking of the code. Rebar3 can be used to run the dialyzer on all of the source files in the repository. This should always be clean (no errors or warnings) for code in the repository. To run it, from the root directory type:
 ```
-rebar dialyze
+rebar3 dialyzer
 ```
 
 ## Generating the module documentation.
-Erlang supplies the EDoc tool which can automatically generate cross-referenced documentation from a combination of the code itself and any annotations added by the programmer. We are in the process of adding more tags and type specifications to improve the generated output. So far, the modules stanag_types.erl and test_status.erl have been annotated and provide the most useful information. More modules will be documented soon. Rebar can be used to call EDoc to generate the HTML formatted documents. From the root directory type:
+Erlang supplies the EDoc tool which can automatically generate cross-referenced documentation from a combination of the code itself and any annotations added by the programmer. We are in the process of adding more tags and type specifications to improve the generated output. So far, the modules stanag_types.erl and test_status.erl have been annotated and provide the most useful information. More modules will be documented soon. Rebar3 can be used to call EDoc to generate the HTML formatted documents. From the root directory type:
 ```
-rebar doc
+rebar3 edoc
 ```
 Once complete a doc directory will be created with the generated HTML files for each module.
 
