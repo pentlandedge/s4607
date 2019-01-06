@@ -12,9 +12,9 @@ Errata sheet E3 has also recently appeared. It defines some new platforms, senso
 The software has been released under an Apache free software license.
 
 ## Prerequisites
-It is necessary to have Erlang installed, and the compiler erlc available on the path. The rebar3 tool is used to control the build process, so it is also necessary to have a rebar3 available on the path. 
+It is necessary to have Erlang installed, and the compiler erlc available on the path. The rebar3 tool is used to control the build process, so it is necessary to have this installed and on the path too. 
 
-If using the Makefile, then the make utility must be available.
+If using the (optional) Makefile, then the make utility must be available.
 
 ## Building
 
