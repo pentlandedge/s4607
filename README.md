@@ -10,8 +10,21 @@ The metadata (platform types/radar modes etc.) is in the process of being update
 Errata sheet E3 has also recently appeared. It defines some new platforms, sensors and modes. These are also in the process of being incorporated.
 
 The software has been released under an Apache free software license.
+
+## Prerequisites
+It is necessary to have Erlang installed, and the compiler erlc available on the path. The rebar3 tool is used to control the build process, so it is also necessary to have a rebar3 available on the path. 
+
+If using the Makefile, then the make utility must be available.
+
 ## Building
-It is necessary to have Erlang installed, and the compiler erlc available on the path. The rebar3 tool is used to control the build process, so it is also necessary to have a copy of rebar3 available on the path. The software can be built (on a Linux platform) using rebar3:
+
+The simplest way to build the software, run the unit tests, perform static analysis and generate the module documentation in one step is to use make:
+```
+# make
+```
+The makefile has rules for each of these steps which can be run separately if preferred. It uses rebar3 to do the real work.
+
+The software can be compiled (on a Linux platform) using rebar3:
 ```
 # rebar3 compile
 ```
