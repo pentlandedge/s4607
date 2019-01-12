@@ -164,10 +164,12 @@ display_packets(PktLst) when is_list(PktLst) ->
     ok.
 
 %% Function to convert a packet to CSV iolist.
+-spec packet_to_csv_iolist(Pkt::packet()) -> iolist().
 packet_to_csv_iolist(#packet{header = H, segments = Slist}) ->
     pheader:to_csv_iolist(H) ++ segment:to_csv_iolist(Slist).
 
 %% Function to convert a list of packets to a CSV iolist.
+-spec packets_to_csv_iolist(PktList::packetlist()) -> iolist().
 packets_to_csv_iolist(PktList) when is_list(PktList) ->
     lists:map(fun packet_to_csv_iolist/1, PktList).
 
