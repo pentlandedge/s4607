@@ -58,6 +58,7 @@
 %% File handling functions.
 
 %% Function to read a file in Stanag 4607 format.
+-spec read_file(File::string()) -> binary().
 read_file(File) ->
     {ok, Bin} = file:read_file(File),
     Bin.
@@ -274,6 +275,7 @@ update_segments_in_packet(#packet{header = Hdr}, Segs) when is_list(Segs) ->
 
 %% @doc Test whether a binary looks like 4607 data. Attempts to decode the 
 %% packet header.
+-spec is_4607(Bin::binary()) -> boolean().
 is_4607(Bin) ->
     try 
         {ok, Hdr, _R1} = extract_packet_header(Bin),
