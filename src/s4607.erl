@@ -54,6 +54,12 @@
 -type decode_option() :: strict | permissive | stop_on_error | continue_on_error.
 -export_type([decode_option/0]).
 
+-opaque packet() :: #packet{}.
+-export_type([packet/0]).
+
+-type packetlist() :: [packet()].
+-export_type([packetlist/0]).
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% File handling functions.
 
@@ -146,11 +152,13 @@ packet_payload_size(SegList) ->
     lists:foldl(F, 0, SegList).
     
 %% Function to display a packet.
+-spec display_packet(Pkt::packet()) -> ok.
 display_packet(#packet{header = H, segments = Slist}) ->
     pheader:display(H),
     display_segments(Slist).
 
 %% Packet processing loop, prints out decoded information.
+-spec display_packets(PktLst::packetlist()) -> ok.
 display_packets(PktLst) when is_list(PktLst) ->
     lists:map(fun display_packet/1, PktLst),
     ok.
