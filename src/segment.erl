@@ -116,6 +116,9 @@ encode(#segment{header = SH, data = SegRec}) ->
     end.
 
 %% @doc Create a new segment record for the specified segment type.
+-spec new(SegType, SegRec) -> segment() when
+    SegType :: seg_header:segment_type(),
+    SegRec :: any().
 new(SegType, SegRec) ->
     % Check we support the segment type then build it.
     {ok, _} = seg_type_to_module(SegType),
