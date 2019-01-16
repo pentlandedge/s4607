@@ -44,6 +44,13 @@
 
 -export_type([segment/0, segment_type/0]).
 
+-type segment_data() :: mission:mission() | dwell:dwell() | hrr:hrr() | 
+    job_definition:job_definition() | free_text:free_text() | 
+    platform_loc:platform_loc() | test_and_status:test_and_status() | 
+    job_request:job_request() | job_acknowledge:job_acknowledge(). 
+
+-export_type([segment_data/0]).
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Function declarations.
 
@@ -118,7 +125,7 @@ encode(#segment{header = SH, data = SegRec}) ->
 %% @doc Create a new segment record for the specified segment type.
 -spec new(SegType, SegRec) -> segment() when
     SegType :: seg_header:segment_type(),
-    SegRec :: any().
+    SegRec :: segment_data().
 new(SegType, SegRec) ->
     % Check we support the segment type then build it.
     {ok, _} = seg_type_to_module(SegType),
@@ -127,7 +134,7 @@ new(SegType, SegRec) ->
 %% @doc Construct a segment using a pre-constructed segment header.
 -spec new0(SegHdr, SegRec) -> segment() when
     SegHdr :: seg_header:seg_header(),
-    SegRec :: any().
+    SegRec :: segment_data().
 new0(SegHdr, SegRec) ->
     #segment{header = SegHdr, data = SegRec}.
 
