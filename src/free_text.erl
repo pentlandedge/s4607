@@ -38,7 +38,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Type specifications.
 
--type free_text() :: #free_text{}.
+-opaque free_text() :: #free_text{}.
+-export_type([free_text/0]).
 
 %% @doc Decode a binary free text segment.
 -spec decode(Bin::binary()) -> {ok, free_text()} | {error, Reason} when

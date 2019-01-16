@@ -95,6 +95,12 @@
     multi_ambiguity_keystoning}).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Type specifications.
+
+-opaque hrr() :: #hrr_segment{}.
+-export_type([hrr/0]).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% HRR segment decoding functions.
 
 decode(<<EM:5/binary, RI:16/integer-unsigned-big,
