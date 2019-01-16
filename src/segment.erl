@@ -121,7 +121,10 @@ new(SegType, SegRec) ->
     {ok, _} = seg_type_to_module(SegType),
     build_segment(SegType, SegRec).
 
-%% Variant that takes a pre-constructed segment header.
+%% @doc Construct a segment using a pre-constructed segment header.
+-spec new0(SegHdr, SegRec) -> segment() when
+    SegHdr :: seg_header:seg_header(),
+    SegRec :: any().
 new0(SegHdr, SegRec) ->
     #segment{header = SegHdr, data = SegRec}.
 
