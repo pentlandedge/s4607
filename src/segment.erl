@@ -139,6 +139,9 @@ new0(SegHdr, SegRec) ->
     #segment{header = SegHdr, data = SegRec}.
 
 %% Helper function to build the segment.
+-spec build_segment(SegType, SegRec) -> segment() when
+    SegType :: segment_type(),
+    SegRec :: segment_data().
 build_segment(SegType, SegRec) when is_atom(SegType) ->
     % Create a segment header.
     SH = build_seg_header(SegType, SegRec),
