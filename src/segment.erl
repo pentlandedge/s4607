@@ -68,7 +68,7 @@ decode_segments(Bin, Acc) ->
             decode_segments(Rem, Acc)
     end.
 
-%% Decode a single segment. Returns any left over binary data.
+%% @doc Decode a single segment. Returns any left over binary data.
 -spec decode_segment(Bin::binary()) -> Ret when
     Seg :: segment(),
     Ret :: {ok, Seg, Rem} | 
@@ -196,7 +196,7 @@ extract_segment_header(<<Hdr:5/binary,Rest/binary>>) ->
 extract_segment_data(Bin, Len) ->
     sutils:extract_data(Bin, Len).
 
-%% Update the data in a segment.
+%% @doc Update the data payload in a segment.
 update_segment_data(#segment{header = SegHdr}, SegRec) ->
     SegType = seg_header:get_segment_type(SegHdr),
     new(SegType, SegRec).
