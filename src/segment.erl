@@ -204,6 +204,7 @@ update_segment_data(#segment{header = SegHdr}, SegRec) ->
 %% Accessor functions.
 
 %% @doc Retrieve the segment header from a segment structure.
+-spec get_header(Seg::segment()) -> seg_header:seg_header(). 
 get_header(#segment{header = H}) -> H.
 
 %% @doc Retrieve the data payload from a segment structure.
