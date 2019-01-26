@@ -69,6 +69,9 @@
     get_truth_tag_entity/1,
     get_target_rcs/1]).
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Record definitiions. 
+
 -record(exist_mask, {
     revisit_index,
     dwell_index,
@@ -119,10 +122,16 @@
     truth_tag_entity,
     target_rcs}).
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Type specifications. 
+
 -type exist_mask() :: #exist_mask{}.
 -export_type([exist_mask/0]).
 
-%% Function to decode the existance mask. Will crash caller if the mask 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Function definitions. 
+
+%% @doc Decode the existance mask. Will crash caller if the mask 
 %% does not have the mandatory bits set.
 decode(<<16#FF, 
     D10:1,D11:1,D12:1,D13:1,D14:1,D15:1,D16:1,D17:1,
@@ -182,7 +191,7 @@ decode(<<16#FF,
         truth_tag_entity = D32_17,
         target_rcs = D32_18}.
 
-%% Function to take an existence mask record and return a binary encoding of
+%% @doc Convert an existence mask record to a binary encoding of
 %% the fields.
 encode(#exist_mask{
     revisit_index = 1,
@@ -241,8 +250,8 @@ encode(#exist_mask{
       D32_9:1,D32_10:1,D32_11:1,D32_12:1,D32_13:1,D32_14:1,D32_15:1,D32_16:1,
       D32_17:1,D32_18:1,0,0>>.
 
-%% Function to allow the caller to construct an existence mask by supplying 
-%% a list of atoms specifiying the optional and conditional fields to set.
+%% @doc Construct an existence mask record by supplying  a list of atoms 
+%% specifiying the optional and conditional fields to set.
 new(Fields) when is_list(Fields) ->
     % Local function to check if a parameter exists in the list supplied
     % and return 1 if it is and 0 if not.
@@ -303,6 +312,7 @@ new(Fields) when is_list(Fields) ->
 bool_to_int(true) -> 1;
 bool_to_int(false) -> 0.
 
+%% @doc Display the contents of an existence mask.
 display(EM) ->
     io:format("****************************************~n"),
     io:format("** @existence_mask~n"),
