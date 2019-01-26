@@ -133,6 +133,7 @@
 
 %% @doc Decode the existance mask. Will crash caller if the mask 
 %% does not have the mandatory bits set.
+-spec decode(Bin::binary()) -> exist_mask().
 decode(<<16#FF, 
     D10:1,D11:1,D12:1,D13:1,D14:1,D15:1,D16:1,D17:1,
     D18:1,D19:1,D20:1,D21:1,D22:1,D23:1,1:1,1:1,
@@ -193,6 +194,7 @@ decode(<<16#FF,
 
 %% @doc Convert an existence mask record to a binary encoding of
 %% the fields.
+-spec encode(EM::exist_mask()) -> binary().
 encode(#exist_mask{
     revisit_index = 1,
     dwell_index = 1,
@@ -252,6 +254,7 @@ encode(#exist_mask{
 
 %% @doc Construct an existence mask record by supplying  a list of atoms 
 %% specifiying the optional and conditional fields to set.
+-spec new(Fields::[atom()]) -> exist_mask().
 new(Fields) when is_list(Fields) ->
     % Local function to check if a parameter exists in the list supplied
     % and return 1 if it is and 0 if not.
