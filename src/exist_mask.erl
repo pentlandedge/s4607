@@ -128,6 +128,13 @@
 -type exist_mask() :: #exist_mask{}.
 -export_type([exist_mask/0]).
 
+-type em_mandatory() :: revisit_index | dwell_index | last_dwell_of_revisit | 
+    target_report_count | dwell_time | sensor_lat | sensor_lon | sensor_alt | 
+    dwell_center_lat | dwell_center_lon | dwell_range_half_extent | 
+    dwell_angle_half_extent.
+
+-export_type([em_mandatory/0]).
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Function definitions. 
 
