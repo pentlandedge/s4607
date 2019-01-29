@@ -133,7 +133,14 @@
     dwell_center_lat | dwell_center_lon | dwell_range_half_extent | 
     dwell_angle_half_extent.
 
--export_type([em_mandatory/0]).
+-type em_conditional() :: lat_scale_factor | lon_scale_factor | sensor_track |
+    sensor_speed | sensor_vert_vel | platform_heading | platform_pitch |
+    platform_roll | mti_report_index | target_hr_lat | target_hr_lon |
+    target_delta_lat | target_delta_lon | target_slant_range_unc | 
+    target_cross_range_unc | target_height_unc | target_rad_vel_unc | 
+    truth_tag_app | truth_tag_entity.
+
+-export_type([em_mandatory/0, em_conditional/0]).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Function definitions. 
