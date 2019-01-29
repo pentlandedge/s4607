@@ -140,7 +140,13 @@
     target_cross_range_unc | target_height_unc | target_rad_vel_unc | 
     truth_tag_app | truth_tag_entity.
 
--export_type([em_mandatory/0, em_conditional/0]).
+-type em_optional() :: spu_along_track | spu_cross_track | spu_alt | 
+    sensor_track_unc | sensor_speed_unc | sensor_vert_vel_unc | 
+    sensor_heading | sensor_pitch | sensor_roll | mdv | geodetic_height |
+    target_vel_los | target_wrap_velocity | target_snr | 
+    target_classification | target_class_prob | target_rcs.
+
+-export_type([em_mandatory/0, em_conditional/0, em_optional/0]).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Function definitions. 
