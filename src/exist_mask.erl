@@ -146,7 +146,10 @@
     target_vel_los | target_wrap_velocity | target_snr | 
     target_classification | target_class_prob | target_rcs.
 
+-type em_non_mandatory() :: em_conditional() | em_optional().
+
 -export_type([em_mandatory/0, em_conditional/0, em_optional/0]).
+-export_type([em_non_mandatory/0]).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Function definitions. 
