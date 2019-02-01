@@ -277,7 +277,7 @@ encode(#exist_mask{
 
 %% @doc Construct an existence mask record by supplying  a list of atoms 
 %% specifiying the optional and conditional fields to set.
--spec new(Fields::[atom()]) -> exist_mask().
+-spec new(Fields::[em_non_mandatory()]) -> exist_mask().
 new(Fields) when is_list(Fields) ->
     % Local function to check if a parameter exists in the list supplied
     % and return 1 if it is and 0 if not.
