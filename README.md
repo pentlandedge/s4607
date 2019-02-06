@@ -131,3 +131,6 @@ It is also possible to extract a filtered list of segments of specified types:
 
 ## Online application.
 The [Hawkstream Stanag 4607 Viewer](http://www.hawkstream.net "Hawkstream Stanag 4607 Viewer Demo") uses this library to decode and display dwell segment data on a map. This will be steadily updated to display more of the 4607 information.
+
+The [Hawkstream Live](http://www.hawkstream.net/live_demo.html "Hawkstream Live Demo") demonstration shows how live MTI radar data can be streamed and displayed on a browser map. Follow the link and click on the "Radar Sim" and "Tracker Sim" checkboxes. You should see a simple moving display showing cars crossing the bridges over the River Forth in Scotland.
+
