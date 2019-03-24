@@ -43,7 +43,7 @@ The PacketList is a single, hierarchical structure suitable for use in data proc
 
 ## Running the escript
 
-NOTE: this does not currently work with rebar3. Needs to be updated.
+NOTE: this does not currently work with rebar3. Needs to be updated. It is likely that these scripts will become separate rebar3 escript projects.
 
 For convenience, the display_4607 script has been provided. The software must have been built before running this. Make the script executable:
 ```
