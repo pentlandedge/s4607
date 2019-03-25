@@ -1,8 +1,6 @@
 # s4607
 Stanag 4607 library written in Erlang. Stanag 4607 is a NATO standard for sharing radar information. Erlang is a wonderful programming language for developing distributed systems, providing a good platform on which to develop software to connect and control sensors of various kinds.
 
-NOTE: the library is currently being migrated from rebar to rebar3. Some of these instructions may not work as advertised while the transition is taking place (particularly those relating to running escript files which are known to be broken). If this is a problem, then please use the v1.0.0 release for the time being which is based entirely on rebar.
-
 This software is still under development, but can now decode and encode the packet header, dwell, mission, HRR, job definition, free text, platform location, test and status, job request and job acknowledge segments. Once complete, the focus will shift to improving the top level API and documentation to make the library more convenient to use.
 
 The metadata (platform types/radar modes etc.) is in the process of being updated to match the list available at http://jitc.fhu.disa.mil/projects/mti/registers/metadata.aspx
@@ -41,18 +39,9 @@ From the Erlang prompt, open a file in Stanag 4607 format and display its conten
 ```
 The PacketList is a single, hierarchical structure suitable for use in data processing applications.
 
-## Running the escript
+## Displaying the contents of a 4607 file as text. 
 
-NOTE: this does not currently work with rebar3. Needs to be updated. It is likely that these scripts will become separate rebar3 escript projects.
-
-For convenience, the display_4607 script has been provided. The software must have been built before running this. Make the script executable:
-```
-# chmod a+x display_4607
-```
-The script can then be run, and the results written to a file as follows:
-```
-# ./display_4607 /path/to/file > 4607.log
-```
+There is a separate repository for [display_4607](https://github.com/pentlandedge/display_4607 "Display 4607 data as text"). This utility will dump out the fields of a 4607 file as text. It was formerly part of this repository but a move was necessitated by the switch to rebar3.
 
 ## Running the regression tests
 The project uses Erlang's eunit test system, controlled from rebar3.
