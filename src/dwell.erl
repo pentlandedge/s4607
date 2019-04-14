@@ -672,36 +672,100 @@ update_targets(#dwell_segment{} = DS, NewTargets) when is_list(NewTargets) ->
 
 %% Accessor functions to allow access to the record fields with out creating 
 %% client dependencies on the actual structure.
+
+%% @doc Accessor function for the existence mask.
 get_existence_mask(#dwell_segment{existence_mask = X}) -> X.
+
+%% @doc Accessor function for the revisit index. 
 get_revisit_index(#dwell_segment{revisit_index = X}) -> X.
+
+%% @doc Accessor function for the dwell index. 
 get_dwell_index(#dwell_segment{dwell_index = X}) -> X.
+
+%% @doc Accessor function for the last dwell of revisit. 
 get_last_dwell_of_revisit(#dwell_segment{last_dwell_of_revisit = X}) -> X.
+
+%% @doc Accessor function for the target report count. 
 get_target_report_count(#dwell_segment{target_report_count = X}) -> X.
+
+%% @doc Accessor function for the dwell time. 
 get_dwell_time(#dwell_segment{dwell_time = X}) -> X.
+
+%% @doc Accessor function for the sensor Latitude. 
 get_sensor_lat(#dwell_segment{sensor_lat = X}) -> X.
+
+%% @doc Accessor function for the sensor Longitude. 
 get_sensor_lon(#dwell_segment{sensor_lon = X}) -> X.
+
+%% @doc Accessor function for the sensor Altitude. 
 get_sensor_alt(#dwell_segment{sensor_alt = X}) -> X.
+
+%% @doc Accessor function for the Latitude scale factor. 
 get_lat_scale_factor(#dwell_segment{lat_scale_factor = X}) -> X.
+
+%% @doc Accessor function for the Longitude scale factor. 
 get_lon_scale_factor(#dwell_segment{lon_scale_factor = X}) -> X.
+
+%% @doc Accessor function for the sensor position uncertainty along track. 
 get_spu_along_track(#dwell_segment{spu_along_track = X}) -> X.
+
+%% @doc Accessor function for the sensor position uncertainty cross track. 
 get_spu_cross_track(#dwell_segment{spu_cross_track = X}) -> X.
+
+%% @doc Accessor function for the sensor altitude uncertainty. 
 get_spu_alt(#dwell_segment{spu_alt = X}) -> X.
+
+%% @doc Accessor function for the sensor track. 
 get_sensor_track(#dwell_segment{sensor_track = X}) -> X.
+
+%% @doc Accessor function for the sensor speed. 
 get_sensor_speed(#dwell_segment{sensor_speed = X}) -> X.
+
+%% @doc Accessor function for the sensor vertical velocity. 
 get_sensor_vert_vel(#dwell_segment{sensor_vert_vel = X}) -> X.
+
+%% @doc Accessor function for the sensor track uncertainty. 
 get_sensor_track_unc(#dwell_segment{sensor_track_unc = X}) -> X.
+
+%% @doc Accessor function for the sensor speed uncertainty. 
 get_sensor_speed_unc(#dwell_segment{sensor_speed_unc = X}) -> X.
+
+%% @doc Accessor function for the sensor vertical velocity uncertainty. 
 get_sensor_vert_vel_unc(#dwell_segment{sensor_vert_vel_unc = X}) -> X.
+
+%% @doc Accessor function for the platform heading. 
 get_platform_heading(#dwell_segment{platform_heading = X}) -> X.
+
+%% @doc Accessor function for the platform pitch. 
 get_platform_pitch(#dwell_segment{platform_pitch = X}) -> X.
+
+%% @doc Accessor function for the platform roll. 
 get_platform_roll(#dwell_segment{platform_roll = X}) -> X.
+
+%% @doc Accessor function for the dwell center Latitude. 
 get_dwell_center_lat(#dwell_segment{dwell_center_lat = X}) -> X.
+
+%% @doc Accessor function for the dwell center Longitude. 
 get_dwell_center_lon(#dwell_segment{dwell_center_lon = X}) -> X.
+
+%% @doc Accessor function for the dwell range half extent. 
 get_dwell_range_half_extent(#dwell_segment{dwell_range_half_extent = X}) -> X.
+
+%% @doc Accessor function for the dwell angle half extent. 
 get_dwell_angle_half_extent(#dwell_segment{dwell_angle_half_extent = X}) -> X.
+
+%% @doc Accessor function for the sensor heading. 
 get_sensor_heading(#dwell_segment{sensor_heading = X}) -> X.
+
+%% @doc Accessor function for the sensor pitch. 
 get_sensor_pitch(#dwell_segment{sensor_pitch = X}) -> X.
+
+%% @doc Accessor function for the sensor roll. 
 get_sensor_roll(#dwell_segment{sensor_roll = X}) -> X.
+
+%% @doc Accessor function for the minimum detectable velocity. 
 get_mdv(#dwell_segment{mdv = X}) -> X.
+
+%% @doc Accessor function for the target reports. 
 get_targets(#dwell_segment{targets = X}) -> X.
 
