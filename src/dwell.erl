@@ -106,6 +106,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Dwell segment decoding functions.
 
+%% @doc Decode a binary dwell segment into structured form.
 decode(<<EM:8/binary,RI:16/integer-unsigned-big,
     DI:16/integer-unsigned-big,LD,TRC:16/integer-unsigned-big,
     DT:32/integer-unsigned-big,SLat:4/binary,SLon:4/binary,SAlt:4/binary,
@@ -307,7 +308,7 @@ decode(<<EM:8/binary,RI:16/integer-unsigned-big,
 decode(_) ->
     {error, dwell_mismatch}.
 
-%% Function to encode a dwell segment record in its binary form.
+%% @doc Encode a dwell segment record in its binary form.
 encode(DS) ->
     % Extract the existence mask from the incoming dwell segment.
     EM = get_existence_mask(DS),
@@ -367,7 +368,7 @@ encode(DS) ->
     % Append any target reports.
     encode_target_reports(get_target_report_count(DS), get_targets(DS), EM, Bin1).
 
-%% Helper function for the dwell encode: encodes all of the target reports.
+%% @doc Helper function for the dwell encode: encodes the target reports.
 %% InitBin can be set to the dwell report prior to adding the target reports
 %% so that the target reports are automatically added to the end of the 
 %% dwell segment.
@@ -382,7 +383,7 @@ encode_target_reports(RepCount, RepList, EM, InitBin)
         end,
     lists:foldl(F, InitBin, RepList).
 
-%% Function to create a new dwell report structure from the specified fields.
+%% @doc Create a new dwell report structure from the specified fields.
 new(Fields) ->
     % Local function to pull the parameter from the list or supply a default
     % value.
@@ -427,13 +428,12 @@ new(Fields) ->
         mdv = F(mdv, Fields, 0),
         targets = F(targets, Fields, [])}.
 
-%% Convenience wrapper to calculate the expected size of a dwell segment
-%% once encoded.
+%% @doc Calculate the expected size of a dwell segment once encoded.
 payload_size(#dwell_segment{existence_mask = EM, target_report_count = TC}) ->
     payload_size(EM, TC).
 
-%% Function to calculate the size of an encoded dwell segment payload from 
-%% the existence mask and the target report count.
+%% @doc Calculate the size of an encoded dwell segment payload from the 
+%% existence mask and the target report count.
 payload_size(EM, TgtRepCount) ->
     SizeList = [         
         {get_revisit_index, 2},
@@ -486,7 +486,7 @@ payload_size(EM, TgtRepCount) ->
     % Return the combined total of the dwell and the target reports.
     DwellSize + TgtRepSize.
 
-%% Function to convert the dwell segment into a dictionary.
+%% @doc Convert the dwell segment into a dictionary.
 to_dict(DS) ->
     % Extract the existence mask from the incoming dwell segment.
     EM = get_existence_mask(DS),
