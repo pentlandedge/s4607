@@ -567,6 +567,7 @@ decode_target_report_list(Bin, EM, TgtCount, AccTgts) when TgtCount > 0 ->
     {ok, TR, Rem} = tgt_report:decode(Bin, EM),
     decode_target_report_list(Rem, EM, TgtCount-1, [TR|AccTgts]).
 
+%% @doc Display the contents of a dwell segment in the console.
 display(DS) ->
     io:format("****************************************~n"),
     io:format("** @dwell~n"),
