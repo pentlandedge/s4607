@@ -345,6 +345,7 @@ encode_request_type(initial_request) -> 0;
 encode_request_type(cancel_job) -> 1.
 
 %% @doc Display the contents of a job request segment.
+-spec display(job_req()) -> ok.
 display(#job_req{} = JR) ->
     io:format("****************************************~n"),
     io:format("** @job_req~n"),
