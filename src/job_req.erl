@@ -447,6 +447,7 @@ get_start_datetime(#job_req{earliest_start_year = Y,
                             earliest_start_sec = S}) ->
     {{Y,Mth,D},{H,Min,S}}.
 
+%% @doc Accessor for the allowed delay field. 
 get_allowed_delay(#job_req{allowed_delay = X}) -> X.
 
 %% @doc Get the duration from a decoded job request segment. 
@@ -457,7 +458,10 @@ get_duration(#job_req{duration = X}) -> X.
 -spec get_revisit_interval(job_req()) -> revisit_interval().
 get_revisit_interval(#job_req{revisit_interval = X}) -> X.
 
+%% @doc Accessor function for the sensor ID type. 
 get_sensor_id_type(#job_req{sensor_id_type = X}) -> X.
+
+%% @doc Accessor function for the sensor ID model. 
 get_sensor_id_model(#job_req{sensor_id_model = X}) -> X.
 
 %% @doc Get the request type from a decoded job request segment. 
