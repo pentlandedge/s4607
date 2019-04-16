@@ -409,15 +409,31 @@ get_bounding_d_lat(#job_req{bounding_d_lat = X}) -> X.
 %% @doc Accessor for the bounding box point D Longitude.
 get_bounding_d_lon(#job_req{bounding_d_lon = X}) -> X.
 
+%% @doc Accessor for the radar mode. 
 get_radar_mode(#job_req{radar_mode = X}) -> X.
+
+%% @doc Accessor for the radar range resolution. 
 get_radar_range_res(#job_req{radar_range_res = X}) -> X.
+
+%% @doc Accessor for the radar cross range resolution. 
 get_radar_cross_range_res(#job_req{radar_cross_range_res = X}) -> X.
 
+%% @doc Accessor for the earliest start date years field. 
 get_earliest_start_year(#job_req{earliest_start_year = X}) -> X.
+
+%% @doc Accessor for the earliest start date month field. 
 get_earliest_start_month(#job_req{earliest_start_month = X}) -> X.
+
+%% @doc Accessor for the earliest start date day field. 
 get_earliest_start_day(#job_req{earliest_start_day = X}) -> X.
+
+%% @doc Accessor for the earliest start date hour field. 
 get_earliest_start_hour(#job_req{earliest_start_hour = X}) -> X.
+
+%% @doc Accessor for the earliest start date min field. 
 get_earliest_start_min(#job_req{earliest_start_min = X}) -> X.
+
+%% @doc Accessor for the earliest start date seconds field. 
 get_earliest_start_sec(#job_req{earliest_start_sec = X}) -> X.
 
 %% @doc Convenience function to fetch all the start time fields as a single 
