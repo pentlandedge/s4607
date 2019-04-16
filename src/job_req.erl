@@ -375,17 +375,40 @@ display(#job_req{} = JR) ->
     io:format("Request type: ~p~n", [get_request_type(JR)]).
 
 %% Accessor functions.
+
+%% @doc Accessor for the requestor ID.
 get_requestor_id(#job_req{requestor_id = X}) -> X.
+
+%% @doc Accessor for the requestor task ID.
 get_requestor_task_id(#job_req{requestor_task_id = X}) -> X.
+
+%% @doc Accessor for the requestor priority.
 get_requestor_priority(#job_req{requestor_priority = X}) -> X.
+
+%% @doc Accessor for the bounding box point A Latitude.
 get_bounding_a_lat(#job_req{bounding_a_lat = X}) -> X.
+
+%% @doc Accessor for the bounding box point A Longitude.
 get_bounding_a_lon(#job_req{bounding_a_lon = X}) -> X.
+
+%% @doc Accessor for the bounding box point B Latitude.
 get_bounding_b_lat(#job_req{bounding_b_lat = X}) -> X.
+
+%% @doc Accessor for the bounding box point B Longitude.
 get_bounding_b_lon(#job_req{bounding_b_lon = X}) -> X.
+
+%% @doc Accessor for the bounding box point C Latitude.
 get_bounding_c_lat(#job_req{bounding_c_lat = X}) -> X.
+
+%% @doc Accessor for the bounding box point C Longitude.
 get_bounding_c_lon(#job_req{bounding_c_lon = X}) -> X.
+
+%% @doc Accessor for the bounding box point D Latitude.
 get_bounding_d_lat(#job_req{bounding_d_lat = X}) -> X.
+
+%% @doc Accessor for the bounding box point D Longitude.
 get_bounding_d_lon(#job_req{bounding_d_lon = X}) -> X.
+
 get_radar_mode(#job_req{radar_mode = X}) -> X.
 get_radar_range_res(#job_req{radar_range_res = X}) -> X.
 get_radar_cross_range_res(#job_req{radar_cross_range_res = X}) -> X.
