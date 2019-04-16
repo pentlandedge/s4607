@@ -150,6 +150,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Function declarations.
 
+%% @doc Decode binary Job Request segment data payload.
 -spec decode(Bin::binary()) -> {ok, job_req()} | {error, Reason::atom()}.
 decode(<<ReqID:10/binary,TaskID:10/binary,Pri,R4:4/binary,R5:4/binary,
     R6:4/binary,R7:4/binary,R8:4/binary,R9:4/binary,R10:4/binary,
