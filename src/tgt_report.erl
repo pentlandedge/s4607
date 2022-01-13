@@ -257,7 +257,7 @@ encode(#tgt_report{
     target_rad_vel_unc = TgtRadVelUnc,
     truth_tag_app = TruthTagApp,
     truth_tag_entity = TruthTagEnt,
-    target_rcs = TgtRcs} = TR, EM) ->
+    target_rcs = TgtRcs} = _TR, EM) ->
    
     % Create a local function to wrap the check of the existence mask and 
     % the parameter encoding/appending.
@@ -380,7 +380,7 @@ to_dict(#tgt_report{
     target_rad_vel_unc = TgtRadVelUnc,
     truth_tag_app = TruthTagApp,
     truth_tag_entity = TruthTagEnt,
-    target_rcs = TgtRcs} = TR, EM) ->
+    target_rcs = TgtRcs} = _TR, EM) ->
 
     % Define a table of the form [{A, C, V}] where A is an atom field name,
     % C is an existence mask checker function, and V is the value of the 
